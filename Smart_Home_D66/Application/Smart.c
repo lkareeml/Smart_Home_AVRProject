@@ -74,7 +74,7 @@ Login system admin and user “admin is remoted only.
 
 // Specifications –Temperature Sensor, DC motor
         Temperature Sensor if temp > 28 °C, Air condition TURN_ON DC_Motor
-        Temperature Sensor if temp < 21 °C, Air condition	TURN_OFF DC_Motor
+        Temperature Sensor if temp < 21 °C, Air condition    TURN_OFF DC_Motor
 
 // Components needed :
         External EEPROM
@@ -142,9 +142,158 @@ Login system admin and user “admin is remoted only.
 /********************************************* **************************/
 
 void Smart_Initialization(){
-	
+    
 }
+
+
+void Appliances_Controller(State New_State,Device Appliance){
+	switch(Appliance){
+		case Door_Lock_Servo://Servo on PD7
+		if(New_State == Turn_On) Servo_180_Degree_Delay();///EDIT
+		else if(New_State == Turn_Off) Servo_0_Degree_Delay();///EDIT
+		break;
+		case Dim_Lamp_Device://PA0
+		if(New_State == Turn_On) Lamp_Dimmer_On();
+		else if(New_State == Turn_Off) Lamp_Dimmer_Off();
+		break;
+		case Air_Conditioner_Device://AC ON RELAY ON PA2
+		if(New_State == Turn_On) AC_On();
+		else if(New_State == Turn_Off) AC_Off();
+		break;
+		case LED_0_Device://LED0 ON KIT is PC2
+		if(New_State == Turn_On) LED_0_On();
+		else if(New_State == Turn_Off) LED_0_Off();
+		break;
+		case LED_1_Device://LED1 ON KIT is PC7
+		if(New_State == Turn_On) LED_1_On();
+		else if(New_State == Turn_Off) LED_1_Off();
+		break;
+		case LED_2_Device://LED2 ON KIT is PD3
+		if(New_State == Turn_On) LED_2_On();
+		else if(New_State == Turn_Off) LED_2_Off();
+		break;
+		case LED_3_Device://LED3 RESERVE PIN PD4
+		if(New_State == Turn_On) LED_3_On();
+		else if(New_State == Turn_Off) LED_3_Off();
+		break;
+		case LED_4_Device://LED4 RESERVE PIN PD5
+		if(New_State == Turn_On) LED_4_On();
+		else if(New_State == Turn_Off) LED_4_Off();
+		break;
+	}
+}
+
+
+
+void LCD_Start_App(){
+    LCD_Send_Clear_Screen();
+    //    [Welcome To *****]
+    //  [Kiak Smart home*]
+    LCD_Send_String("Welcome To      ");
+    LCD_Send_String("Smart home App  ");
+}
+void LCD_GetUsername(uint8* username){
+    uint8 x = '\0';
+    uint8 user_count = 0;
+    LCD_Send_Clear_Screen();
+    LCD_Send_String("Enter UserID:   ");
+    while (user_count < 8) {
+        x = '\0';x = KEYPAD_Get_Pressed_Key();if (x == '\0') continue;
+        if (x >= '0' && x <= '9'){
+        LCD_Send_Char(x);username[user_count] = x;user_count++;}
+        else if (x == '*' && user_count > 0){
+        LCD_Delete_Last_Written();username[user_count] = '\0';user_count--;}
+        else if (x >= 'A' && x <= 'D') break;
+    }
+}
+void LCD_GetPaswword(uint8* password){
+    LCD_Send_Clear_Screen();
+    LCD_Send_String("Enter Password: ");
+    uint8 x = '\0';
+    uint8 pass_count = 0;
+    while (pass_count < 8) {
+        x = '\0';x = KEYPAD_Get_Pressed_Key();if (x == '\0') continue;
+        if (x >= '0' && x <= '9'){
+        LCD_Send_Char(x);password[pass_count] = x;pass_count++;}
+        else if (x == '*' && pass_count > 0){
+        LCD_Delete_Last_Written();password[pass_count] = '\0';pass_count--;}
+        else if (x >= 'A' && x <= 'D')break;
+    }
+}
+uint8 LCD_Get_User_Choice(){
+	uint8 x = '\0';
+	while (1) {
+		x = '\0';x = KEYPAD_Get_Pressed_Key();if (x == '\0') continue;
+		if (x >= '0' && x <= '9') return x;
+	}
+}
+void LCD_Welcome(){
+	LCD_Send_Clear_Screen();
+    LCD_Send_String("Welcome Back!   ");
+    LCD_Send_String("Username        ");
+}
+void LCD_Idle(uint8 AC_State, uint8 Temp){
+    //    LCD-KEYPAD-IDLE_NO_LOGIN
+    //[AC(ON) Temp(30c)] -- [AC(OFF)Temp(20c)]
+    //[****(0) To Login] -- [****(0) To Login]
+    
+    if(Temp >100) return;// Protection as max temp is 60 degree
+    sint8 snum[3];
+    itoa(Temp, snum, 10);
+    LCD_Send_Clear_Screen(); // Clears anything on screen
+    LCD_Send_String("AC(O"); // AC(O as it can be On or Off
+    if     (AC_State == 0) LCD_Send_String("N) ");
+    else if(AC_State == 1) LCD_Send_String("FF)");
+    LCD_Send_String("Temp(");
+    LCD_Send_String(snum);
+    if     (Temp <  10) LCD_Send_String("c) ");
+    else if(Temp >= 10) LCD_Send_String("c)");
+    LCD_Send_String("        (0) More");
+}
+void LCD_Keypad_Login_Handler(){
+	uint8 username[9] = "";
+	uint8 password[9] = "";
+
+	LCD_GetUsername(&username);
+	//Now Search EEPROM For That User!!
+	
+	//In case you Can't find username : LCD_Send_String("Wrong User      ");
+	//In case you found username :      LCD_Send_String("Correct User    ");
+
+	LCD_GetUsername(&password);
+	//Now Get Password from User EEPROM !!
+	
+	//In case Password Doesn't match : LCD_Send_String ("Wrong Password  ");
+	//In case Password match         : LCD_Send_String ("Correct Password");
+
+	// Now Flag the EEPROM THAT LCD USer Is Logged IN!
+	
+	//
+}
+void LCD_Show_Options(){
+	LCD_Send_Clear_Screen();
+    LCD_Send_String("(1)AC  (2)User  ");
+    LCD_Send_String("(3)Led (4)Dimmer");
+}
+void LCD_Handle_Choise(){
+	// First we show user the options
+	LCD_Show_Options();
+	// Then we wait for user choice
+	uint8 x = LCD_Get_User_Choice();
+	if(x == '1'){}//AC CODE
+	else if (x == '2'){}//User show list code
+	else if (x == '3'){}//Led Control Mode
+	else if (x == '4'){}//Dimmer Light Control Mode
+}
+
 void Smart_Idle(){
+    // There are 3 things should always work at idle
+    // 1) The idle Screen on LCD ( Idle > Login > options > ... > Idle )
+    // 2) The door Servo always works (servo implementation with timer+Interrupt)
+    // 3) waiting for user input on UART Bluetooth (Cant use Polling method!! Interrupt)
+    // 4) Waiting for User input on Keypad:  KEYPAD_Get_Pressed_Key();
+	
+	//HOW TO MAKE THEM ALL WORK TOGETHER!!!
 
 }
 
