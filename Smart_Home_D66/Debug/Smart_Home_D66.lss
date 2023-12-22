@@ -102,12 +102,6 @@ Disassembly of section .text:
   b6:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000ba <main>:
-
-#include <avr/io.h>
-
-
-int main(void)
-{
   ba:	ff cf       	rjmp	.-2      	; 0xba <main>
 
 000000bc <_exit>:
