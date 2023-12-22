@@ -42,26 +42,32 @@ Discarded input sections
  .bss           0x00000000        0x0 Application/Smart.o
  .text.Smart_Initialization
                 0x00000000        0x2 Application/Smart.o
+ .text.String_Compare
+                0x00000000       0x52 Application/Smart.o
  .text.Appliances_Controller
                 0x00000000       0xb6 Application/Smart.o
  .progmem.gcc_sw_table.Appliances_Controller
                 0x00000000       0x10 Application/Smart.o
  .rodata.str1.1
-                0x00000000      0x117 Application/Smart.o
- .text.LCD_Start_App
+                0x00000000      0x14a Application/Smart.o
+ .text.LCD_Show_Welcome
                 0x00000000       0x16 Application/Smart.o
- .text.LCD_GetUsername
+ .text.LCD_GetUserID
                 0x00000000       0x6a Application/Smart.o
  .text.LCD_GetPaswword
                 0x00000000       0x6a Application/Smart.o
- .text.LCD_Get_User_Choice
+ .text.Keypad_Get_User_Choice
                 0x00000000       0x12 Application/Smart.o
- .text.LCD_Welcome
+ .text.LCD_Show_Welcome_User
                 0x00000000       0x16 Application/Smart.o
  .text.LCD_Idle
                 0x00000000       0x90 Application/Smart.o
+ .text.LCD_Show_WrongUser
+                0x00000000       0x16 Application/Smart.o
+ .text.LCD_Show_WrongPassword
+                0x00000000       0x16 Application/Smart.o
  .text.LCD_Keypad_Login_Handler
-                0x00000000       0x36 Application/Smart.o
+                0x00000000       0x92 Application/Smart.o
  .text.LCD_Show_Main_Options
                 0x00000000       0x16 Application/Smart.o
  .text.LCD_Show_Choose_LED
@@ -70,18 +76,20 @@ Discarded input sections
                 0x00000000       0x16 Application/Smart.o
  .text.LCD_Handle_Choise
                 0x00000000       0x44 Application/Smart.o
+ .text.Factory_Reset
+                0x00000000        0x2 Application/Smart.o
  .text.Smart_Idle
                 0x00000000        0x2 Application/Smart.o
- .debug_info    0x00000000      0x91c Application/Smart.o
- .debug_abbrev  0x00000000      0x27e Application/Smart.o
- .debug_loc     0x00000000      0x698 Application/Smart.o
+ .debug_info    0x00000000      0xad8 Application/Smart.o
+ .debug_abbrev  0x00000000      0x2bb Application/Smart.o
+ .debug_loc     0x00000000      0x722 Application/Smart.o
  .debug_aranges
-                0x00000000       0x88 Application/Smart.o
- .debug_ranges  0x00000000       0x78 Application/Smart.o
- .debug_line    0x00000000      0x5b1 Application/Smart.o
- .debug_str     0x00000000      0x48b Application/Smart.o
+                0x00000000       0xa8 Application/Smart.o
+ .debug_ranges  0x00000000       0xd0 Application/Smart.o
+ .debug_line    0x00000000      0x6b6 Application/Smart.o
+ .debug_str     0x00000000      0x524 Application/Smart.o
  .comment       0x00000000       0x31 Application/Smart.o
- .debug_frame   0x00000000      0x150 Application/Smart.o
+ .debug_frame   0x00000000      0x190 Application/Smart.o
  .text          0x00000000        0x0 HAL/AirConditioner/AC.o
  .data          0x00000000        0x0 HAL/AirConditioner/AC.o
  .bss           0x00000000        0x0 HAL/AirConditioner/AC.o
