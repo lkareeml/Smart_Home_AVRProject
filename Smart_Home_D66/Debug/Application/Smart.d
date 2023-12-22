@@ -4,7 +4,9 @@ Application/Smart.d Application/Smart.o: ../Application/Smart.c \
  ../Application/../MCAL/Timers/Timers.h \
  ../Application/../MCAL/UART/UART.h \
  ../Application/../MCAL/Analog_To_Digital_Converter/ADC.h \
- ../Application/../MCAL/TWI_I2C/TWI_I2C.h \
+ ../Application/../MCAL/TWI_I2C/TWI_I2C.h ../Application/Smart.h \
+ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
+ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h \
  ../Application/../HAL/Buzzer/Buzzer.h \
  ../Application/../HAL/Keypad_4x4/Keypad_4x4.h \
  ../Application/../HAL/AirConditioner/AC.h \
@@ -29,6 +31,12 @@ Application/Smart.d Application/Smart.o: ../Application/Smart.c \
 ../Application/../MCAL/Analog_To_Digital_Converter/ADC.h:
 
 ../Application/../MCAL/TWI_I2C/TWI_I2C.h:
+
+../Application/Smart.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h:
 
 ../Application/../HAL/Buzzer/Buzzer.h:
 

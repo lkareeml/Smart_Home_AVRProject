@@ -98,7 +98,8 @@ Login system admin and user “admin is remoted only.
 #include "../MCAL/UART/UART.h"                              //Done
 #include "../MCAL/Analog_To_Digital_Converter/ADC.h"        //Done
 #include "../MCAL/TWI_I2C/TWI_I2C.h"                        //Done
-
+#include "Smart.h"                                          //Done
+#include <stdlib.h>
 /****************      Buzzer Include               ********************/
 
 #include "../HAL/Buzzer/Buzzer.h"                      //Done
@@ -145,7 +146,6 @@ void Smart_Initialization(){
     
 }
 
-
 void Appliances_Controller(State New_State,Device Appliance){
 	switch(Appliance){
 		case Door_Lock_Servo://Servo on PD7
@@ -182,9 +182,6 @@ void Appliances_Controller(State New_State,Device Appliance){
 		break;
 	}
 }
-
-
-
 void LCD_Start_App(){
     LCD_Send_Clear_Screen();
     //    [Welcome To *****]
@@ -214,7 +211,11 @@ void LCD_GetPaswword(uint8* password){
     while (pass_count < 8) {
         x = '\0';x = KEYPAD_Get_Pressed_Key();if (x == '\0') continue;
         if (x >= '0' && x <= '9'){
-        LCD_Send_Char(x);password[pass_count] = x;pass_count++;}
+        LCD_Send_Char(x);
+		
+		password[pass_count] = x;
+		
+		pass_count++;}
         else if (x == '*' && pass_count > 0){
         LCD_Delete_Last_Written();password[pass_count] = '\0';pass_count--;}
         else if (x >= 'A' && x <= 'D')break;
@@ -251,16 +252,16 @@ void LCD_Idle(uint8 AC_State, uint8 Temp){
     LCD_Send_String("        (0) More");
 }
 void LCD_Keypad_Login_Handler(){
-	uint8 username[9] = "";
-	uint8 password[9] = "";
+	uint8 username[9];
+	uint8 password[9];
 
-	LCD_GetUsername(&username);
+	LCD_GetUsername(username);
 	//Now Search EEPROM For That User!!
 	
 	//In case you Can't find username : LCD_Send_String("Wrong User      ");
 	//In case you found username :      LCD_Send_String("Correct User    ");
 
-	LCD_GetUsername(&password);
+	LCD_GetUsername(password);
 	//Now Get Password from User EEPROM !!
 	
 	//In case Password Doesn't match : LCD_Send_String ("Wrong Password  ");
@@ -270,20 +271,42 @@ void LCD_Keypad_Login_Handler(){
 	
 	//
 }
-void LCD_Show_Options(){
+void LCD_Show_Main_Options(){
 	LCD_Send_Clear_Screen();
     LCD_Send_String("(1)AC  (2)User  ");
     LCD_Send_String("(3)Led (4)Dimmer");
 }
+void LCD_Show_Choose_LED(){
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("Led No.(1)(2)(3)");
+	LCD_Send_String("(4)(5)   (0)Exit");
+}
+void LCD_Show_Choose_Dimmer(){
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("Dimmer Higher(1)");
+	LCD_Send_String("(0)Low   (9)Exit");
+}
 void LCD_Handle_Choise(){
 	// First we show user the options
-	LCD_Show_Options();
+	LCD_Show_Main_Options();
 	// Then we wait for user choice
 	uint8 x = LCD_Get_User_Choice();
+	LCD_Send_Clear_Screen();
 	if(x == '1'){}//AC CODE
-	else if (x == '2'){}//User show list code
-	else if (x == '3'){}//Led Control Mode
-	else if (x == '4'){}//Dimmer Light Control Mode
+	else if (x == '2'){
+        LCD_Send_String("UserID,username");
+        LCD_Send_String("(0)More (9)Exit");
+		//....
+		}//User show list code
+	else if (x == '3'){
+		LCD_Show_Choose_LED();
+		x = LCD_Get_User_Choice();
+		// ....
+		}//Led Control Mode
+	else if (x == '4'){
+        LCD_Show_Choose_Dimmer();
+		//Handle Dimmer choice ...
+		}//Dimmer Light Control Mode
 }
 
 void Smart_Idle(){
