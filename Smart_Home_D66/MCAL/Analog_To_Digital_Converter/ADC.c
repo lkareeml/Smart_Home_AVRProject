@@ -90,7 +90,10 @@ void ADC_Manual_Interrupt(){
 	ADC_Start();// Don't Forget :add ADC_Start at end of interrupt call
 	// As after Starting once, it will flag interrupt and stop working
 }
-
+void ADC_ISR(ADC_vect){
+	
+	ADC_Start();
+}
 void ADC_Timer_No_Interrupt(){
 	ADMUX_Reg = ((ADMUX_Reg & 0b11100000) | ADC_Ch1);
 	//  choose auto trigger source > Timer0 COMP Match 3 bit in SIFOR

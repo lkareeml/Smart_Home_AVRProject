@@ -28,7 +28,6 @@ Starting with Pin Needed Calculation To choose micro controller:
 
 Total Pins Needed for the Project : 29
 
-
 Calculation of Timers Needed : 
 Calculation of ADC Needed :
 
@@ -38,7 +37,12 @@ Any other Needed Technology for the project ?
 Suitable Microcontroller : 
 
 
+Timers:
+Timer1 >> For Servo and Door State
 
+Timer0 >>
+
+Timer2 >> 
 
 ******************************************************************************
 ******************************************************************************
@@ -292,7 +296,6 @@ void LCD_Handle_Choise(){
 		//Handle Dimmer choice ...
 		}//Dimmer Light Control Mode
 }
-
 void LCD_Keypad_Login_Handler(){
 	uint8 userID[3]; // MAX USER IS 3
 	uint8 password[9];uint8 EEPROM_Pass[9];
@@ -310,7 +313,6 @@ void LCD_Keypad_Login_Handler(){
 		// Now Flag the EEPROM THAT LCD USer Is Logged IN!
 	}
 }
-
 void LCD_Idle(uint8 AC_State, uint8 Temp){
 	//    LCD-KEYPAD-IDLE_NO_LOGIN
 	//[AC(ON) Temp(30c)] -- [AC(OFF)Temp(20c)]
@@ -336,6 +338,64 @@ void Factory_Reset(){
 	//Restore default admin user and password
 	//Restore All Default Settings
 }
+
+
+void UART_Handler(){
+	
+	// UART_Send_String_Polling_8("STRING HERE")
+	
+	// >>> Welcome, Please Enter UserID:
+	// RECEIVE USER ID
+	// SEARCH USER ID
+	// >>> Please Enter Password:
+	// RECEIVE PASSWORD
+	// COMPARE PASSWORD
+	
+	// LABLE X
+	// Success Login: >> "Login Success"
+		// >>> "Choose Option: "
+		// >>> "1) Control Appliances"
+			// >>> "1) Control Leds"
+				// >>> "Led 1 (11) On,(01) Off"
+				// >>> "Led 2 (12) On,(02) Off"
+				// >>> "Led 3 (13) On,(03) Off"
+				// >>> "Led 4 (14) On,(04) Off"
+				// >>> "Led 5 (15) On,(05) Off"
+			// >>> "2) Control AC"
+				// >>> "AC Auto (11)"
+				// >>> "AC Manual Turn Off (02)"
+				// >>> "AC Manual Turn On  (12)"
+			// >>> "3) Control Door"
+				// >>> "1) Open Door Lock"
+				// >>> "2) Close Door Lock"
+			// >>> "4) Control Dimmer"
+				// >>> "1) Dimmer Up"
+				// >>> "2) Dimmer Down"
+				// >>> "3) Dimmer Off"
+				// >>> "4) Dimmer On"
+					
+		// >>> "2) User Management"
+			// >>> "1) Show Users list"
+			// >>> "2) Create New User"
+			// >>> "3) Delete Existing User"
+			// >>> "3) Delete All Users"
+			// >>> "3) Change User Password"
+			// >>> "3) Change User Username"
+
+		// >>> "3) Settings"
+			// >>> "1) Date and Time (dev)"
+			// >>> "2) Test Buzzer"
+			// >>> "3) Factory Reset"
+			
+	// Failed Login: >> "Login Failed Try Again"
+		// >>> Please Enter UserID:
+		// RECEIVE USER ID
+		// SEARCH USER ID
+		// >>> Please Enter Password:
+		// RECEIVE PASSWORD
+		// COMPARE PASSWORD
+}
+
 
 void Smart_Idle(){
     // There are 3 things should always work at idle

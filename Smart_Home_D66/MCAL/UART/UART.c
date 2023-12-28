@@ -171,7 +171,6 @@ void UART_Init() {
 	Set(UCSRB_Reg, 5);
 	#endif
 }
-
 void UART_Send_Byte_Polling_8(uint8 Data) {
 	while (!Get(UCSRA_Reg, 5)); // Polling Method On Pin5 UCSRA Reg /Data Register Empty
 	UDR_Reg = Data;
@@ -183,10 +182,63 @@ void UART_Send_String_Polling_8(sint8 * String) {
 		count++;
 	}
 }
+
+
+
+static uint8 Global_UART_count = 0;
+static uint8 Global_UART_Array[9];
+static uint8 Global_UART_Send_Response_State = 0;
+
+// 0 means nothing send nothing to receive
+// 1 means Sending now
+// 2 means Sent waiting for reply
+// 3 means Sent and Processing Reply
+// 4 means Sent and Got Reply Processed
+// 10 means Idle
+
+void Reset_UART_Counter(){
+	Global_UART_count = 0;
+}
+void Reset_UART_VARS(){
+	Global_UART_count = 0;
+	for(int i =0;i<9;i++){
+		Global_UART_Array[i] = 0;
+	}
+}
+
+void UART_Choice_Handler(){
+	
+}
+
+void UART_Interrupt_Handler(USART0_RX_vect){
+	Global_UART_Array[Global_UART_count] = UDR_Reg;
+	if (Global_UART_Array[Global_UART_count] == 13)
+	{//Remove at Carriage Return \r
+		Global_UART_Array[Global_UART_count] = 0;
+	}
+	if (Global_UART_Array[Global_UART_count] == '\n')
+	{ // ASCII  NEW LINE Bluetooth END TRANSMISSION
+		Global_UART_Array[Global_UART_count] = '\0';
+		//Reset_UART_Counter();
+		
+	}
+	else{
+		Global_UART_count++;
+	}
+}
+
+
+
+
+
+
+
+
 uint8 UART_Receive_Byte_8(void) {
 	while (Get(UCSRA_Reg, 7) == 0); // Polling Method
 	return UDR_Reg;
 }
+
 void UART_Recieve_String_8(sint8 * String) {
 	uint8 count = 0;
 	while (1) {
