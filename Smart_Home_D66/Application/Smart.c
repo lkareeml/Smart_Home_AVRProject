@@ -104,6 +104,8 @@ Login system admin and user “admin is remoted only.
 #include "../MCAL/TWI_I2C/TWI_I2C.h"                        //Done
 #include "Smart.h"                                          //Done
 #include <stdlib.h>
+#include <string.h>
+
 /****************      Buzzer Include               ********************/
 
 #include "../HAL/Buzzer/Buzzer.h"                      //Done
@@ -150,7 +152,7 @@ void Smart_Initialization(){
     
 }
 
-uint8 String_Compare(uint8* str1,uint8* str2){
+uint8 String_Compare(sint8* str1,sint8* str2){
 	//return 0 if mismatch
 	//return 1 if match
 	if(strlen(str1) != strlen(str2)) return 0; // Mismatch Due to size
@@ -298,7 +300,7 @@ void LCD_Handle_Choise(){
 }
 void LCD_Keypad_Login_Handler(){
 	uint8 userID[3]; // MAX USER IS 3
-	uint8 password[9];uint8 EEPROM_Pass[9];
+	uint8 password[9];sint8 EEPROM_Pass[9];
 	LCD_GetUserID(userID);
 	if(userID[0] > '3' || userID[0] == '0' || userID[1] >= '0' || userID[2] >= '0') // Error user does not exist
 	LCD_Show_WrongUser();
@@ -339,6 +341,110 @@ void Factory_Reset(){
 	//Restore All Default Settings
 }
 
+uint8 EEPROM_Reg_User(uint8 UserID, sint8 * Username, sint8 * Password){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) != 0){
+		return 0; // Means User already exist
+	}
+	else{// User does not exist, Create the user
+		EEPROM_Write_Byte(Marker,UserID);
+		EEPROM_Write_String((Marker+1),Password);
+		EEPROM_Write_Byte(Marker+9, 0 );
+		EEPROM_Write_String((Marker+10),Username);
+		EEPROM_Write_Byte(Marker+18, 0 );
+		EEPROM_Write_Byte(Marker+19, 0 );
+		return 1;// Means User Successfully Registered
+	}
+}
+uint8 EEPROM_Edit_User_Password(uint8 UserID,sint8 * Password){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Does not exist
+	}
+	else{// User does exist, Change Password
+		for(uint16 Address =(Marker+1);Address<=(Marker+9);Address++)
+		{
+			EEPROM_Write_Byte(Address,0);
+		}
+		EEPROM_Write_String((Marker+1),Password);
+		return 1;// Means User Successfully Change Password
+	}
+}
+uint8 EEPROM_Edit_Username(uint8 UserID,sint8 * Username){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Does not exist
+	}
+	else{// User does exist, Change Password
+		for(uint16 Address =(Marker+10);Address<=(Marker+18);Address++)
+		{
+			EEPROM_Write_Byte(Address,0);
+		}
+		EEPROM_Write_String((Marker+10),Username);
+		return 1;// Means User Successfully Change Password
+	}
+}
+uint8 EEPROM_Read_User(uint8 UserID,uint8 * Username){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Dose Not exist
+	}else{
+		EEPROM_Read_String(Marker+10,Username);
+		return 1;
+	}
+}
+uint8 EEPROM_Delete_User(uint8 UserID){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Dose Not exist
+		}else{
+		for(uint16 Address = Marker; Address < (Marker + 20);Address++){
+			EEPROM_Write_Byte(Address,0);
+			return 1;// Means User Deleted Successfully
+		}
+	}
+}
+
+
+void UART_EEPROM_Show_User_List(){
+	for(uint8 id = 0;id<4;id++){
+		uint8 Username[8];
+		if(EEPROM_Read_User(id,Username)){
+			UART_Send_String_Polling_8("UserID: ");
+			UART_Send_Byte_Polling_8(id);
+			UART_Send_String_Polling_8(" Username: ");
+			UART_Send_String_Polling_8(Username);
+			UART_Send_String_Polling_8("/n");
+		}
+	}
+}
+void UART_EEPROM_Delete_All_Users(){
+	for(uint8 id = 0;id<4;id++){
+		if(EEPROM_Delete_User(id)){
+			UART_Send_String_Polling_8("UserID: ");
+			UART_Send_Byte_Polling_8(id);
+			UART_Send_String_Polling_8(" Successfully\n");
+		}
+	}
+	UART_Send_String_Polling_8("Deleted All Users Successfully\n");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void UART_Show_Options(){
+	
+}
+
+
 
 void UART_Handler(){
 	
@@ -354,38 +460,38 @@ void UART_Handler(){
 	// LABLE X
 	// Success Login: >> "Login Success"
 		// >>> "Choose Option: "
-		// >>> "1) Control Appliances"
-			// >>> "1) Control Leds"
+		// >>> "001) Control Appliances"
+			// >>> "011) Control Leds"
 				// >>> "Led 1 (11) On,(01) Off"
 				// >>> "Led 2 (12) On,(02) Off"
 				// >>> "Led 3 (13) On,(03) Off"
 				// >>> "Led 4 (14) On,(04) Off"
 				// >>> "Led 5 (15) On,(05) Off"
-			// >>> "2) Control AC"
+			// >>> "021) Control AC"
 				// >>> "AC Auto (11)"
 				// >>> "AC Manual Turn Off (02)"
 				// >>> "AC Manual Turn On  (12)"
-			// >>> "3) Control Door"
+			// >>> "031) Control Door"
 				// >>> "1) Open Door Lock"
 				// >>> "2) Close Door Lock"
-			// >>> "4) Control Dimmer"
+			// >>> "041) Control Dimmer"
 				// >>> "1) Dimmer Up"
 				// >>> "2) Dimmer Down"
 				// >>> "3) Dimmer Off"
 				// >>> "4) Dimmer On"
 					
-		// >>> "2) User Management"
-			// >>> "1) Show Users list"
-			// >>> "2) Create New User"
-			// >>> "3) Delete Existing User"
-			// >>> "3) Delete All Users"
-			// >>> "3) Change User Password"
-			// >>> "3) Change User Username"
+		// >>> "002) User Management"
+			// >>> "012) Show Users list"
+			// >>> "022) Create New User"
+			// >>> "032) Delete Existing User"
+			// >>> "042) Delete All Users"
+			// >>> "052) Change User Password"
+			// >>> "062) Change User Username"
 
-		// >>> "3) Settings"
-			// >>> "1) Date and Time (dev)"
-			// >>> "2) Test Buzzer"
-			// >>> "3) Factory Reset"
+		// >>> "003) Settings"
+			// >>> "013) Date and Time (dev)"
+			// >>> "023) Test Buzzer"
+			// >>> "033) Factory Reset"
 			
 	// Failed Login: >> "Login Failed Try Again"
 		// >>> Please Enter UserID:
