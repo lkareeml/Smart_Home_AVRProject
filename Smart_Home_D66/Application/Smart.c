@@ -426,7 +426,7 @@ void UART_EEPROM_Delete_All_Users(){
 			UART_Send_String_Polling_8(" Successfully\n");
 		}
 	}
-	UART_Send_String_Polling_8("Deleted All Users Successfully\n");
+	UART_Send_String_Polling_8("Deleted All Users Successfully \n");
 }
 
 
@@ -446,60 +446,130 @@ void UART_Show_Options(){
 
 
 
-void UART_Handler(){
-	
-	// UART_Send_String_Polling_8("STRING HERE")
-	
-	// >>> Welcome, Please Enter UserID:
+void UART_Get_User_Pass(){
+	uint8 *username[8];
+	uint8 *password[8];
+	UART_Send_String_Polling_8("Please Enter UserID:");
 	// RECEIVE USER ID
 	// SEARCH USER ID
-	// >>> Please Enter Password:
+	UART_Send_String_Polling_8("Please Enter Password:");
 	// RECEIVE PASSWORD
 	// COMPARE PASSWORD
-	
-	// LABLE X
-	// Success Login: >> "Login Success"
-		// >>> "Choose Option: "
-		// >>> "001) Control Appliances"
-			// >>> "011) Control Leds"
-				// >>> "Led 1 (11) On,(01) Off"
-				// >>> "Led 2 (12) On,(02) Off"
-				// >>> "Led 3 (13) On,(03) Off"
-				// >>> "Led 4 (14) On,(04) Off"
-				// >>> "Led 5 (15) On,(05) Off"
-			// >>> "021) Control AC"
-				// >>> "AC Auto (11)"
-				// >>> "AC Manual Turn Off (02)"
-				// >>> "AC Manual Turn On  (12)"
-			// >>> "031) Control Door"
-				// >>> "1) Open Door Lock"
-				// >>> "2) Close Door Lock"
-			// >>> "041) Control Dimmer"
-				// >>> "1) Dimmer Up"
-				// >>> "2) Dimmer Down"
-				// >>> "3) Dimmer Off"
-				// >>> "4) Dimmer On"
-					
-		// >>> "002) User Management"
-			// >>> "012) Show Users list"
-			// >>> "022) Create New User"
-			// >>> "032) Delete Existing User"
-			// >>> "042) Delete All Users"
-			// >>> "052) Change User Password"
-			// >>> "062) Change User Username"
+	uint8 UserID_state;
+	// 250 means failed to login
+	// 0 means admin login success
+	// 1 means first user login success ...
+	return UserID_state;
+}
 
-		// >>> "003) Settings"
-			// >>> "013) Date and Time (dev)"
-			// >>> "023) Test Buzzer"
-			// >>> "033) Factory Reset"
+void UART_Control_Leds(){
+	UART_Send_String_Polling_8("Led 1 : (11)On, (01)Off \n");
+	UART_Send_String_Polling_8("Led 2 : (12)On, (02)Off \n");
+	UART_Send_String_Polling_8("Led 3 : (13)On, (03)Off \n");
+	UART_Send_String_Polling_8("Led 4 : (14)On, (04)Off \n");
+	UART_Send_String_Polling_8("Led 5 : (15)On, (05)Off \n");
+	//RECEIVE
+	//RETURN
+}
+void UART_Control_AC(){
+	UART_Send_String_Polling_8("(1) AC Auto \n");
+	UART_Send_String_Polling_8("(2) AC Manual Turn Off \n");
+	UART_Send_String_Polling_8("(3) AC Manual Turn On  \n");
+	//RECEIVE
+	//RETURN
+}
+void UART_Control_Door(){
+	UART_Send_String_Polling_8("(1) Open Door Lock \n");
+	UART_Send_String_Polling_8("(2) Close Door Lock \n");
+	//RECEIVE
+	//RETURN
+}
+void UART_Control_Dimmer(){
+	UART_Send_String_Polling_8("(1) Dimmer Up \n");
+	UART_Send_String_Polling_8("(2) Dimmer Down \n");
+	UART_Send_String_Polling_8("(3) Dimmer Off \n");
+	UART_Send_String_Polling_8("(4) Dimmer On \n");
+	//RECEIVE
+	//RETURN
+}
+void UART_Control_Appliances(){
+	UART_Send_String_Polling_8("(1) Control Leds \n");
+	UART_Send_String_Polling_8("(2) Control AC \n");
+	UART_Send_String_Polling_8("(3) Control Door \n");
+	UART_Send_String_Polling_8("(4) Control Dimmer \n");
+	//RECEIVE
+	//RETURN
+}
+void UART_UserManagement(){
+	UART_Send_String_Polling_8("(1) Show Users list \n");
+	UART_Send_String_Polling_8("(2) Create New User \n");
+	UART_Send_String_Polling_8("(3) Delete Existing User \n");
+	UART_Send_String_Polling_8("(4) Delete All Users \n");
+	UART_Send_String_Polling_8("(5) Change User Password \n");
+	UART_Send_String_Polling_8("(6) Change User Username \n");
+	//RECEIVE
+	//RETURN
+}
+
+
+void UART_MainMenu(){
+	UART_Send_String_Polling_8("Choose Option: \n");
+	UART_Send_String_Polling_8("(1) Control Appliances \n");
+	UART_Send_String_Polling_8("(2) User Management \n");
+	UART_Send_String_Polling_8("(3) Settings \n");
+	//RECEIVE
+	//RETURN
+}
+
+void UART_Settings(){
+	UART_Send_String_Polling_8("(1) Test for more options \n");
+	UART_Send_String_Polling_8("(2) Factory Reset \n");
+	//RECEIVE
+	//RETURN
+}
+
+void UART_Handler(){
+	uint8 UserID = 200;
+	// Ask for login 3 times if not lock the system
+	for(int i =0; i < 3;i++)
+	{
+		if(i != 0) 
+		{
+			UART_Send_String_Polling_8("Login Failed Please Try Again \n");
+		}
+		UserID = UART_Get_User_Pass();
+		if(UserID != 250){
+			// Means login success and returned the UserID
+			break;
+		}
+	}
+	if(UserID == 200)
+	{
+		// ERROR Goes Here
+	}
+	else if(UserID == 250)
+	{
+		// Login Failed 3 times
+		// Break the system Here
+	}
+	else{
+		uint8 Choice = 0;
+		UART_Send_String_Polling_8("Login Success \n");
+		Choice = UART_MainMenu();
+		while(Choice > 3 && Choice < 1){
+			Choice = UART_MainMenu();
+		}
+		
 			
-	// Failed Login: >> "Login Failed Try Again"
-		// >>> Please Enter UserID:
-		// RECEIVE USER ID
-		// SEARCH USER ID
-		// >>> Please Enter Password:
-		// RECEIVE PASSWORD
-		// COMPARE PASSWORD
+		switch(Choice){
+			case 1: Choice = UART_Control_Appliances(); break;
+			case 2: Choice = UART_UserManagement(); break;
+			case 3: Choice = UART_Settings(); break;
+		}
+
+	}
+	UART_Control_Leds();UART_Control_AC();UART_Control_Door();
+
 }
 
 
