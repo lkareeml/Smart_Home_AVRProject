@@ -8,6 +8,7 @@
 #include "../../STD_Types.h"
 #include "../../Bit_Manipulation.h"
 #include "../../AVR32_Reg_Private.h"
+#include "../../HAL/EEPROM/EEPROM.h"
 #include "UART.h"
 #include <stdio.h>
 
@@ -209,23 +210,23 @@ void Reset_UART_VARS(){
 void UART_Choice_Handler(){
 	
 }
-
-void UART_Interrupt_Handler(USART0_RX_vect){
-	Global_UART_Array[Global_UART_count] = UDR_Reg;
-	if (Global_UART_Array[Global_UART_count] == 13)
-	{//Remove at Carriage Return \r
-		Global_UART_Array[Global_UART_count] = 0;
-	}
-	if (Global_UART_Array[Global_UART_count] == '\n')
-	{ // ASCII  NEW LINE Bluetooth END TRANSMISSION
-		Global_UART_Array[Global_UART_count] = '\0';
-		//Reset_UART_Counter();
-		
-	}
-	else{
-		Global_UART_count++;
-	}
-}
+// 
+// void UART_Interrupt_Handler(USART0_RX_vect){
+// 	Global_UART_Array[Global_UART_count] = UDR_Reg;
+// 	if (Global_UART_Array[Global_UART_count] == 13)
+// 	{//Remove at Carriage Return \r
+// 		Global_UART_Array[Global_UART_count] = 0;
+// 	}
+// 	if (Global_UART_Array[Global_UART_count] == '\n')
+// 	{ // ASCII  NEW LINE Bluetooth END TRANSMISSION
+// 		Global_UART_Array[Global_UART_count] = '\0';
+// 		//Reset_UART_Counter();
+// 		
+// 	}
+// 	else{
+// 		Global_UART_count++;
+// 	}
+// }
 
 
 
@@ -239,6 +240,9 @@ uint8 UART_Receive_Byte_8(void) {
 	return UDR_Reg;
 }
 
+uint8 UART_Receive_CHECK(){
+	return Get(UCSRA_Reg, 7);// 0 means nothing sent, 1 something sent
+}
 void UART_Recieve_String_8(sint8 * String) {
 	uint8 count = 0;
 	while (1) {
@@ -323,3 +327,97 @@ uint32 UART_Recieve_Number_Polling_32(void){
 //         }
 //     }
 // #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void UART_Show_Invalid(){
+	UART_Send_String_Polling_8("Invalid input Please try Again \n");
+}
+
+
+
+
+void UART_Show_MainMenu(){
+	UART_Send_String_Polling_8("Choose Option: \n");
+	UART_Send_String_Polling_8("(1) Control Appliances \n");
+	UART_Send_String_Polling_8("(2) User Management \n");
+	UART_Send_String_Polling_8("(3) Settings \n");
+}
+void UART_Show_Control_Appliances(){
+	UART_Send_String_Polling_8("(1) Control Leds \n");
+	UART_Send_String_Polling_8("(2) Control AC \n");
+	UART_Send_String_Polling_8("(3) Control Door \n");
+	UART_Send_String_Polling_8("(4) Control Dimmer \n");
+}
+void UART_Show_Control_Leds(){
+	UART_Send_String_Polling_8("Led 1 : (11)On, (01)Off \n");
+	UART_Send_String_Polling_8("Led 2 : (12)On, (02)Off \n");
+	UART_Send_String_Polling_8("Led 3 : (13)On, (03)Off \n");
+	UART_Send_String_Polling_8("Led 4 : (14)On, (04)Off \n");
+	UART_Send_String_Polling_8("Led 5 : (15)On, (05)Off \n");
+}
+void UART_Show_Control_AC(){
+	UART_Send_String_Polling_8("(1) AC Auto \n");
+	UART_Send_String_Polling_8("(2) AC Manual Turn Off \n");
+	UART_Send_String_Polling_8("(3) AC Manual Turn On  \n");
+}
+void UART_Show_Control_Door(){
+	UART_Send_String_Polling_8("(1) Open Door Lock \n");
+	UART_Send_String_Polling_8("(2) Close Door Lock \n");
+}
+void UART_Show_Control_Dimmer(){
+	UART_Send_String_Polling_8("(1) Dimmer Up \n");
+	UART_Send_String_Polling_8("(2) Dimmer Down \n");
+	UART_Send_String_Polling_8("(3) Dimmer Off \n");
+	UART_Send_String_Polling_8("(4) Dimmer On \n");
+}
+void UART_Show_UserManagement(){
+	UART_Send_String_Polling_8("(1) Show Users list \n");
+	UART_Send_String_Polling_8("(2) Create New User \n");
+	UART_Send_String_Polling_8("(3) Delete Existing User \n");
+	UART_Send_String_Polling_8("(4) Delete All Users \n");
+	UART_Send_String_Polling_8("(5) Change User Password \n");
+	UART_Send_String_Polling_8("(6) Change User Username \n");
+}
+void UART_Show_Settings(){
+	UART_Send_String_Polling_8("(1) Test for more options \n");
+	UART_Send_String_Polling_8("(2) Factory Reset \n");
+}
+
+
+void UART_Show_User_List(){
+	for(uint8 id = 0;id<4;id++){
+		sint8 Username[8];
+		if(EEPROM_Read_User(id,Username)){
+			UART_Send_String_Polling_8("UserID: ");
+			UART_Send_Byte_Polling_8(id);
+			UART_Send_String_Polling_8(" Username: ");
+			UART_Send_String_Polling_8(Username);
+			UART_Send_String_Polling_8("/n");
+		}
+	}
+}
+void UART_EEPROM_Delete_All_Users(){
+	for(uint8 id = 0;id<4;id++){
+		if(EEPROM_Delete_User(id)){
+			UART_Send_String_Polling_8("UserID: ");
+			UART_Send_Byte_Polling_8(id);
+			UART_Send_String_Polling_8(" Successfully\n");
+		}
+	}
+	UART_Send_String_Polling_8("Deleted All Users Successfully \n");
+}
+
+
+

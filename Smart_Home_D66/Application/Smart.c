@@ -107,45 +107,25 @@ Login system admin and user “admin is remoted only.
 #include <string.h>
 
 /****************      Buzzer Include               ********************/
-
 #include "../HAL/Buzzer/Buzzer.h"                      //Done
-
 /****************      KEYPAD Include               ********************/
-
 #include "../HAL/Keypad_4x4/Keypad_4x4.h"              //Done
-
 /****************      AirConditioner Include       ********************/
-
 #include "../HAL/AirConditioner/AC.h"                  //Done
-
 /****************      5 Leds Include               ********************/
-
 #include "../HAL/Leds_5/Leds.h"                        //Done
-
 /****************      EEPROM Include               ********************/
-
 #include "../HAL/EEPROM/EEPROM.h"                      //NEEDS EDIT
-
 /****************      LCD Include                  ********************/
-
 #include "../HAL/LCD_16x2/LCD.h"                       //NEEDS EDIT
-
 /****************      Door Servo Include           ********************/
-
 #include "../HAL/Door_Servo/Door_Servo.h"              //NEEDS EDIT
-
 /****************      Bluetooth UART Include       ********************/
-
 #include "../HAL/Bluetooth/Bluetooth.h"                // NO CODE YET
-
 /****************      Temperature Sensor Include   ********************/
-
 #include "../HAL/Temperature_Sensor/Temp_Sensor.h"     // NO CODE YET
-
 /****************      Dimming Lamp Include   **************************/
-
 #include "../HAL/Dimming_Light/Dimmer.h"               // NO CODE YET
-
 /********************************************* **************************/
 
 void Smart_Initialization(){
@@ -198,13 +178,7 @@ void Appliances_Controller(State New_State,Device Appliance){
 		break;
 	}
 }
-void LCD_Show_Welcome(){
-    //  [Welcome To *****]
-    //  [Kiak Smart home*]
-    LCD_Send_Clear_Screen();
-    LCD_Send_String("Welcome To      ");
-    LCD_Send_String("Smart home App  ");
-}
+
 void LCD_GetUserID(uint8* userID){
     uint8 x = '\0';
     uint8 user_count = 0;
@@ -244,38 +218,15 @@ uint8 Keypad_Get_User_Choice(){
 		if (x >= '0' && x <= '9') return x;
 	}
 }
-void LCD_Show_Welcome_User(){
-	LCD_Send_Clear_Screen();
-    LCD_Send_String("Welcome Back!   ");
-    LCD_Send_String("Username        ");
-}
-void LCD_Show_WrongUser(){
-	//In case you Can't find username :
-	LCD_Send_Clear_Screen();
-	LCD_Send_String("Wrong User      ");
-	LCD_Send_String("                ");
-}
-void LCD_Show_WrongPassword(){
-	//In case Wrong Password :
-	LCD_Send_Clear_Screen();
-	LCD_Send_String("Wrong Password  ");
-	LCD_Send_String("                ");
-}
-void LCD_Show_Main_Options(){
-	LCD_Send_Clear_Screen();
-    LCD_Send_String("(1)AC  (2)User  ");
-    LCD_Send_String("(3)Led (4)Dimmer");
-}
-void LCD_Show_Choose_LED(){
-	LCD_Send_Clear_Screen();
-	LCD_Send_String("Led No.(1)(2)(3)");
-	LCD_Send_String("(4)(5)   (0)Exit");
-}
-void LCD_Show_Choose_Dimmer(){
-	LCD_Send_Clear_Screen();
-	LCD_Send_String("Dimmer Higher(1)");
-	LCD_Send_String("(0)Low   (9)Exit");
-}
+
+// LCD_Show_Welcome();
+// LCD_Show_Welcome_User();
+// LCD_Show_WrongUser();
+// LCD_Show_WrongPassword();
+// LCD_Show_Main_Options();
+// LCD_Show_Choose_LED();
+// LCD_Show_Choose_Dimmer();
+
 void LCD_Handle_Choise(){
 	// First we show user the options
 	LCD_Show_Main_Options();
@@ -341,92 +292,180 @@ void Factory_Reset(){
 	//Restore All Default Settings
 }
 
-uint8 EEPROM_Reg_User(uint8 UserID, sint8 * Username, sint8 * Password){
-	uint16 Marker = (UserID*20) + 10;
-	if(EEPROM_Read_Byte(Marker) != 0){
-		return 0; // Means User already exist
-	}
-	else{// User does not exist, Create the user
-		EEPROM_Write_Byte(Marker,UserID);
-		EEPROM_Write_String((Marker+1),Password);
-		EEPROM_Write_Byte(Marker+9, 0 );
-		EEPROM_Write_String((Marker+10),Username);
-		EEPROM_Write_Byte(Marker+18, 0 );
-		EEPROM_Write_Byte(Marker+19, 0 );
-		return 1;// Means User Successfully Registered
-	}
-}
-uint8 EEPROM_Edit_User_Password(uint8 UserID,sint8 * Password){
-	uint16 Marker = (UserID*20) + 10;
-	if(EEPROM_Read_Byte(Marker) == 0){
-		return 0; // Means User Does not exist
-	}
-	else{// User does exist, Change Password
-		for(uint16 Address =(Marker+1);Address<=(Marker+9);Address++)
+
+
+
+// UART_Show_MainMenu();
+// UART_Show_Control_Appliances();
+// UART_Show_Control_Leds();
+// UART_Show_Control_AC();
+// UART_Show_Control_Door();
+// UART_Show_Control_Dimmer();
+// UART_Show_UserManagement();
+// UART_Show_Settings();
+// UART_Show_User_List();
+// UART_EEPROM_Delete_All_Users();
+
+
+uint8 Global_UART_Flag_Username =0;
+uint8 Global_UART_Flag_Password =0;
+
+
+
+
+// step 1 user_id
+// step 2 user_password
+// step 3 choice_1(from main menu)
+// step 4 choice_2(from Control_Appliances/UserManagement/Settings)
+// step 5 choice_3(from ...)
+
+
+uint8 global_Flag;
+uint8 global_UART_Login_failed = 0;
+sint8 global_UART_UserID[2];
+sint8 global_UART_Username[8];
+sint8 global_UART_Password[8];
+sint8 global_EEPROM_Password[8];
+sint8 global_UART_Choice_1[2];
+sint8 global_UART_Choice_2[2];
+sint8 global_UART_Choice_3[2];
+
+interrupt(){
+switch(global_Flag){
+	case 1:
+		GIE_Disable();
+		UART_Send_String_Polling_8("Please Enter UserID:\n");
+		global_Flag++;
+		GIE_Enable();
+		break;
+	case 2: //we got user input for userID now we manage it
+		GIE_Disable();
+		UART_Recieve_String_8(global_UART_UserID);
+		if(EEPROM_Read_User(global_UART_UserID,global_UART_Username) == 0){
+			//User Does not Exist
+		}
+		UART_Send_String_Polling_8("Please Enter Password:\n");
+		global_Flag++;
+		GIE_Enable();
+		break;
+	case 3:
+		GIE_Disable();
+		UART_Recieve_String_8(global_UART_Password);
+		if(EEPROM_Read_Password(global_UART_UserID,global_EEPROM_Password) == 0){
+			//Password Does not Exist
+		}
+		else{
+			//User Exists and password compare here
+			if(strcmp(global_EEPROM_Password,global_UART_Password)==0)
+			{
+				UART_Send_String_Polling_8("Welcome Back! ");
+				UART_Send_String_Polling_8(global_UART_Username);
+				UART_Show_MainMenu();
+				global_Flag++;
+			}else{
+				global_UART_Login_failed++;
+				if(global_UART_Login_failed >= 4)
+				{
+					UART_Send_String_Polling_8("Login Failed, Contact admin immediately!! \n");
+					BUZZER_ALARM_TILL_RESET();break;
+				}
+				UART_Send_String_Polling_8("Login Failed, Try again! \n");
+				global_Flag=-2;
+			}
+		}
+		GIE_Enable();
+		break;
+	case 4:
+		GIE_Disable();
+		UART_Recieve_String_8(global_UART_Choice_1);
+		uint8 choice_1 = (global_UART_Choice_1[0]-48);
+		if(choice_1 > 3 && choice_1 < 1)
 		{
-			EEPROM_Write_Byte(Address,0);
+			UART_Show_Invalid();
+			UART_Show_MainMenu();
+			break;
 		}
-		EEPROM_Write_String((Marker+1),Password);
-		return 1;// Means User Successfully Change Password
-	}
-}
-uint8 EEPROM_Edit_Username(uint8 UserID,sint8 * Username){
-	uint16 Marker = (UserID*20) + 10;
-	if(EEPROM_Read_Byte(Marker) == 0){
-		return 0; // Means User Does not exist
-	}
-	else{// User does exist, Change Password
-		for(uint16 Address =(Marker+10);Address<=(Marker+18);Address++)
+		else
 		{
-			EEPROM_Write_Byte(Address,0);
+			switch(choice_1){
+				case 1:UART_Show_Control_Appliances();break;
+				case 2:UART_Show_UserManagement();break;
+				case 3:UART_Show_Settings();break;
+			}
+			global_Flag++;
 		}
-		EEPROM_Write_String((Marker+10),Username);
-		return 1;// Means User Successfully Change Password
-	}
-}
-uint8 EEPROM_Read_User(uint8 UserID,uint8 * Username){
-	uint16 Marker = (UserID*20) + 10;
-	if(EEPROM_Read_Byte(Marker) == 0){
-		return 0; // Means User Dose Not exist
-	}else{
-		EEPROM_Read_String(Marker+10,Username);
-		return 1;
-	}
-}
-uint8 EEPROM_Delete_User(uint8 UserID){
-	uint16 Marker = (UserID*20) + 10;
-	if(EEPROM_Read_Byte(Marker) == 0){
-		return 0; // Means User Dose Not exist
-		}else{
-		for(uint16 Address = Marker; Address < (Marker + 20);Address++){
-			EEPROM_Write_Byte(Address,0);
-			return 1;// Means User Deleted Successfully
+		GIE_Enable();
+		break;
+	case 5:
+		GIE_Disable();
+		UART_Recieve_String_8(global_UART_Choice_2);
+		uint8 choice_2 = (global_UART_Choice_2[0]-48);
+		if(choice_2 > 6 && choice_2 < 1)
+		{
+			UART_Show_Invalid();
+			switch(choice_1){
+				case 1:UART_Show_Control_Appliances();break;
+				case 2:UART_Show_UserManagement();break;
+				case 3:UART_Show_Settings();break;
+			}
+			break;
 		}
-	}
-}
-
-
-void UART_EEPROM_Show_User_List(){
-	for(uint8 id = 0;id<4;id++){
-		uint8 Username[8];
-		if(EEPROM_Read_User(id,Username)){
-			UART_Send_String_Polling_8("UserID: ");
-			UART_Send_Byte_Polling_8(id);
-			UART_Send_String_Polling_8(" Username: ");
-			UART_Send_String_Polling_8(Username);
-			UART_Send_String_Polling_8("/n");
+		else
+		{
+			switch(choice_1){
+				case 1:			
+					switch(choice_2){
+						case 1:UART_Show_Control_Leds();break;
+						case 2:UART_Show_Control_AC();break;
+						case 3:
+							if(global_UART_UserID[0]-48 == 0){UART_Show_Control_Door();}
+						else
+						{
+							UART_Send_String_Polling_8("Auth Denied, Please ask Admin!");
+							UART_Show_Control_Appliances();
+						}
+						break;
+						case 4:UART_Show_Control_Dimmer();break;
+						case 5:UART_Show_Invalid();break;
+						case 6:UART_Show_Invalid();break;
+					}
+					break;
+				case 2:					
+				switch(choice_2){
+					case 1:UART_Show_User_List();break;
+					case 2:
+						// Create NEW USER
+					break;
+					case 3:
+						//Delete Existing User
+					break;
+					case 4:UART_EEPROM_Delete_All_Users();break;
+					case 5:
+						//Change User Password
+					break;
+					case 6:	
+						//Change User Username
+					break;
+				}
+				break;
+				case 3:	
+				switch(choice_2){
+					case 1:
+						//Test more options
+					break;
+					case 2:
+						// Factory Reset
+					break;
+				}
+				break;
+			}
 		}
-	}
+		
+		GIE_Enable();
+		break;
+		
 }
-void UART_EEPROM_Delete_All_Users(){
-	for(uint8 id = 0;id<4;id++){
-		if(EEPROM_Delete_User(id)){
-			UART_Send_String_Polling_8("UserID: ");
-			UART_Send_Byte_Polling_8(id);
-			UART_Send_String_Polling_8(" Successfully\n");
-		}
-	}
-	UART_Send_String_Polling_8("Deleted All Users Successfully \n");
+
 }
 
 
@@ -436,25 +475,29 @@ void UART_EEPROM_Delete_All_Users(){
 
 
 
-
-
-
-
-void UART_Show_Options(){
-	
-}
-
-
-
-void UART_Get_User_Pass(){
-	uint8 *username[8];
-	uint8 *password[8];
+uint8 UART_Get_User_Pass(){
+	sint8 EEPROM_username[8];
+	sint8 EEPROM_password[8];
+	uint8 Entered_UserID;
+	uint8 Entered_password[8];
 	UART_Send_String_Polling_8("Please Enter UserID:");
 	// RECEIVE USER ID
+	
 	// SEARCH USER ID
+	if(EEPROM_Read_User(Entered_UserID,EEPROM_username) == 0){
+		//User Does not Exist
+	}else{
+		//User Exists
+	}
 	UART_Send_String_Polling_8("Please Enter Password:");
 	// RECEIVE PASSWORD
+	
 	// COMPARE PASSWORD
+	if(EEPROM_Read_Password(Entered_UserID,EEPROM_password) == 0){
+		//User Does not Exist
+		}else{
+		//User Exists
+	}
 	uint8 UserID_state;
 	// 250 means failed to login
 	// 0 means admin login success
@@ -462,116 +505,82 @@ void UART_Get_User_Pass(){
 	return UserID_state;
 }
 
-void UART_Control_Leds(){
-	UART_Send_String_Polling_8("Led 1 : (11)On, (01)Off \n");
-	UART_Send_String_Polling_8("Led 2 : (12)On, (02)Off \n");
-	UART_Send_String_Polling_8("Led 3 : (13)On, (03)Off \n");
-	UART_Send_String_Polling_8("Led 4 : (14)On, (04)Off \n");
-	UART_Send_String_Polling_8("Led 5 : (15)On, (05)Off \n");
-	//RECEIVE
-	//RETURN
-}
-void UART_Control_AC(){
-	UART_Send_String_Polling_8("(1) AC Auto \n");
-	UART_Send_String_Polling_8("(2) AC Manual Turn Off \n");
-	UART_Send_String_Polling_8("(3) AC Manual Turn On  \n");
-	//RECEIVE
-	//RETURN
-}
-void UART_Control_Door(){
-	UART_Send_String_Polling_8("(1) Open Door Lock \n");
-	UART_Send_String_Polling_8("(2) Close Door Lock \n");
-	//RECEIVE
-	//RETURN
-}
-void UART_Control_Dimmer(){
-	UART_Send_String_Polling_8("(1) Dimmer Up \n");
-	UART_Send_String_Polling_8("(2) Dimmer Down \n");
-	UART_Send_String_Polling_8("(3) Dimmer Off \n");
-	UART_Send_String_Polling_8("(4) Dimmer On \n");
-	//RECEIVE
-	//RETURN
-}
-void UART_Control_Appliances(){
-	UART_Send_String_Polling_8("(1) Control Leds \n");
-	UART_Send_String_Polling_8("(2) Control AC \n");
-	UART_Send_String_Polling_8("(3) Control Door \n");
-	UART_Send_String_Polling_8("(4) Control Dimmer \n");
-	//RECEIVE
-	//RETURN
-}
-void UART_UserManagement(){
-	UART_Send_String_Polling_8("(1) Show Users list \n");
-	UART_Send_String_Polling_8("(2) Create New User \n");
-	UART_Send_String_Polling_8("(3) Delete Existing User \n");
-	UART_Send_String_Polling_8("(4) Delete All Users \n");
-	UART_Send_String_Polling_8("(5) Change User Password \n");
-	UART_Send_String_Polling_8("(6) Change User Username \n");
-	//RECEIVE
-	//RETURN
+
+
+
+void UART_EEPROM_Reg_New_User(){
+	//EEPROM_Reg_New_User();
 }
 
 
-void UART_MainMenu(){
-	UART_Send_String_Polling_8("Choose Option: \n");
-	UART_Send_String_Polling_8("(1) Control Appliances \n");
-	UART_Send_String_Polling_8("(2) User Management \n");
-	UART_Send_String_Polling_8("(3) Settings \n");
-	//RECEIVE
-	//RETURN
-}
-
-void UART_Settings(){
-	UART_Send_String_Polling_8("(1) Test for more options \n");
-	UART_Send_String_Polling_8("(2) Factory Reset \n");
-	//RECEIVE
-	//RETURN
-}
-
+/*
 void UART_Handler(){
 	uint8 UserID = 200;
 	// Ask for login 3 times if not lock the system
 	for(int i =0; i < 3;i++)
 	{
-		if(i != 0) 
+		if(i != 0 && UserID == 250) 
 		{
 			UART_Send_String_Polling_8("Login Failed Please Try Again \n");
 		}
 		UserID = UART_Get_User_Pass();
-		if(UserID != 250){
+		if(UserID != 250 && UserID != 200){
 			// Means login success and returned the UserID
 			break;
 		}
 	}
-	if(UserID == 200)
-	{
-		// ERROR Goes Here
-	}
+	
+	if(UserID == 200){}// ERROR Goes Here
 	else if(UserID == 250)
 	{
-		// Login Failed 3 times
-		// Break the system Here
+		// Login Failed 3 times Break the system Here
+		BUZZER_ALARM_TILL_RESET();
 	}
 	else{
-		uint8 Choice = 0;
+		uint8 Choice_1 = 0, Choice_2 = 0, Choice_3 = 0;
+
 		UART_Send_String_Polling_8("Login Success \n");
-		Choice = UART_MainMenu();
-		while(Choice > 3 && Choice < 1){
-			Choice = UART_MainMenu();
+		UART_Show_MainMenu();
+		//Something here will change choice
+		while(Choice_1 > 3 && Choice_1 < 1)
+			UART_Show_MainMenu();
+			//Something here will change choice
+		switch(Choice_1){
+			case 1: 
+				UART_Show_Control_Appliances();
+				//Something here will change choice
+				switch(Choice_2){
+					case 1: UART_Show_Control_Leds(); break;
+					case 2: UART_Show_Control_AC(); break;
+					case 3: UART_Show_Control_Door(); break;
+					case 4: UART_Show_Control_Dimmer(); break;
+				}
+				break;
+			case 2: 
+				UART_Show_UserManagement();
+				//Something here will change choice
+				switch(Choice_2){
+					case 1: UART_Show_User_List(); break; // Only show no interaction Needed
+					case 2: UART_EEPROM_Reg_New_User(); break;
+					case 3: UART_Show_Control_Door(); break;
+					case 4: UART_EEPROM_Delete_All_Users(); break; // Only show no interaction Needed
+					case 5: UART_Show_Control_Dimmer(); break;
+					case 6: UART_Show_Control_Dimmer(); break;
+				}
+				break;
+			case 3: 
+					UART_Show_Settings();
+					//Something here will change choice
+					switch(Choice_3){
+						case 1:  break; 
+						case 2:  break;
+					}
+					break;
 		}
-		
-			
-		switch(Choice){
-			case 1: Choice = UART_Control_Appliances(); break;
-			case 2: Choice = UART_UserManagement(); break;
-			case 3: Choice = UART_Settings(); break;
-		}
-
 	}
-	UART_Control_Leds();UART_Control_AC();UART_Control_Door();
-
 }
 
+*/
 
 void Smart_Idle(){
     // There are 3 things should always work at idle

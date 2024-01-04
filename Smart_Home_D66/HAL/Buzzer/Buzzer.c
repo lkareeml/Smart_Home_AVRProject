@@ -26,7 +26,7 @@ void BUZZER_Off()
 
 void BUZZER_ALARM_TILL_RESET()
 {
-	BUZZER_On();
 	GIE_Disable();
+	BUZZER_On();
 	while(1);
 }

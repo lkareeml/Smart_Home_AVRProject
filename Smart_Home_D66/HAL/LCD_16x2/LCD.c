@@ -157,3 +157,46 @@ void LCD_Send_String(sint8 * str){
 	}
 	_delay_ms(5);
 }
+
+
+
+void LCD_Show_Welcome(){
+	//  [Welcome To *****]
+	//  [Kiak Smart home*]
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("Welcome To      ");
+	LCD_Send_String("Smart home App  ");
+}
+
+void LCD_Show_Welcome_User(){
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("Welcome Back!   ");
+	LCD_Send_String("Username        ");
+}
+void LCD_Show_WrongUser(){
+	//In case you Can't find username :
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("Wrong User      ");
+	LCD_Send_String("                ");
+}
+void LCD_Show_WrongPassword(){
+	//In case Wrong Password :
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("Wrong Password  ");
+	LCD_Send_String("                ");
+}
+void LCD_Show_Main_Options(){
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("(1)AC  (2)User  ");
+	LCD_Send_String("(3)Led (4)Dimmer");
+}
+void LCD_Show_Choose_LED(){
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("Led No.(1)(2)(3)");
+	LCD_Send_String("(4)(5)   (0)Exit");
+}
+void LCD_Show_Choose_Dimmer(){
+	LCD_Send_Clear_Screen();
+	LCD_Send_String("Dimmer Higher(1)");
+	LCD_Send_String("(0)Low   (9)Exit");
+}

@@ -60,8 +60,6 @@ void  EEPROM_Write_Byte(uint16 Address , uint8 Data){
 	}
 }
 
-
-
 //strlen() function doesn't count the null character \0
 
 uint16 EEPROM_Write_String(uint16 Address , sint8* String){
@@ -112,14 +110,80 @@ uint32 EEPROM_Read_Number_32(uint16 Address){
 
 
 
-
-
-
-
-
-
-
-
+uint8 EEPROM_Reg_New_User(uint8 UserID, sint8 * Username, sint8 * Password){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) != 0){
+		return 0; // Means User already exist
+	}
+	else{// User does not exist, Create the user
+		EEPROM_Write_Byte(Marker,UserID);
+		EEPROM_Write_String((Marker+1),Password);
+		EEPROM_Write_Byte(Marker+9, 0 );
+		EEPROM_Write_String((Marker+10),Username);
+		EEPROM_Write_Byte(Marker+18, 0 );
+		EEPROM_Write_Byte(Marker+19, 0 );
+		return 1;// Means User Successfully Registered
+	}
+}
+uint8 EEPROM_Edit_User_Password(uint8 UserID,sint8 * Password){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Does not exist
+	}
+	else{// User does exist, Change Password
+		for(uint16 Address =(Marker+1);Address<=(Marker+9);Address++)
+		{
+			EEPROM_Write_Byte(Address,0);
+		}
+		EEPROM_Write_String((Marker+1),Password);
+		return 1;// Means User Successfully Change Password
+	}
+}
+uint8 EEPROM_Edit_User_Username(uint8 UserID,sint8 * Username){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Does not exist
+	}
+	else{// User does exist, Change Password
+		for(uint16 Address =(Marker+10);Address<=(Marker+18);Address++)
+		{
+			EEPROM_Write_Byte(Address,0);
+		}
+		EEPROM_Write_String((Marker+10),Username);
+		return 1;// Means User Successfully Change Password
+	}
+}
+uint8 EEPROM_Read_User(uint8 UserID,sint8 * Username){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Dose Not exist
+		}else{
+		EEPROM_Read_String(Marker+10,Username);
+		return 1;
+	}
+}
+uint8 EEPROM_Read_Password(uint8 UserID,sint8 * Password){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Dose Not exist
+		}else{
+		EEPROM_Read_String(Marker+1,Password);
+		return 1;
+	}
+}
+uint8 EEPROM_Delete_User(uint8 UserID){
+	uint16 Marker = (UserID*20) + 10;
+	if(EEPROM_Read_Byte(Marker) == 0){
+		return 0; // Means User Dose Not exist
+	}
+	else{
+		for(uint16 Address = Marker; Address < (Marker + 20);Address++)
+		{
+			EEPROM_Write_Byte(Address,0);
+		}
+		return 1;// Means User Deleted Successfully
+	}
+}
 
 
 

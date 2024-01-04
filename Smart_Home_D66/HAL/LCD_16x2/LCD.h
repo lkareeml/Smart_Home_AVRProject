@@ -22,4 +22,14 @@ void LCD_Send_Clear_Screen();
 void LCD_Cursor_Shift(Dir Direction);
 void LCD_Delete_Last_Written();
 void LCD_Position_Handler(Dir Direction);
+
+
+
+void LCD_Show_Welcome();
+void LCD_Show_Welcome_User();
+void LCD_Show_WrongUser();
+void LCD_Show_WrongPassword();
+void LCD_Show_Main_Options();
+void LCD_Show_Choose_LED();
+void LCD_Show_Choose_Dimmer();
 #endif /* DRIVERS_HAL_LCD_LCD_H_ */

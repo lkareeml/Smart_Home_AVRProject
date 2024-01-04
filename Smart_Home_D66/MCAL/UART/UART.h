@@ -70,4 +70,17 @@ void   UART_Recieve_String_8(sint8 *String);
 void   UART_Send_Number_Polling_32(uint32 Number);
 uint32 UART_Recieve_Number_Polling_32(void);
 
+
+void UART_Show_Invalid();
+void UART_Show_MainMenu();
+void UART_Show_Control_Appliances();
+void UART_Show_Control_Leds();
+void UART_Show_Control_AC();
+void UART_Show_Control_Door();
+void UART_Show_Control_Dimmer();
+void UART_Show_UserManagement();
+void UART_Show_Settings();
+void UART_Show_User_List();
+void UART_EEPROM_Delete_All_Users();
+
 #endif /* UART_H_ */
