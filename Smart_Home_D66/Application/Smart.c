@@ -334,7 +334,7 @@ interrupt(){
 switch(global_Flag){
 	case 1:
 		GIE_Disable();
-		UART_Send_String_Polling_8("Please Enter UserID:\n");
+		UART_Show_Request_UserID();
 		global_Flag++;
 		GIE_Enable();
 		break;
@@ -344,7 +344,7 @@ switch(global_Flag){
 		if(EEPROM_Read_User(global_UART_UserID,global_UART_Username) == 0){
 			//User Does not Exist
 		}
-		UART_Send_String_Polling_8("Please Enter Password:\n");
+		UART_Show_Request_Password();
 		global_Flag++;
 		GIE_Enable();
 		break;
@@ -356,22 +356,7 @@ switch(global_Flag){
 		}
 		else{
 			//User Exists and password compare here
-			if(strcmp(global_EEPROM_Password,global_UART_Password)==0)
-			{
-				UART_Send_String_Polling_8("Welcome Back! ");
-				UART_Send_String_Polling_8(global_UART_Username);
-				UART_Show_MainMenu();
-				global_Flag++;
-			}else{
-				global_UART_Login_failed++;
-				if(global_UART_Login_failed >= 4)
-				{
-					UART_Send_String_Polling_8("Login Failed, Contact admin immediately!! \n");
-					BUZZER_ALARM_TILL_RESET();break;
-				}
-				UART_Send_String_Polling_8("Login Failed, Try again! \n");
-				global_Flag=-2;
-			}
+			UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password);
 		}
 		GIE_Enable();
 		break;
@@ -387,11 +372,7 @@ switch(global_Flag){
 		}
 		else
 		{
-			switch(choice_1){
-				case 1:UART_Show_Control_Appliances();break;
-				case 2:UART_Show_UserManagement();break;
-				case 3:UART_Show_Settings();break;
-			}
+			UART_Show_MainMenu_Inside(choice_1);
 			global_Flag++;
 		}
 		GIE_Enable();
@@ -403,48 +384,32 @@ switch(global_Flag){
 		if(choice_2 > 6 && choice_2 < 1)
 		{
 			UART_Show_Invalid();
-			switch(choice_1){
-				case 1:UART_Show_Control_Appliances();break;
-				case 2:UART_Show_UserManagement();break;
-				case 3:UART_Show_Settings();break;
-			}
-			break;
+			UART_Show_MainMenu_Inside(choice_1);
 		}
 		else
 		{
 			switch(choice_1){
 				case 1:			
-					switch(choice_2){
-						case 1:UART_Show_Control_Leds();break;
-						case 2:UART_Show_Control_AC();break;
-						case 3:
-							if(global_UART_UserID[0]-48 == 0){UART_Show_Control_Door();}
-						else
-						{
-							UART_Send_String_Polling_8("Auth Denied, Please ask Admin!");
-							UART_Show_Control_Appliances();
-						}
-						break;
-						case 4:UART_Show_Control_Dimmer();break;
-						case 5:UART_Show_Invalid();break;
-						case 6:UART_Show_Invalid();break;
-					}
+					UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * global_UART_UserID);
 					break;
 				case 2:					
 				switch(choice_2){
-					case 1:UART_Show_User_List();break;
+					case 1:
+						UART_Show_User_List();
+						
+						break;
 					case 2:
-						// Create NEW USER
+						// Create NEW USER global_Flag++;
 					break;
 					case 3:
-						//Delete Existing User
+						//Delete Existing User global_Flag++;
 					break;
 					case 4:UART_EEPROM_Delete_All_Users();break;
 					case 5:
-						//Change User Password
+						//Change User Password global_Flag++;
 					break;
 					case 6:	
-						//Change User Username
+						//Change User Username global_Flag++;
 					break;
 				}
 				break;
@@ -460,10 +425,14 @@ switch(global_Flag){
 				break;
 			}
 		}
-		
 		GIE_Enable();
 		break;
 		
+	case 6:
+		GIE_Disable();
+	
+		GIE_Enable();
+		break;
 }
 
 }

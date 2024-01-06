@@ -71,6 +71,11 @@ void   UART_Send_Number_Polling_32(uint32 Number);
 uint32 UART_Recieve_Number_Polling_32(void);
 
 
+void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password);
+void UART_Show_MainMenu_Inside(uint8 choice_1);
+void UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * global_UART_UserID);
+
+
 void UART_Show_Invalid();
 void UART_Show_MainMenu();
 void UART_Show_Control_Appliances();

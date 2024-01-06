@@ -332,21 +332,70 @@ uint32 UART_Recieve_Number_Polling_32(void){
 
 
 
+void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password){
+	if(strcmp(global_EEPROM_Password,global_UART_Password)==0)
+	{
+		UART_Send_String_Polling_8("Welcome Back! ");
+		UART_Send_String_Polling_8(global_UART_Username);
+		UART_Show_MainMenu();
+		(*global_Flag)++;
+		}else{
+		global_UART_Login_failed++;
+		if(global_UART_Login_failed >= 4)
+		{
+			UART_Send_String_Polling_8("Login Failed, Contact admin immediately!! \n");
+			BUZZER_ALARM_TILL_RESET();break;
+		}
+		UART_Send_String_Polling_8("Login Failed, Try again! \n");
+		UART_Show_Request_UserID();
+		(*global_Flag)=-2;
+	}
+}
 
 
-
-
-
-
-
-
-
-void UART_Show_Invalid(){
-	UART_Send_String_Polling_8("Invalid input Please try Again \n");
+void UART_Show_MainMenu_Inside(uint8 choice_1){
+	switch(choice_1){
+		case 1:UART_Show_Control_Appliances();break;
+		case 2:UART_Show_UserManagement();break;
+		case 3:UART_Show_Settings();break;
+	}
 }
 
 
 
+void UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * global_UART_UserID){
+	switch(choice_2){
+		case 1:UART_Show_Control_Leds();global_Flag++;break;
+		case 2:UART_Show_Control_AC();global_Flag++;break;
+		case 3:
+		if(global_UART_UserID[0]-48 == 0){UART_Show_Control_Door();global_Flag++;}
+		else
+		{
+			UART_Send_String_Polling_8("Auth Denied, Please ask Admin!");
+			UART_Show_Control_Appliances();
+		}
+		break;
+		case 4:UART_Show_Control_Dimmer();global_Flag++;break;
+		case 5:UART_Show_Invalid();break;
+		case 6:UART_Show_Invalid();break;
+	}				
+}
+
+
+void UART_Show_UserManagement_Inside(){
+	
+}
+
+
+void UART_Show_Request_UserID(){
+	UART_Send_String_Polling_8("Please Enter UserID:\n");
+}
+void UART_Show_Request_Password(){
+	UART_Send_String_Polling_8("Please Enter Password:\n");
+}
+void UART_Show_Invalid(){
+	UART_Send_String_Polling_8("Invalid input Please try Again \n");
+}
 
 void UART_Show_MainMenu(){
 	UART_Send_String_Polling_8("Choose Option: \n");
@@ -409,7 +458,7 @@ void UART_Show_User_List(){
 	}
 }
 void UART_EEPROM_Delete_All_Users(){
-	for(uint8 id = 0;id<4;id++){
+	for(uint8 id = 1;id<4;id++){
 		if(EEPROM_Delete_User(id)){
 			UART_Send_String_Polling_8("UserID: ");
 			UART_Send_Byte_Polling_8(id);
