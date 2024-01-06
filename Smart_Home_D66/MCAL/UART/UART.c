@@ -9,8 +9,10 @@
 #include "../../Bit_Manipulation.h"
 #include "../../AVR32_Reg_Private.h"
 #include "../../HAL/EEPROM/EEPROM.h"
+#include "../../HAL/Buzzer/Buzzer.h"
 #include "UART.h"
 #include <stdio.h>
+#include <string.h>
 
 void UART_Dynamic_INIT(uint8 CommSize, uint8 SyncMode, uint8 SyncPolarity, uint8 ParityMode, uint8 Stopbit, uint8 X2SpeedMode, uint32 baudRate) {
 	//Setting Communication Character Size:
@@ -184,11 +186,11 @@ void UART_Send_String_Polling_8(sint8 * String) {
 	}
 }
 
-
-
-static uint8 Global_UART_count = 0;
-static uint8 Global_UART_Array[9];
-static uint8 Global_UART_Send_Response_State = 0;
+// 
+// 
+// static uint8 Global_UART_count = 0;
+// static uint8 Global_UART_Array[9];
+// static uint8 Global_UART_Send_Response_State = 0;
 
 // 0 means nothing send nothing to receive
 // 1 means Sending now
@@ -197,19 +199,19 @@ static uint8 Global_UART_Send_Response_State = 0;
 // 4 means Sent and Got Reply Processed
 // 10 means Idle
 
-void Reset_UART_Counter(){
-	Global_UART_count = 0;
-}
-void Reset_UART_VARS(){
-	Global_UART_count = 0;
-	for(int i =0;i<9;i++){
-		Global_UART_Array[i] = 0;
-	}
-}
-
-void UART_Choice_Handler(){
-	
-}
+// void Reset_UART_Counter(){
+// 	Global_UART_count = 0;
+// }
+// void Reset_UART_VARS(){
+// 	Global_UART_count = 0;
+// 	for(int i =0;i<9;i++){
+// 		Global_UART_Array[i] = 0;
+// 	}
+// }
+// 
+// void UART_Choice_Handler(){
+// 	
+// }
 // 
 // void UART_Interrupt_Handler(USART0_RX_vect){
 // 	Global_UART_Array[Global_UART_count] = UDR_Reg;
@@ -332,19 +334,21 @@ uint32 UART_Recieve_Number_Polling_32(void){
 
 
 
-void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password){
+void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password,uint8 * FailCount){
 	if(strcmp(global_EEPROM_Password,global_UART_Password)==0)
 	{
 		UART_Send_String_Polling_8("Welcome Back! ");
 		UART_Send_String_Polling_8(global_UART_Username);
 		UART_Show_MainMenu();
 		(*global_Flag)++;
-		}else{
-		global_UART_Login_failed++;
-		if(global_UART_Login_failed >= 4)
+	}
+	else
+	{
+		(*FailCount)++;
+		if((*FailCount) >= 4)
 		{
 			UART_Send_String_Polling_8("Login Failed, Contact admin immediately!! \n");
-			BUZZER_ALARM_TILL_RESET();break;
+			BUZZER_ALARM_TILL_RESET();
 		}
 		UART_Send_String_Polling_8("Login Failed, Try again! \n");
 		UART_Show_Request_UserID();
@@ -356,29 +360,28 @@ void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * 
 void UART_Show_MainMenu_Inside(uint8 choice_1){
 	switch(choice_1){
 		case 1:UART_Show_Control_Appliances();break;
-		case 2:UART_Show_UserManagement();break;
-		case 3:UART_Show_Settings();break;
+		case 2:UART_Show_Settings();break;
 	}
 }
 
 
 
-void UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * global_UART_UserID){
+void UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * UART_UserID, uint8 * global_Flag){
 	switch(choice_2){
 		case 1:UART_Show_Control_Leds();global_Flag++;break;
 		case 2:UART_Show_Control_AC();global_Flag++;break;
 		case 3:
-		if(global_UART_UserID[0]-48 == 0){UART_Show_Control_Door();global_Flag++;}
+		if(UART_UserID[0]-48 == 0){UART_Show_Control_Door();global_Flag++;}
 		else
 		{
-			UART_Send_String_Polling_8("Auth Denied, Please ask Admin!");
+			UART_Send_String_Polling_8("Auth Denied, Please ask Admin! \n");
 			UART_Show_Control_Appliances();
 		}
 		break;
 		case 4:UART_Show_Control_Dimmer();global_Flag++;break;
 		case 5:UART_Show_Invalid();break;
 		case 6:UART_Show_Invalid();break;
-	}				
+	}
 }
 
 
@@ -431,17 +434,12 @@ void UART_Show_Control_Dimmer(){
 	UART_Send_String_Polling_8("(3) Dimmer Off \n");
 	UART_Send_String_Polling_8("(4) Dimmer On \n");
 }
-void UART_Show_UserManagement(){
+void UART_Show_Settings(){
 	UART_Send_String_Polling_8("(1) Show Users list \n");
 	UART_Send_String_Polling_8("(2) Create New User \n");
 	UART_Send_String_Polling_8("(3) Delete Existing User \n");
 	UART_Send_String_Polling_8("(4) Delete All Users \n");
-	UART_Send_String_Polling_8("(5) Change User Password \n");
-	UART_Send_String_Polling_8("(6) Change User Username \n");
-}
-void UART_Show_Settings(){
-	UART_Send_String_Polling_8("(1) Test for more options \n");
-	UART_Send_String_Polling_8("(2) Factory Reset \n");
+	UART_Send_String_Polling_8("(5) Factory Reset \n");
 }
 
 

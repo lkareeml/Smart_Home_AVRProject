@@ -105,6 +105,7 @@ Login system admin and user “admin is remoted only.
 #include "Smart.h"                                          //Done
 #include <stdlib.h>
 #include <string.h>
+#include <avr/interrupt.h>
 
 /****************      Buzzer Include               ********************/
 #include "../HAL/Buzzer/Buzzer.h"                      //Done
@@ -115,7 +116,7 @@ Login system admin and user “admin is remoted only.
 /****************      5 Leds Include               ********************/
 #include "../HAL/Leds_5/Leds.h"                        //Done
 /****************      EEPROM Include               ********************/
-#include "../HAL/EEPROM/EEPROM.h"                      //NEEDS EDIT
+#include "../HAL/EEPROM/EEPROM.h"                      //Done
 /****************      LCD Include                  ********************/
 #include "../HAL/LCD_16x2/LCD.h"                       //NEEDS EDIT
 /****************      Door Servo Include           ********************/
@@ -306,11 +307,9 @@ void Factory_Reset(){
 // UART_Show_User_List();
 // UART_EEPROM_Delete_All_Users();
 
-
-uint8 Global_UART_Flag_Username =0;
-uint8 Global_UART_Flag_Password =0;
-
-
+// 
+// uint8 UART_Flag_Username =0;
+// uint8 UART_Flag_Password =0;
 
 
 // step 1 user_id
@@ -321,50 +320,60 @@ uint8 Global_UART_Flag_Password =0;
 
 
 uint8 global_Flag;
-uint8 global_UART_Login_failed = 0;
-sint8 global_UART_UserID[2];
-sint8 global_UART_Username[8];
-sint8 global_UART_Password[8];
-sint8 global_EEPROM_Password[8];
-sint8 global_UART_Choice_1[2];
-sint8 global_UART_Choice_2[2];
-sint8 global_UART_Choice_3[2];
+uint8 FailCount = 0;
+sint8 UART_UserID[2];
+sint8 EEPROM_Username[8];
+sint8 UART_Password[8];
+sint8 EEPROM_Password[8];
+sint8 UART_Choice_1[2];
+sint8 UART_Choice_2[2];
+sint8 UART_Choice_3[2];
+uint8 global_choice_1=0;
+uint8 global_choice_2=0;
+uint8 global_choice_3=0;
 
-interrupt(){
+void SMART_UART_Interrupt(USART0_RX_vect){
 switch(global_Flag){
-	case 1:
+	case 1:// The app Just Started and User Not loggedIn and user sent anything
 		GIE_Disable();
 		UART_Show_Request_UserID();
 		global_Flag++;
 		GIE_Enable();
 		break;
-	case 2: //we got user input for userID now we manage it
+		
+	case 2: // we got user input for userID now we validate it
 		GIE_Disable();
-		UART_Recieve_String_8(global_UART_UserID);
-		if(EEPROM_Read_User(global_UART_UserID,global_UART_Username) == 0){
+		UART_Recieve_String_8(UART_UserID);
+		if(EEPROM_Read_User(UART_UserID[0],EEPROM_Username) == 0){
 			//User Does not Exist
 		}
 		UART_Show_Request_Password();
 		global_Flag++;
 		GIE_Enable();
 		break;
-	case 3:
+		
+	case 3:// We getting password, We look for password in EEPROM, compare, User login
 		GIE_Disable();
-		UART_Recieve_String_8(global_UART_Password);
-		if(EEPROM_Read_Password(global_UART_UserID,global_EEPROM_Password) == 0){
+		//Clear password for safety
+		for(int i=0;i<8;i++) {
+			EEPROM_Password[i] = 0;
+		}
+		UART_Recieve_String_8(UART_Password);
+		if(EEPROM_Read_Password(UART_UserID[0],EEPROM_Password) == 0){
 			//Password Does not Exist
 		}
 		else{
 			//User Exists and password compare here
-			UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password);
+			UART_User_Login(&global_Flag, EEPROM_Username, EEPROM_Password, UART_Password, &FailCount);
 		}
 		GIE_Enable();
 		break;
-	case 4:
+		
+	case 4:// User Logged in success, Showed main menu, process user choice 1 from MainMenu
 		GIE_Disable();
-		UART_Recieve_String_8(global_UART_Choice_1);
-		uint8 choice_1 = (global_UART_Choice_1[0]-48);
-		if(choice_1 > 3 && choice_1 < 1)
+		UART_Recieve_String_8(UART_Choice_1);
+		global_choice_1 = (UART_Choice_1[0]-48);
+		if(global_choice_1 > 3 && global_choice_1 < 1)
 		{
 			UART_Show_Invalid();
 			UART_Show_MainMenu();
@@ -372,63 +381,50 @@ switch(global_Flag){
 		}
 		else
 		{
-			UART_Show_MainMenu_Inside(choice_1);
+			UART_Show_MainMenu_Inside(global_choice_1);
 			global_Flag++;
 		}
 		GIE_Enable();
 		break;
-	case 5:
+		
+	case 5:// User made choice 2 from
 		GIE_Disable();
-		UART_Recieve_String_8(global_UART_Choice_2);
-		uint8 choice_2 = (global_UART_Choice_2[0]-48);
+		UART_Recieve_String_8(UART_Choice_2);
+		uint8 choice_2 = (UART_Choice_2[0]-48);
 		if(choice_2 > 6 && choice_2 < 1)
 		{
 			UART_Show_Invalid();
-			UART_Show_MainMenu_Inside(choice_1);
+			UART_Show_MainMenu_Inside(global_choice_1);
 		}
-		else
-		{
-			switch(choice_1){
-				case 1:			
-					UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * global_UART_UserID);
+		if(global_choice_1 == 1){
+				UART_Show_Control_Appliances_Inside(choice_2,UART_UserID,&global_Flag);
+		}
+		else if(global_choice_1 == 2){	
+			switch(choice_2){
+				case 1:
+					UART_Show_User_List(); 
+					UART_Show_MainMenu();
+					global_Flag = 4;
 					break;
-				case 2:					
-				switch(choice_2){
-					case 1:
-						UART_Show_User_List();
-						
-						break;
-					case 2:
-						// Create NEW USER global_Flag++;
-					break;
-					case 3:
-						//Delete Existing User global_Flag++;
-					break;
-					case 4:UART_EEPROM_Delete_All_Users();break;
-					case 5:
-						//Change User Password global_Flag++;
-					break;
-					case 6:	
-						//Change User Username global_Flag++;
-					break;
-				}
+				case 2:
+					// Create NEW USER global_Flag++;
+					
 				break;
-				case 3:	
-				switch(choice_2){
-					case 1:
-						//Test more options
-					break;
-					case 2:
-						// Factory Reset
-					break;
-				}
+				case 3:
+					//Delete Existing User global_Flag++;
+					
+					
+				break;
+				case 4:UART_EEPROM_Delete_All_Users();break;
+				case 5:
+					// Factory Reset
 				break;
 			}
 		}
 		GIE_Enable();
 		break;
-		
-	case 6:
+			
+	case 6:// User extended choice
 		GIE_Disable();
 	
 		GIE_Enable();
@@ -442,7 +438,7 @@ switch(global_Flag){
 
 
 
-
+/*
 
 uint8 UART_Get_User_Pass(){
 	sint8 EEPROM_username[8];
@@ -474,13 +470,13 @@ uint8 UART_Get_User_Pass(){
 	return UserID_state;
 }
 
-
-
-
 void UART_EEPROM_Reg_New_User(){
 	//EEPROM_Reg_New_User();
 }
 
+
+
+*/
 
 /*
 void UART_Handler(){

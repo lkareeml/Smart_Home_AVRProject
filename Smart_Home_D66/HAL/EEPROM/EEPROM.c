@@ -189,7 +189,10 @@ uint8 EEPROM_Delete_User(uint8 UserID){
 
 
 /* IN PROGRESS */
-void  EEPROM_Remove_Byte(uint16 Address);
+void  EEPROM_Remove_Byte(uint16 Address){
+	EEPROM_Write_Byte(Address,0);
+};
+
 void  EEPROM_Remove_String(uint16 Start_Address, uint16 End_Address);
 void EEPROM_ALL_Wiper(){}
 void EEPROM_Address_Checker(){}

@@ -11,7 +11,7 @@ c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/..
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_clear_bss.o)
                               Application/Smart.o (__do_clear_bss)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strcmp.o)
-                              Application/Smart.o (strcmp)
+                              MCAL/UART/UART.o (strcmp)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(itoa_ncheck.o)
                               Application/Smart.o (__itoa_ncheck)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(utoa_ncheck.o)
@@ -38,19 +38,13 @@ c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/..
 Allocating common symbols
 Common symbol       size              file
 
-global_UART_Choice_3
-                    0x2               Application/Smart.o
-global_UART_Password
-                    0x8               Application/Smart.o
-global_UART_Choice_2
-                    0x2               Application/Smart.o
-global_EEPROM_Password
-                    0x8               Application/Smart.o
-global_UART_UserID  0x2               Application/Smart.o
-global_UART_Username
-                    0x8               Application/Smart.o
-global_UART_Choice_1
-                    0x2               Application/Smart.o
+UART_Choice_1       0x2               Application/Smart.o
+EEPROM_Password     0x8               Application/Smart.o
+UART_Password       0x8               Application/Smart.o
+EEPROM_Username     0x8               Application/Smart.o
+UART_UserID         0x2               Application/Smart.o
+UART_Choice_3       0x2               Application/Smart.o
+UART_Choice_2       0x2               Application/Smart.o
 global_Flag         0x1               Application/Smart.o
 
 Discarded input sections
@@ -69,7 +63,7 @@ Discarded input sections
  .progmem.gcc_sw_table.Appliances_Controller
                 0x00000000       0x10 Application/Smart.o
  .rodata.str1.1
-                0x00000000      0x13c Application/Smart.o
+                0x00000000       0x6d Application/Smart.o
  .text.LCD_GetUserID
                 0x00000000       0x6a Application/Smart.o
  .text.LCD_GetPaswword
@@ -86,30 +80,28 @@ Discarded input sections
                 0x00000000        0x2 Application/Smart.o
  .text.Factory_Reset
                 0x00000000        0x2 Application/Smart.o
- .text.interrupt
-                0x00000000      0x13a Application/Smart.o
- .text.UART_Get_User_Pass
-                0x00000000       0x56 Application/Smart.o
- .text.UART_EEPROM_Reg_New_User
-                0x00000000        0x2 Application/Smart.o
+ .text.SMART_UART_Interrupt
+                0x00000000      0x146 Application/Smart.o
  .text.Smart_Idle
                 0x00000000        0x2 Application/Smart.o
- .bss.global_UART_Login_failed
+ .bss.global_choice_3
                 0x00000000        0x1 Application/Smart.o
- .bss.Global_UART_Flag_Password
+ .bss.global_choice_2
                 0x00000000        0x1 Application/Smart.o
- .bss.Global_UART_Flag_Username
+ .bss.global_choice_1
                 0x00000000        0x1 Application/Smart.o
- .debug_info    0x00000000      0xd67 Application/Smart.o
- .debug_abbrev  0x00000000      0x2e3 Application/Smart.o
- .debug_loc     0x00000000      0x7bc Application/Smart.o
+ .bss.FailCount
+                0x00000000        0x1 Application/Smart.o
+ .debug_info    0x00000000      0xc7c Application/Smart.o
+ .debug_abbrev  0x00000000      0x2d4 Application/Smart.o
+ .debug_loc     0x00000000      0x7c4 Application/Smart.o
  .debug_aranges
-                0x00000000       0x90 Application/Smart.o
- .debug_ranges  0x00000000       0xa0 Application/Smart.o
- .debug_line    0x00000000      0x7a2 Application/Smart.o
- .debug_str     0x00000000      0x763 Application/Smart.o
+                0x00000000       0x80 Application/Smart.o
+ .debug_ranges  0x00000000       0x90 Application/Smart.o
+ .debug_line    0x00000000      0x759 Application/Smart.o
+ .debug_str     0x00000000      0x717 Application/Smart.o
  .comment       0x00000000       0x31 Application/Smart.o
- .debug_frame   0x00000000      0x178 Application/Smart.o
+ .debug_frame   0x00000000      0x14c Application/Smart.o
  COMMON         0x00000000       0x21 Application/Smart.o
  .text          0x00000000        0x0 HAL/AirConditioner/AC.o
  .data          0x00000000        0x0 HAL/AirConditioner/AC.o
@@ -209,20 +201,22 @@ Discarded input sections
                 0x00000000       0x36 HAL/EEPROM/EEPROM.o
  .text.EEPROM_Delete_User
                 0x00000000       0x42 HAL/EEPROM/EEPROM.o
+ .text.EEPROM_Remove_Byte
+                0x00000000        0x8 HAL/EEPROM/EEPROM.o
  .text.EEPROM_ALL_Wiper
                 0x00000000        0x2 HAL/EEPROM/EEPROM.o
  .text.EEPROM_Address_Checker
                 0x00000000        0x2 HAL/EEPROM/EEPROM.o
- .debug_info    0x00000000      0xaff HAL/EEPROM/EEPROM.o
+ .debug_info    0x00000000      0xb44 HAL/EEPROM/EEPROM.o
  .debug_abbrev  0x00000000      0x1a8 HAL/EEPROM/EEPROM.o
- .debug_loc     0x00000000      0xe2b HAL/EEPROM/EEPROM.o
+ .debug_loc     0x00000000      0xe51 HAL/EEPROM/EEPROM.o
  .debug_aranges
-                0x00000000       0x90 HAL/EEPROM/EEPROM.o
- .debug_ranges  0x00000000       0x98 HAL/EEPROM/EEPROM.o
- .debug_line    0x00000000      0x527 HAL/EEPROM/EEPROM.o
- .debug_str     0x00000000      0x5ef HAL/EEPROM/EEPROM.o
+                0x00000000       0x98 HAL/EEPROM/EEPROM.o
+ .debug_ranges  0x00000000       0xa0 HAL/EEPROM/EEPROM.o
+ .debug_line    0x00000000      0x53e HAL/EEPROM/EEPROM.o
+ .debug_str     0x00000000      0x602 HAL/EEPROM/EEPROM.o
  .comment       0x00000000       0x31 HAL/EEPROM/EEPROM.o
- .debug_frame   0x00000000      0x268 HAL/EEPROM/EEPROM.o
+ .debug_frame   0x00000000      0x278 HAL/EEPROM/EEPROM.o
  .text          0x00000000        0x0 HAL/Keypad_4x4/Keypad_4x4.o
  .data          0x00000000        0x0 HAL/Keypad_4x4/Keypad_4x4.o
  .bss           0x00000000        0x0 HAL/Keypad_4x4/Keypad_4x4.o
@@ -601,12 +595,6 @@ Discarded input sections
                 0x00000000        0x8 MCAL/UART/UART.o
  .text.UART_Send_String_Polling_8
                 0x00000000       0x26 MCAL/UART/UART.o
- .text.Reset_UART_Counter
-                0x00000000        0x2 MCAL/UART/UART.o
- .text.Reset_UART_VARS
-                0x00000000       0x10 MCAL/UART/UART.o
- .text.UART_Choice_Handler
-                0x00000000        0x2 MCAL/UART/UART.o
  .text.UART_Receive_Byte_8
                 0x00000000        0x8 MCAL/UART/UART.o
  .text.UART_Receive_CHECK
@@ -614,15 +602,23 @@ Discarded input sections
  .text.UART_Recieve_String_8
                 0x00000000       0x3a MCAL/UART/UART.o
  .rodata.str1.1
-                0x00000000      0x2fc MCAL/UART/UART.o
+                0x00000000      0x34f MCAL/UART/UART.o
  .text.UART_Send_Number_Polling_32
                 0x00000000       0x74 MCAL/UART/UART.o
  .text.UART_Recieve_Number_Polling_32
                 0x00000000        0x8 MCAL/UART/UART.o
+ .text.UART_Show_UserManagement_Inside
+                0x00000000        0x2 MCAL/UART/UART.o
+ .text.UART_Show_Request_UserID
+                0x00000000        0xa MCAL/UART/UART.o
+ .text.UART_Show_Request_Password
+                0x00000000        0xa MCAL/UART/UART.o
  .text.UART_Show_Invalid
                 0x00000000        0xa MCAL/UART/UART.o
  .text.UART_Show_MainMenu
                 0x00000000       0x22 MCAL/UART/UART.o
+ .text.UART_User_Login
+                0x00000000       0x6c MCAL/UART/UART.o
  .text.UART_Show_Control_Appliances
                 0x00000000       0x22 MCAL/UART/UART.o
  .text.UART_Show_Control_Leds
@@ -633,24 +629,26 @@ Discarded input sections
                 0x00000000       0x12 MCAL/UART/UART.o
  .text.UART_Show_Control_Dimmer
                 0x00000000       0x22 MCAL/UART/UART.o
- .text.UART_Show_UserManagement
-                0x00000000       0x32 MCAL/UART/UART.o
+ .text.UART_Show_Control_Appliances_Inside
+                0x00000000       0x56 MCAL/UART/UART.o
  .text.UART_Show_Settings
-                0x00000000       0x12 MCAL/UART/UART.o
+                0x00000000       0x2a MCAL/UART/UART.o
+ .text.UART_Show_MainMenu_Inside
+                0x00000000       0x16 MCAL/UART/UART.o
  .text.UART_Show_User_List
                 0x00000000       0x6a MCAL/UART/UART.o
  .text.UART_EEPROM_Delete_All_Users
                 0x00000000       0x38 MCAL/UART/UART.o
- .debug_info    0x00000000      0xa3f MCAL/UART/UART.o
- .debug_abbrev  0x00000000      0x249 MCAL/UART/UART.o
- .debug_loc     0x00000000      0x52d MCAL/UART/UART.o
+ .debug_info    0x00000000      0xbe3 MCAL/UART/UART.o
+ .debug_abbrev  0x00000000      0x25d MCAL/UART/UART.o
+ .debug_loc     0x00000000      0x916 MCAL/UART/UART.o
  .debug_aranges
-                0x00000000      0x120 MCAL/UART/UART.o
- .debug_ranges  0x00000000      0x110 MCAL/UART/UART.o
- .debug_line    0x00000000      0x676 MCAL/UART/UART.o
- .debug_str     0x00000000      0x57e MCAL/UART/UART.o
+                0x00000000      0x130 MCAL/UART/UART.o
+ .debug_ranges  0x00000000      0x120 MCAL/UART/UART.o
+ .debug_line    0x00000000      0x748 MCAL/UART/UART.o
+ .debug_str     0x00000000      0x620 MCAL/UART/UART.o
  .comment       0x00000000       0x31 MCAL/UART/UART.o
- .debug_frame   0x00000000      0x2c0 MCAL/UART/UART.o
+ .debug_frame   0x00000000      0x300 MCAL/UART/UART.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_udivmodsi4.o)
