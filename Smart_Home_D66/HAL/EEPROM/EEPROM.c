@@ -36,7 +36,7 @@ uint8 EEPROM_Read_Byte(uint16 Address){
 			}
 		}
 	}
-	_delay_ms(10);
+	_delay_ms(5);
 	return Data;
 }
 
@@ -53,7 +53,7 @@ void  EEPROM_Write_Byte(uint16 Address , uint8 Data){
 				TWI_Send_Data(Data);
 				if(TWI_Check_Status(MSTR_T_DATA_ACK)){
 					TWI_Send_Stop();
-					_delay_ms(10);
+					_delay_ms(5);
 				}
 			}
 		}

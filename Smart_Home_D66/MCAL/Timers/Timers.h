@@ -59,13 +59,13 @@
 
 /**************************    Configuration    ******************************/
 //    Timer_Normal   Timer_CTC   Timer_FastPWM   Timer_PhasePWM
-#define Timer0_Mode            Timer_M_Normal
+#define Timer0_Mode            Timer_M_PhasePWM
 #define Timer2_Mode            Timer_M_CTC
 //    Timer_Pre_1,8,64,256,1024
 #define Timer0_PreScaler    Timer_Pre_1
 #define Timer2_PreScaler    Timer_Pre_1024
 //    Timer_PinOFF    Timer_PinCLEAR    Timer_PinTOGGLE    Timer_PinSET
-#define Timer0_OC0_Pin        Timer_PinOFF
+#define Timer0_OC0_Pin        Timer_PinSET
 #define Timer2_OC2_Pin        Timer_PinOFF
 /********************************    Timer 1    ************************************/
 // OC2 == PD7 // OC1B == PD4 // OC1A == PD5 // OC0 == PB3 //

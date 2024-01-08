@@ -10,6 +10,8 @@
 #define DIMMER_H_
 
 
+void activate_bulbs(void);
+void light_bulb(int status);
 
 
 

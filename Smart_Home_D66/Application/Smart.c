@@ -333,103 +333,103 @@ uint8 global_choice_2=0;
 uint8 global_choice_3=0;
 
 void SMART_UART_Interrupt(USART0_RX_vect){
-switch(global_Flag){
-	case 1:// The app Just Started and User Not loggedIn and user sent anything
-		GIE_Disable();
-		UART_Show_Request_UserID();
-		global_Flag++;
-		GIE_Enable();
-		break;
-		
-	case 2: // we got user input for userID now we validate it
-		GIE_Disable();
-		UART_Recieve_String_8(UART_UserID);
-		if(EEPROM_Read_User(UART_UserID[0],EEPROM_Username) == 0){
-			//User Does not Exist
-		}
-		UART_Show_Request_Password();
-		global_Flag++;
-		GIE_Enable();
-		break;
-		
-	case 3:// We getting password, We look for password in EEPROM, compare, User login
-		GIE_Disable();
-		//Clear password for safety
-		for(int i=0;i<8;i++) {
-			EEPROM_Password[i] = 0;
-		}
-		UART_Recieve_String_8(UART_Password);
-		if(EEPROM_Read_Password(UART_UserID[0],EEPROM_Password) == 0){
-			//Password Does not Exist
-		}
-		else{
-			//User Exists and password compare here
-			UART_User_Login(&global_Flag, EEPROM_Username, EEPROM_Password, UART_Password, &FailCount);
-		}
-		GIE_Enable();
-		break;
-		
-	case 4:// User Logged in success, Showed main menu, process user choice 1 from MainMenu
-		GIE_Disable();
-		UART_Recieve_String_8(UART_Choice_1);
-		global_choice_1 = (UART_Choice_1[0]-48);
-		if(global_choice_1 > 3 && global_choice_1 < 1)
-		{
-			UART_Show_Invalid();
-			UART_Show_MainMenu();
-			break;
-		}
-		else
-		{
-			UART_Show_MainMenu_Inside(global_choice_1);
+	switch(global_Flag){
+		case 1:// The app Just Started and User Not loggedIn and user sent anything
+			GIE_Disable();
+			UART_Show_Request_UserID();
 			global_Flag++;
-		}
-		GIE_Enable();
-		break;
+			GIE_Enable();
+			break;
 		
-	case 5:// User made choice 2 from
-		GIE_Disable();
-		UART_Recieve_String_8(UART_Choice_2);
-		uint8 choice_2 = (UART_Choice_2[0]-48);
-		if(choice_2 > 6 && choice_2 < 1)
-		{
-			UART_Show_Invalid();
-			UART_Show_MainMenu_Inside(global_choice_1);
-		}
-		if(global_choice_1 == 1){
-				UART_Show_Control_Appliances_Inside(choice_2,UART_UserID,&global_Flag);
-		}
-		else if(global_choice_1 == 2){	
-			switch(choice_2){
-				case 1:
-					UART_Show_User_List(); 
-					UART_Show_MainMenu();
-					global_Flag = 4;
-					break;
-				case 2:
-					// Create NEW USER global_Flag++;
-					
-				break;
-				case 3:
-					//Delete Existing User global_Flag++;
-					
-					
-				break;
-				case 4:UART_EEPROM_Delete_All_Users();break;
-				case 5:
-					// Factory Reset
+		case 2: // we got user input for userID now we validate it
+			GIE_Disable();
+			UART_Recieve_String_8(UART_UserID);
+			if(EEPROM_Read_User(UART_UserID[0],EEPROM_Username) == 0){
+				//User Does not Exist
+			}
+			UART_Show_Request_Password();
+			global_Flag++;
+			GIE_Enable();
+			break;
+		
+		case 3:// We getting password, We look for password in EEPROM, compare, User login
+			GIE_Disable();
+			//Clear password for safety
+			for(int i=0;i<8;i++) {
+				EEPROM_Password[i] = 0;
+			}
+			UART_Recieve_String_8(UART_Password);
+			if(EEPROM_Read_Password(UART_UserID[0],EEPROM_Password) == 0){
+				//Password Does not Exist
+			}
+			else{
+				//User Exists and password compare here
+				UART_User_Login(&global_Flag, EEPROM_Username, EEPROM_Password, UART_Password, &FailCount);
+			}
+			GIE_Enable();
+			break;
+		
+		case 4:// User Logged in success, Showed main menu, process user choice 1 from MainMenu
+			GIE_Disable();
+			UART_Recieve_String_8(UART_Choice_1);
+			global_choice_1 = (UART_Choice_1[0]-48);
+			if(global_choice_1 > 3 && global_choice_1 < 1)
+			{
+				UART_Show_Invalid();
+				UART_Show_MainMenu();
 				break;
 			}
-		}
-		GIE_Enable();
-		break;
+			else
+			{
+				UART_Show_MainMenu_Inside(global_choice_1);
+				global_Flag++;
+			}
+			GIE_Enable();
+			break;
+		
+		case 5:// User made choice 2 from
+			GIE_Disable();
+			UART_Recieve_String_8(UART_Choice_2);
+			global_choice_2 = (UART_Choice_2[0]-48);
+			if(global_choice_2 > 6 && global_choice_2 < 1)
+			{
+				UART_Show_Invalid();
+				UART_Show_MainMenu_Inside(global_choice_1);
+			}
+			if(global_choice_1 == 1){
+					UART_Show_Control_Appliances_Inside(global_choice_2,UART_UserID,&global_Flag);
+			}
+			else if(global_choice_1 == 2){	
+				switch(global_choice_2){
+					case 1:
+						UART_Show_User_List(); 
+						UART_Show_MainMenu();
+						global_Flag = 4;// Go back to step 4
+						break;
+					case 2:
+						// Create NEW USER global_Flag++;
+						
+						break;
+					case 3:
+						// Delete Existing User 
+						UART_Show_Request_UserID();
+						global_Flag++;//we need user ID to clear it and delete user
+						break;
+					case 4:UART_EEPROM_Delete_All_Users();break;
+					case 5:
+						// Factory Reset
+						break;
+				}
+			}
+			GIE_Enable();
+			break;
 			
-	case 6:// User extended choice
-		GIE_Disable();
+		case 6:// User extended choice
+			GIE_Disable();
 	
-		GIE_Enable();
-		break;
-}
+			GIE_Enable();
+			break;
+	}
 
 }
 
