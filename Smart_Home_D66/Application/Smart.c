@@ -129,9 +129,7 @@ Login system admin and user “admin is remoted only.
 #include "../HAL/Dimming_Light/Dimmer.h"               // NO CODE YET
 /********************************************* **************************/
 
-void Smart_Initialization(){
-    
-}
+
 
 uint8 String_Compare(sint8* str1,sint8* str2){
 	//return 0 if mismatch
@@ -143,6 +141,10 @@ uint8 String_Compare(sint8* str1,sint8* str2){
 	}
 	return 1; // Match each char
 }
+
+
+
+
 void Appliances_Controller(State New_State,Device Appliance){
 	switch(Appliance){
 		case Door_Lock_Servo://Servo on PD7
@@ -295,23 +297,6 @@ void Factory_Reset(){
 
 
 
-
-// UART_Show_MainMenu();
-// UART_Show_Control_Appliances();
-// UART_Show_Control_Leds();
-// UART_Show_Control_AC();
-// UART_Show_Control_Door();
-// UART_Show_Control_Dimmer();
-// UART_Show_UserManagement();
-// UART_Show_Settings();
-// UART_Show_User_List();
-// UART_EEPROM_Delete_All_Users();
-
-// 
-// uint8 UART_Flag_Username =0;
-// uint8 UART_Flag_Password =0;
-
-
 // step 1 user_id
 // step 2 user_password
 // step 3 choice_1(from main menu)
@@ -319,119 +304,8 @@ void Factory_Reset(){
 // step 5 choice_3(from ...)
 
 
-uint8 global_Flag;
-uint8 FailCount = 0;
-sint8 UART_UserID[2];
-sint8 EEPROM_Username[8];
-sint8 UART_Password[8];
-sint8 EEPROM_Password[8];
-sint8 UART_Choice_1[2];
-sint8 UART_Choice_2[2];
-sint8 UART_Choice_3[2];
-uint8 global_choice_1=0;
-uint8 global_choice_2=0;
-uint8 global_choice_3=0;
 
-void SMART_UART_Interrupt(USART0_RX_vect){
-	switch(global_Flag){
-		case 1:// The app Just Started and User Not loggedIn and user sent anything
-			GIE_Disable();
-			UART_Show_Request_UserID();
-			global_Flag++;
-			GIE_Enable();
-			break;
-		
-		case 2: // we got user input for userID now we validate it
-			GIE_Disable();
-			UART_Recieve_String_8(UART_UserID);
-			if(EEPROM_Read_User(UART_UserID[0],EEPROM_Username) == 0){
-				//User Does not Exist
-			}
-			UART_Show_Request_Password();
-			global_Flag++;
-			GIE_Enable();
-			break;
-		
-		case 3:// We getting password, We look for password in EEPROM, compare, User login
-			GIE_Disable();
-			//Clear password for safety
-			for(int i=0;i<8;i++) {
-				EEPROM_Password[i] = 0;
-			}
-			UART_Recieve_String_8(UART_Password);
-			if(EEPROM_Read_Password(UART_UserID[0],EEPROM_Password) == 0){
-				//Password Does not Exist
-			}
-			else{
-				//User Exists and password compare here
-				UART_User_Login(&global_Flag, EEPROM_Username, EEPROM_Password, UART_Password, &FailCount);
-			}
-			GIE_Enable();
-			break;
-		
-		case 4:// User Logged in success, Showed main menu, process user choice 1 from MainMenu
-			GIE_Disable();
-			UART_Recieve_String_8(UART_Choice_1);
-			global_choice_1 = (UART_Choice_1[0]-48);
-			if(global_choice_1 > 3 && global_choice_1 < 1)
-			{
-				UART_Show_Invalid();
-				UART_Show_MainMenu();
-				break;
-			}
-			else
-			{
-				UART_Show_MainMenu_Inside(global_choice_1);
-				global_Flag++;
-			}
-			GIE_Enable();
-			break;
-		
-		case 5:// User made choice 2 from
-			GIE_Disable();
-			UART_Recieve_String_8(UART_Choice_2);
-			global_choice_2 = (UART_Choice_2[0]-48);
-			if(global_choice_2 > 6 && global_choice_2 < 1)
-			{
-				UART_Show_Invalid();
-				UART_Show_MainMenu_Inside(global_choice_1);
-			}
-			if(global_choice_1 == 1){
-					UART_Show_Control_Appliances_Inside(global_choice_2,UART_UserID,&global_Flag);
-			}
-			else if(global_choice_1 == 2){	
-				switch(global_choice_2){
-					case 1:
-						UART_Show_User_List(); 
-						UART_Show_MainMenu();
-						global_Flag = 4;// Go back to step 4
-						break;
-					case 2:
-						// Create NEW USER global_Flag++;
-						
-						break;
-					case 3:
-						// Delete Existing User 
-						UART_Show_Request_UserID();
-						global_Flag++;//we need user ID to clear it and delete user
-						break;
-					case 4:UART_EEPROM_Delete_All_Users();break;
-					case 5:
-						// Factory Reset
-						break;
-				}
-			}
-			GIE_Enable();
-			break;
-			
-		case 6:// User extended choice
-			GIE_Disable();
-	
-			GIE_Enable();
-			break;
-	}
 
-}
 
 
 
@@ -553,10 +427,8 @@ void Smart_Idle(){
     // 2) The door Servo always works (servo implementation with timer+Interrupt)
     // 3) waiting for user input on UART Bluetooth (Cant use Polling method!! Interrupt)
     // 4) Waiting for User input on Keypad:  KEYPAD_Get_Pressed_Key();
-	
 	//YOUSSEF >> DOOR SERVO WITH TIMER1 + INTERRUPT
 	//YOUSSEF >> POT + INTERRUPT
-
 	//HOW TO MAKE THEM ALL WORK TOGETHER!!!
 
 }

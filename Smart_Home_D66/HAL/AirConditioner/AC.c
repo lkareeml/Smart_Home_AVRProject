@@ -10,11 +10,11 @@
 
 void AC_Initialization()
 {
-	DIO_Set_Pin_Direction(PORTA,Pin2,Out);
+	DIO_Set_Pin_Direction(PORTAx,Pin2,Out);
 }
 void AC_On(){
-	DIO_Set_Pin_Output(PORTA,Pin2,High);
+	DIO_Set_Pin_Output(PORTAx,Pin2,High);
 }
 void AC_Off(){
-	DIO_Set_Pin_Output(PORTA,Pin2,Low);
+	DIO_Set_Pin_Output(PORTAx,Pin2,Low);
 }

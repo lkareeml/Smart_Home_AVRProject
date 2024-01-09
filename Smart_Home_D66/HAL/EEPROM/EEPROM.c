@@ -62,23 +62,20 @@ void  EEPROM_Write_Byte(uint16 Address , uint8 Data){
 
 //strlen() function doesn't count the null character \0
 
-uint16 EEPROM_Write_String(uint16 Address , sint8* String){
+void EEPROM_Write_String(uint16 Address , sint8* String){
 	uint8 i = 0;
 	while(String[i] != '\0'){
 		EEPROM_Write_Byte((Address+i), String[i]);
 		i++;
 	}
 	EEPROM_Write_Byte((Address+i), String[i]);
-	return (Address+i+1);
 }
 
 void  EEPROM_Read_String(uint16 Address ,sint8* String){
 	uint8 i =0;
-	String[i] = EEPROM_Read_Byte(Address+i);
 	while(String[i] != '\0'){
-		i++;
-		_delay_ms(10);
 		String[i] = EEPROM_Read_Byte(Address+i);
+		i++;
 	}
 	String[i] = '\0';
 }
@@ -153,24 +150,23 @@ uint8 EEPROM_Edit_User_Username(uint8 UserID,sint8 * Username){
 		return 1;// Means User Successfully Change Password
 	}
 }
-uint8 EEPROM_Read_User(uint8 UserID,sint8 * Username){
-	uint16 Marker = (UserID*20) + 10;
-	if(EEPROM_Read_Byte(Marker) == 0){
-		return 0; // Means User Dose Not exist
-		}else{
-		EEPROM_Read_String(Marker+10,Username);
-		return 1;
-	}
-}
-uint8 EEPROM_Read_Password(uint8 UserID,sint8 * Password){
+uint8 EEPROM_Read_User_Password(uint8 UserID,sint8 * Username,sint8 * Password){
 	uint16 Marker = (UserID*20) + 10;
 	if(EEPROM_Read_Byte(Marker) == 0){
 		return 0; // Means User Dose Not exist
 		}else{
 		EEPROM_Read_String(Marker+1,Password);
+		EEPROM_Read_String(Marker+10,Username);
 		return 1;
 	}
 }
+
+
+void EEPROM_Read_User(uint8 UserID,sint8 * Username){
+	uint16 Marker = (UserID*20) + 10;
+	EEPROM_Read_String(Marker+10,Username);
+}
+
 uint8 EEPROM_Delete_User(uint8 UserID){
 	uint16 Marker = (UserID*20) + 10;
 	if(EEPROM_Read_Byte(Marker) == 0){

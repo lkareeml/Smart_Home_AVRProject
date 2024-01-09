@@ -174,10 +174,12 @@ void UART_Init() {
 	Set(UCSRB_Reg, 5);
 	#endif
 }
+
 void UART_Send_Byte_Polling_8(uint8 Data) {
 	while (!Get(UCSRA_Reg, 5)); // Polling Method On Pin5 UCSRA Reg /Data Register Empty
 	UDR_Reg = Data;
 }
+
 void UART_Send_String_Polling_8(sint8 * String) {
 	uint8 count = 0;
 	while (String[count] != '\0') {
@@ -186,8 +188,6 @@ void UART_Send_String_Polling_8(sint8 * String) {
 	}
 }
 
-// 
-// 
 // static uint8 Global_UART_count = 0;
 // static uint8 Global_UART_Array[9];
 // static uint8 Global_UART_Send_Response_State = 0;
@@ -332,38 +332,29 @@ uint32 UART_Recieve_Number_Polling_32(void){
 
 
 
-
-
-void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password,uint8 * FailCount){
-	if(strcmp(global_EEPROM_Password,global_UART_Password)==0)
-	{
-		UART_Send_String_Polling_8("Welcome Back! ");
-		UART_Send_String_Polling_8(global_UART_Username);
-		UART_Show_MainMenu();
-		(*global_Flag)++;
-	}
-	else
-	{
-		(*FailCount)++;
-		if((*FailCount) >= 4)
-		{
-			UART_Send_String_Polling_8("Login Failed, Contact admin immediately!! \n");
-			BUZZER_ALARM_TILL_RESET();
-		}
-		UART_Send_String_Polling_8("Login Failed, Try again! \n");
-		UART_Show_Request_UserID();
-		(*global_Flag)=-2;
-	}
-}
-
-
-void UART_Show_MainMenu_Inside(uint8 choice_1){
-	switch(choice_1){
-		case 1:UART_Show_Control_Appliances();break;
-		case 2:UART_Show_Settings();break;
-	}
-}
-
+// 
+// 
+// void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password,uint8 * FailCount){
+// 	if(strcmp(global_EEPROM_Password,global_UART_Password)==0)
+// 	{
+// 		UART_Send_String_Polling_8("Welcome Back! ");
+// 		UART_Send_String_Polling_8(global_UART_Username);
+// 		UART_Show_MainMenu();
+// 		(*global_Flag)++;
+// 	}
+// 	else
+// 	{
+// 		(*FailCount)++;
+// 		if((*FailCount) >= 4)
+// 		{
+// 			UART_Send_String_Polling_8("Login Failed, Contact admin immediately!! \n");
+// 			BUZZER_ALARM_TILL_RESET();
+// 		}
+// 		UART_Send_String_Polling_8("Login Failed, Try again! \n");
+// 		UART_Show_Request_UserID();
+// 		(*global_Flag)=-2;
+// 	}
+// }
 
 
 void UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * UART_UserID, uint8 * global_Flag){
@@ -402,59 +393,76 @@ void UART_Show_Invalid(){
 
 void UART_Show_MainMenu(){
 	UART_Send_String_Polling_8("Choose Option: \n");
-	UART_Send_String_Polling_8("(1) Control Appliances \n");
-	UART_Send_String_Polling_8("(2) User Management \n");
-	UART_Send_String_Polling_8("(3) Settings \n");
-}
-void UART_Show_Control_Appliances(){
 	UART_Send_String_Polling_8("(1) Control Leds \n");
 	UART_Send_String_Polling_8("(2) Control AC \n");
 	UART_Send_String_Polling_8("(3) Control Door \n");
 	UART_Send_String_Polling_8("(4) Control Dimmer \n");
+	UART_Send_String_Polling_8("(5) Show Users list \n");
+	UART_Send_String_Polling_8("(6) Create New User \n");
+	UART_Send_String_Polling_8("(7) Delete User \n");
+	UART_Send_String_Polling_8("(8) Delete All Users \n");
+	UART_Send_String_Polling_8("(9) Factory Reset \n");
 }
 void UART_Show_Control_Leds(){
-	UART_Send_String_Polling_8("Led 1 : (11)On, (01)Off \n");
-	UART_Send_String_Polling_8("Led 2 : (12)On, (02)Off \n");
-	UART_Send_String_Polling_8("Led 3 : (13)On, (03)Off \n");
-	UART_Send_String_Polling_8("Led 4 : (14)On, (04)Off \n");
-	UART_Send_String_Polling_8("Led 5 : (15)On, (05)Off \n");
+	UART_Send_String_Polling_8("(1) Toggle Led 1 \n");
+	UART_Send_String_Polling_8("(2) Toggle Led 2 \n");
+	UART_Send_String_Polling_8("(3) Toggle Led 3 \n");
+	UART_Send_String_Polling_8("(4) Toggle Led 4 \n");
+	UART_Send_String_Polling_8("(5) Toggle Led 5 \n");
+	UART_Send_String_Polling_8("(0) Back \n");
 }
 void UART_Show_Control_AC(){
 	UART_Send_String_Polling_8("(1) AC Auto \n");
 	UART_Send_String_Polling_8("(2) AC Manual Turn Off \n");
 	UART_Send_String_Polling_8("(3) AC Manual Turn On  \n");
+	UART_Send_String_Polling_8("(0) Back \n");
 }
 void UART_Show_Control_Door(){
 	UART_Send_String_Polling_8("(1) Open Door Lock \n");
 	UART_Send_String_Polling_8("(2) Close Door Lock \n");
+	UART_Send_String_Polling_8("(0) Back \n");
+
 }
 void UART_Show_Control_Dimmer(){
 	UART_Send_String_Polling_8("(1) Dimmer Up \n");
 	UART_Send_String_Polling_8("(2) Dimmer Down \n");
 	UART_Send_String_Polling_8("(3) Dimmer Off \n");
 	UART_Send_String_Polling_8("(4) Dimmer On \n");
-}
-void UART_Show_Settings(){
-	UART_Send_String_Polling_8("(1) Show Users list \n");
-	UART_Send_String_Polling_8("(2) Create New User \n");
-	UART_Send_String_Polling_8("(3) Delete Existing User \n");
-	UART_Send_String_Polling_8("(4) Delete All Users \n");
-	UART_Send_String_Polling_8("(5) Factory Reset \n");
-}
+	UART_Send_String_Polling_8("(0) Back \n");
 
-
+}
 void UART_Show_User_List(){
 	for(uint8 id = 0;id<4;id++){
-		sint8 Username[8];
-		if(EEPROM_Read_User(id,Username)){
-			UART_Send_String_Polling_8("UserID: ");
-			UART_Send_Byte_Polling_8(id);
-			UART_Send_String_Polling_8(" Username: ");
-			UART_Send_String_Polling_8(Username);
-			UART_Send_String_Polling_8("/n");
-		}
+//		sint8 Username[8];
+// 		if(EEPROM_Read_User(id,Username)){
+// 			UART_Send_String_Polling_8("UserID: ");
+// 			UART_Send_Byte_Polling_8(id);
+// 			UART_Send_String_Polling_8(" Username: ");
+// 			UART_Send_String_Polling_8(Username);
+// 			UART_Send_String_Polling_8("/n");
+// 		}
 	}
 }
+
+void UART_Choice_Handler_1(uint8 g_choice_1){
+	switch(g_choice_1){
+		case 1:UART_Show_Control_Leds();break;
+		case 2:UART_Show_Control_AC();	break;
+		case 3:UART_Show_Control_Door();break;
+		case 4:UART_Show_Control_Dimmer();break;
+		case 5://Show_User_List
+		break;
+		case 6://Create New User Allow Only Admin To Create User!
+		break;
+		case 7://Delete User  Allow Only Admin To Delete User!
+		break;
+		case 8://Delete All Users Allow Only Admin To Delete User!
+		break;
+		case 9:// Factory Reset
+		break;
+	}
+}
+
 void UART_EEPROM_Delete_All_Users(){
 	for(uint8 id = 1;id<4;id++){
 		if(EEPROM_Delete_User(id)){

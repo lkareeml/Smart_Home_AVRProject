@@ -15,7 +15,7 @@ void activate_bulb()
 {
 	Timer0_Init();//intilize the timer 
 	//mode of the pwm has been selected in timer config file
-	DIO_Set_Pin_Direction(PORTB,3,Out);
+	DIO_Set_Pin_Direction(PORTBx,3,Out);
 }
 void light_bulb(int status)
 {

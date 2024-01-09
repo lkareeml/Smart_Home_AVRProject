@@ -43,15 +43,15 @@ ISR(TIMER1_COMPA_vect) // Timer1 compare match interrupt
 {
 	static uint8 counter = 0;
 	// Start if counter = 0 by making Servo Pin high
-	if(counter==0){DIO_Set_Pin_Output(PORTD,Pin7,High);}
+	if(counter==0){DIO_Set_Pin_Output(PORTDx,Pin7,High);}
 	else if(counter == 1){
 		if(door_state == 0){
-			DIO_Set_Pin_Output(PORTD,Pin7,Low);
+			DIO_Set_Pin_Output(PORTDx,Pin7,Low);
 		}
 	}
 	else if(counter == 5){
 		if(door_state == 1){
-			DIO_Set_Pin_Output(PORTD,Pin7,Low);
+			DIO_Set_Pin_Output(PORTDx,Pin7,Low);
 		}
 	}
 	if(counter<40){counter++;}
@@ -60,8 +60,8 @@ ISR(TIMER1_COMPA_vect) // Timer1 compare match interrupt
 
 
 void Servo_Init(){
-	DIO_Set_Pin_Direction(PORTD,Pin7,Out);
-	DIO_Set_Pin_Output(PORTD,Pin7,Low);
+	DIO_Set_Pin_Direction(PORTDx,Pin7,Out);
+	DIO_Set_Pin_Output(PORTDx,Pin7,Low);
 	// Set the Prescaler to 8
 	// Set WGM12 to enable CTC mode
 	TCCR1B_Reg |= (1 << WGM12) | (1 << CS11);

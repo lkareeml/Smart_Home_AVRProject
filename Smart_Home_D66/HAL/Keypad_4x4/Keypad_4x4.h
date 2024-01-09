@@ -8,13 +8,13 @@
 #ifndef KEYPAD_4X4_H_
 #define KEYPAD_4X4_H_
 
-#define COL_PORTB 	PORTB
+#define COL_PORTB 	PORTBx
 #define COL_Pin_0	Pin4
 #define COL_Pin_1	Pin5
 #define COL_Pin_2	Pin6
 #define COL_Pin_3	Pin7
 
-#define ROW_PORTC	PORTC
+#define ROW_PORTC	PORTCx
 #define ROW_Pin_0	Pin3
 #define ROW_Pin_1	Pin4
 #define ROW_Pin_2	Pin5

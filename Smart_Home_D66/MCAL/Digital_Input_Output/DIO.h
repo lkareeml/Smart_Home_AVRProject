@@ -10,10 +10,10 @@
 #define DIO_H_
 
 typedef enum{
-	PORTA,
-	PORTB,
-	PORTC,
-	PORTD
+	PORTAx,
+	PORTBx,
+	PORTCx,
+	PORTDx
 }PORT;
 
 typedef enum{
@@ -25,7 +25,7 @@ typedef enum{
 }DIO_IO;
 
 typedef enum{
-	Low, High
+	Low, High,Toggle
 }DIO_VALUE;
 
 void DIO_Set_Port_Direction	(PORT Port,DIO_IO Direction);

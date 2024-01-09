@@ -43,7 +43,7 @@
 #define UART_TX_Enable						Enabled					// Enabled -- Disabled
 #define UART_RX_Enable						Enabled					// Enabled -- Disabled
 #define UART_TX_Complete_Interrupt			Disabled				// Enabled -- Disabled
-#define UART_RX_Complete_Interrupt			Disabled				// Enabled -- Disabled
+#define UART_RX_Complete_Interrupt			Enabled					// Enabled -- Disabled
 #define UART_Data_Reg_Empty_Interrupt		Disabled				// Enabled -- Disabled
 
 //#define Multi_processor_Com_Mode	 >>>> (UCSRA_Reg,0);	Only operate for
@@ -88,5 +88,10 @@ void UART_Show_Control_Dimmer();
 void UART_Show_Settings();
 void UART_Show_User_List();
 void UART_EEPROM_Delete_All_Users();
+
+
+void UART_Choice_Handler_1(uint8 g_choice_1);
+
+
 
 #endif /* UART_H_ */
