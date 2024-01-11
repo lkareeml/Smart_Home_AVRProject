@@ -13,10 +13,10 @@
 #include "../../MCAL/Digital_Input_Output/DIO.h"
 #include "../../MCAL/Interrupt/Interrupt.h"
 #include "../../AVR32_Reg_Private.h"
+#include "../../MCAL/UART/UART.h"
 #include <avr/interrupt.h>
 
 
-static uint8 door_state=0;// 0 is closed, 1 is open
 
 /*
 Open Door lets make it to 180 degree which means:
@@ -38,6 +38,37 @@ Closed Door lets make it to 0 degree which means:
 	
 */
 
+uint8 door_state = 0;// 0 is closed, 1 is open
+
+void Door_Feedback(uint8 New_Feed){
+	switch(New_Feed){
+		case 2: 
+			switch(door_state)
+			{
+				case 0 :
+					UART_Send_String_Polling_8("Door is Already Closed!");
+					break;
+				case 1:
+					door_state = 0;
+					UART_Send_String_Polling_8("Door Closed Success!");
+					break;
+			}
+			break;
+		case 1:
+			switch(door_state)
+			{
+				case 0 :
+					door_state = 1;
+					UART_Send_String_Polling_8("Door Opened Success!");
+					break;
+				case 1:
+					
+					UART_Send_String_Polling_8("Door is Already Opened!");
+					break;
+			}
+			break;	
+	}
+}
 
 ISR(TIMER1_COMPA_vect) // Timer1 compare match interrupt
 {

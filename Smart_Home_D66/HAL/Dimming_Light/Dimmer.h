@@ -10,9 +10,12 @@
 #define DIMMER_H_
 
 
-void activate_bulbs(void);
-void light_bulb(int status);
-
+void Dimmer_Init();
+void Dimmer_Feedback(uint8 New_Feed);
+void Dimmer_Increase();
+void Dimmer_Decrease();
+void Dimmer_On();
+void Dimmer_Off();
 
 
 #endif /* DIMMER_H_ */

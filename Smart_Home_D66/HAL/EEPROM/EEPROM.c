@@ -150,22 +150,41 @@ uint8 EEPROM_Edit_User_Username(uint8 UserID,sint8 * Username){
 		return 1;// Means User Successfully Change Password
 	}
 }
-uint8 EEPROM_Read_User_Password(uint8 UserID,sint8 * Username,sint8 * Password){
-	uint16 Marker = (UserID*20) + 10;
-	if(EEPROM_Read_Byte(Marker) == 0){
-		return 0; // Means User Dose Not exist
-		}else{
-		EEPROM_Read_String(Marker+1,Password);
-		EEPROM_Read_String(Marker+10,Username);
-		return 1;
+
+
+
+
+
+
+
+
+void EEPROM_Read_Data(uint8 UserID,sint8 * Data, uint8 DataType){	
+	//DataType = 1 -- Password + 1 //DataType = 2 -- Username +10
+	uint16 Marker = 0;
+	if(UserID == 99){
+		Marker = 10;
+	}else{
+		Marker = (UserID*20) + 10;
+	}
+	switch(DataType){
+		case 1: EEPROM_Read_String(Marker+1,Data); break;
+		case 2: EEPROM_Read_String(Marker+10,Data); break;
 	}
 }
 
-
-void EEPROM_Read_User(uint8 UserID,sint8 * Username){
-	uint16 Marker = (UserID*20) + 10;
-	EEPROM_Read_String(Marker+10,Username);
+uint8 EEPROM_Read_UserID_Exist(uint8 UserID){
+	uint16 Marker = 0;
+	if(UserID == 99){
+		Marker = 10;
+	}else{
+		Marker = (UserID*20) + 10;
+	}	
+	return EEPROM_Read_Byte(Marker);
 }
+
+
+
+
 
 uint8 EEPROM_Delete_User(uint8 UserID){
 	uint16 Marker = (UserID*20) + 10;

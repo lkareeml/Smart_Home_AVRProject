@@ -14,24 +14,27 @@ void LED1_Init();
 void LED2_Init();
 void LED3_Init();
 void LED4_Init();
-void Lamp_Dimmer_Init();
+void Dimmer_Init();
 
 void LED_0_On();
 void LED_1_On();
 void LED_2_On();
 void LED_3_On();
 void LED_4_On();
-void Lamp_Dimmer_On();
+void Dimmer_On();
 
 void LED_0_Off();
 void LED_1_Off();
 void LED_2_Off();
 void LED_3_Off();
 void LED_4_Off();
-void Lamp_Dimmer_Off();
+void Dimmer_Off();
 
 void LED_0_Toggle();
 void LED_1_Toggle();
 void LED_2_Toggle();
+void LED_3_Toggle();
+void LED_4_Toggle();
+void LED_5_Toggle();
 
 #endif /* LEDS_H_ */

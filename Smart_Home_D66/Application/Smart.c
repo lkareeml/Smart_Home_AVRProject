@@ -143,45 +143,6 @@ uint8 String_Compare(sint8* str1,sint8* str2){
 }
 
 
-
-
-void Appliances_Controller(State New_State,Device Appliance){
-	switch(Appliance){
-		case Door_Lock_Servo://Servo on PD7
-		if(New_State == Turn_On) Servo_180_Degree_Delay();///EDIT
-		else if(New_State == Turn_Off) Servo_0_Degree_Delay();///EDIT
-		break;
-		case Dim_Lamp_Device://PA0
-		if(New_State == Turn_On) Lamp_Dimmer_On();
-		else if(New_State == Turn_Off) Lamp_Dimmer_Off();
-		break;
-		case Air_Conditioner_Device://AC ON RELAY ON PA2
-		if(New_State == Turn_On) AC_On();
-		else if(New_State == Turn_Off) AC_Off();
-		break;
-		case LED_0_Device://LED0 ON KIT is PC2
-		if(New_State == Turn_On) LED_0_On();
-		else if(New_State == Turn_Off) LED_0_Off();
-		break;
-		case LED_1_Device://LED1 ON KIT is PC7
-		if(New_State == Turn_On) LED_1_On();
-		else if(New_State == Turn_Off) LED_1_Off();
-		break;
-		case LED_2_Device://LED2 ON KIT is PD3
-		if(New_State == Turn_On) LED_2_On();
-		else if(New_State == Turn_Off) LED_2_Off();
-		break;
-		case LED_3_Device://LED3 RESERVE PIN PD4
-		if(New_State == Turn_On) LED_3_On();
-		else if(New_State == Turn_Off) LED_3_Off();
-		break;
-		case LED_4_Device://LED4 RESERVE PIN PD5
-		if(New_State == Turn_On) LED_4_On();
-		else if(New_State == Turn_Off) LED_4_Off();
-		break;
-	}
-}
-
 void LCD_GetUserID(uint8* userID){
     uint8 x = '\0';
     uint8 user_count = 0;
@@ -302,13 +263,6 @@ void Factory_Reset(){
 // step 3 choice_1(from main menu)
 // step 4 choice_2(from Control_Appliances/UserManagement/Settings)
 // step 5 choice_3(from ...)
-
-
-
-
-
-
-
 
 
 

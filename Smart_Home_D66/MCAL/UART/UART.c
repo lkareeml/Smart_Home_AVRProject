@@ -382,7 +382,7 @@ void UART_Show_UserManagement_Inside(){
 
 
 void UART_Show_Request_UserID(){
-	UART_Send_String_Polling_8("Please Enter UserID:\n");
+	UART_Send_String_Polling_8("Please Enter UserID:(1~99)\n");
 }
 void UART_Show_Request_Password(){
 	UART_Send_String_Polling_8("Please Enter Password:\n");
@@ -402,6 +402,7 @@ void UART_Show_MainMenu(){
 	UART_Send_String_Polling_8("(7) Delete User \n");
 	UART_Send_String_Polling_8("(8) Delete All Users \n");
 	UART_Send_String_Polling_8("(9) Factory Reset \n");
+	UART_Send_String_Polling_8("(0) Log Out \n");
 }
 void UART_Show_Control_Leds(){
 	UART_Send_String_Polling_8("(1) Toggle Led 1 \n");
