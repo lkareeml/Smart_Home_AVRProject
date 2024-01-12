@@ -92,6 +92,7 @@ void UART_EEPROM_Delete_All_Users();
 
 void UART_Choice_Handler_1(uint8 g_choice_1);
 
+void UART_LED_Feedback(uint8 g_choice_2);
 
 
 #endif /* UART_H_ */

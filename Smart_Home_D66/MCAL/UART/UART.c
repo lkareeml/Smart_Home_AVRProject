@@ -10,6 +10,8 @@
 #include "../../AVR32_Reg_Private.h"
 #include "../../HAL/EEPROM/EEPROM.h"
 #include "../../HAL/Buzzer/Buzzer.h"
+#include "../../HAL/Leds_5/Leds.h"
+
 #include "UART.h"
 #include <stdio.h>
 #include <string.h>
@@ -461,19 +463,27 @@ void UART_Choice_Handler_1(uint8 g_choice_1){
 		break;
 		case 9:// Factory Reset
 		break;
+		case 0:// Log out
+		break;
 	}
 }
 
-void UART_EEPROM_Delete_All_Users(){
-	for(uint8 id = 1;id<4;id++){
-		if(EEPROM_Delete_User(id)){
-			UART_Send_String_Polling_8("UserID: ");
-			UART_Send_Byte_Polling_8(id);
-			UART_Send_String_Polling_8(" Successfully\n");
-		}
+
+void UART_LED_Feedback(uint8 g_choice_2){
+	uint8 x = 0;
+	switch(g_choice_2){
+		case 1: // Toggle Led 0
+			LED_0_Toggle(); x = 0;break;
+		case 2: // Toggle Led 1
+			LED_1_Toggle(); x = 1;break;
+		case 3: // Toggle Led 2
+			LED_2_Toggle(); x = 2;break;
+		case 4: // Toggle Led 3
+			LED_3_Toggle(); x = 3;break;
+		case 5: // Toggle Led 4
+			LED_4_Toggle(); x = 4;break;
 	}
-	UART_Send_String_Polling_8("Deleted All Users Successfully \n");
+	UART_Send_String_Polling_8("Led ");
+	UART_Send_Byte_Polling_8(x);
+	UART_Send_String_Polling_8("Toggled");	
 }
-
-
-

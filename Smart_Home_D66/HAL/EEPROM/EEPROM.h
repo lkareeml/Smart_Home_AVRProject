@@ -1,7 +1,7 @@
 /****************************************/
 /*          Author : Kareem Atef        */
 /*          Date: 4-12-2023             */
-/*          Version: 1.0                */
+/*          Version: 5.1                */
 /*          Module: EEPROM              */
 /****************************************/
 
@@ -19,16 +19,8 @@ uint32 EEPROM_Read_Number_32(uint16 Address);
 
 void EEPROM_Read_Data(uint8 UserID,sint8 * Data, uint8 DataType);
 uint8 EEPROM_Read_UserID_Exist(uint8 UserID);
-
-
-
-void EEPROM_Read_User(uint8 UserID,sint8 * Username);
-uint8 EEPROM_Reg_New_User(uint8 UserID, sint8 * Username, sint8 * Password);
-uint8 EEPROM_Edit_User_Password(uint8 UserID,sint8 * Password);
-uint8 EEPROM_Edit_User_Username(uint8 UserID,sint8 * Username);
-uint8 EEPROM_Read_User_Password(uint8 UserID,sint8 * Username,sint8 * Password);
-
-uint8 EEPROM_Delete_User(uint8 UserID);
-
+void EEPROM_Delete_User(uint8 UserID);
+void EEPROM_Edit_Data(uint8 UserID,sint8 * Data, uint8 DataType);
+void EEPROM_Reg_New_User(uint8 UserID, sint8 * Username, sint8 * Password);
 
 #endif /* EEPROM_H_ */
