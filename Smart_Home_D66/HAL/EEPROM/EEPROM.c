@@ -9,6 +9,7 @@
 #include "../../MCAL/TWI_I2C/TWI_I2C.h"
 #include "EEPROM.h"
 #include <util/delay.h>
+extern uint8 MAX_Users_Count;// Without Admin
 
 
 void  EEPROM_Init(void){TWI_Init();}
@@ -35,7 +36,7 @@ uint8 EEPROM_Read_Byte(uint16 Address){
 			}
 		}
 	}
-	_delay_ms(5);
+	_delay_ms(7);
 	return Data;
 }
 void  EEPROM_Write_Byte(uint16 Address , uint8 Data){
@@ -51,7 +52,7 @@ void  EEPROM_Write_Byte(uint16 Address , uint8 Data){
 				TWI_Send_Data(Data);
 				if(TWI_Check_Status(MSTR_T_DATA_ACK)){
 					TWI_Send_Stop();
-					_delay_ms(5);
+					_delay_ms(7);
 				}
 			}
 		}
@@ -63,15 +64,15 @@ void EEPROM_Write_String(uint16 Address , sint8* String){
 		EEPROM_Write_Byte((Address+i), String[i]);
 		i++;
 	}
-	EEPROM_Write_Byte((Address+i), String[i]);
+	EEPROM_Write_Byte((Address+i+1), String[i]);
 }
 void  EEPROM_Read_String(uint16 Address ,sint8* String){
 	uint8 i =0;
+	String[i] = EEPROM_Read_Byte(Address+i);
 	while(String[i] != '\0'){
-		String[i] = EEPROM_Read_Byte(Address+i);
 		i++;
+		String[i] = EEPROM_Read_Byte(Address+i);
 	}
-	String[i] = '\0';
 }
 void  EEPROM_Write_Number_32(uint16 Address , uint32 Number){
 	//00011000 01100000 00011000 00000110
@@ -95,9 +96,7 @@ uint32 EEPROM_Read_Number_32(uint16 Address){
 
 
 
-
-
-void EEPROM_Read_Data(uint8 UserID,sint8 * Data, uint8 DataType){	
+void EEPROM_Read_8Data(uint8 UserID,sint8 * Data, uint8 DataType){	
 	//DataType = 1 -- Password + 1 //DataType = 2 -- Username +10
 	uint16 Marker = 0;
 	if(UserID == 99) Marker = 10;
@@ -128,6 +127,16 @@ void EEPROM_Edit_Data(uint8 UserID,sint8 * Data, uint8 DataType){
 	else Marker = (UserID*20) + 10;
 	// EDIT NOT COMPLETE
 	EEPROM_Write_String((Marker+10),Data);
+}
+
+
+uint8 EEPROM_Find_Empty_ID(){
+	for(int i=0; i<MAX_Users_Count;i++){
+		if(EEPROM_Read_UserID_Exist(i))
+			continue;
+		else return i;
+	}
+	return 0;
 }
 void EEPROM_Reg_New_User(uint8 UserID, sint8 * Username, sint8 * Password){
 uint16 Marker = (UserID*20) + 10;

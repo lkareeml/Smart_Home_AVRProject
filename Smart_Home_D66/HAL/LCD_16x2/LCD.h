@@ -32,4 +32,7 @@ void LCD_Show_WrongPassword();
 void LCD_Show_Main_Options();
 void LCD_Show_Choose_LED();
 void LCD_Show_Choose_Dimmer();
+
+void LCD_Process();
+
 #endif /* DRIVERS_HAL_LCD_LCD_H_ */

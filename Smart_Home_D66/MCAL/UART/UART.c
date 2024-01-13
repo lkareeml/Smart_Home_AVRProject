@@ -11,69 +11,12 @@
 #include "../../HAL/EEPROM/EEPROM.h"
 #include "../../HAL/Buzzer/Buzzer.h"
 #include "../../HAL/Leds_5/Leds.h"
-
 #include "UART.h"
 #include <stdio.h>
 #include <string.h>
 
-void UART_Dynamic_INIT(uint8 CommSize, uint8 SyncMode, uint8 SyncPolarity, uint8 ParityMode, uint8 Stopbit, uint8 X2SpeedMode, uint32 baudRate) {
-	//Setting Communication Character Size:
-	switch (CommSize) {
-		case 5:
-		Clear(UCSRB_Reg, 2);Clear(UCSRC_Reg, 2);Clear(UCSRC_Reg, 1);break;
-		case 6:
-		Clear(UCSRB_Reg, 2);Clear(UCSRC_Reg, 2);Set(UCSRC_Reg, 1);break;
-		case 7:
-		Clear(UCSRB_Reg, 2);Set(UCSRC_Reg, 2);Clear(UCSRC_Reg, 1);break;
-		case 8:
-		Clear(UCSRB_Reg, 2);Set(UCSRC_Reg, 2);Set(UCSRC_Reg, 1);break;
-		case 9:
-		Set(UCSRB_Reg, 2);Set(UCSRC_Reg, 2);Set(UCSRC_Reg, 1);break;
-	} //Setting Sync Mode:
-	switch (SyncMode) {
-		case 1:
-		Clear(UCSRC_Reg, 6);
-		break; //Async_Mode
-		case 0:
-		Set(UCSRC_Reg, 6); //Sync_Mode //TX_Rising_XCK (1) TX_Falling_XCK (0)
-		if (SyncPolarity == 0) {
-			Clear(UCSRC_Reg, 0);
-			} else if (SyncPolarity == 1) {
-			Set(UCSRC_Reg, 0);
-		}
-		break;
-	} //Setting Parity Mode:
-	Set(UCSRC_Reg, 7); // To Select UCSRC Reg
-	switch (ParityMode) {
-		case 0:
-		Clear(UCSRC_Reg, 5);
-		Clear(UCSRC_Reg, 4);
-		break; //Parity_Disable
-		case 1:
-		Set(UCSRC_Reg, 5);
-		Set(UCSRC_Reg, 4);
-		break; //Parity Odd
-		case 2:
-		Set(UCSRC_Reg, 5);
-		Clear(UCSRC_Reg, 4);
-		break; //Parity_Even
-	} //Setting Stop Bit Count:
-	switch (Stopbit) {
-		case 1:
-		Clear(UCSRC_Reg, 3);
-		break; //1_Bit
-		case 2:
-		Set(UCSRC_Reg, 3);
-		break; //0_Bit
-	}
-	uint16 UBRR_value = 0;// = 1000000/ (baudRate - 1) ;//103;
-	switch(X2SpeedMode){//0 Disabled 1 Enabled
-		case 0:Clear(UCSRA_Reg,1);UBRR_value = (1000000/(baudRate-1));break;
-		case 1:Set(UCSRA_Reg,1);UBRR_value = (2000000/(baudRate-1));break;
-	}
-	UBRRH_Reg = (UBRR_value >> 8);
-	UBRRL_Reg = (uint8) UBRR_value;
-}
+extern uint8 MAX_Users_Count;
+extern uint8 FailCount;
 
 void UART_Enable_TX() { Set(UCSRB_Reg, 4);}
 void UART_Disable_TX() {Clear(UCSRB_Reg, 4);}
@@ -176,12 +119,10 @@ void UART_Init() {
 	Set(UCSRB_Reg, 5);
 	#endif
 }
-
 void UART_Send_Byte_Polling_8(uint8 Data) {
 	while (!Get(UCSRA_Reg, 5)); // Polling Method On Pin5 UCSRA Reg /Data Register Empty
 	UDR_Reg = Data;
 }
-
 void UART_Send_String_Polling_8(sint8 * String) {
 	uint8 count = 0;
 	while (String[count] != '\0') {
@@ -189,63 +130,9 @@ void UART_Send_String_Polling_8(sint8 * String) {
 		count++;
 	}
 }
-
-// static uint8 Global_UART_count = 0;
-// static uint8 Global_UART_Array[9];
-// static uint8 Global_UART_Send_Response_State = 0;
-
-// 0 means nothing send nothing to receive
-// 1 means Sending now
-// 2 means Sent waiting for reply
-// 3 means Sent and Processing Reply
-// 4 means Sent and Got Reply Processed
-// 10 means Idle
-
-// void Reset_UART_Counter(){
-// 	Global_UART_count = 0;
-// }
-// void Reset_UART_VARS(){
-// 	Global_UART_count = 0;
-// 	for(int i =0;i<9;i++){
-// 		Global_UART_Array[i] = 0;
-// 	}
-// }
-// 
-// void UART_Choice_Handler(){
-// 	
-// }
-// 
-// void UART_Interrupt_Handler(USART0_RX_vect){
-// 	Global_UART_Array[Global_UART_count] = UDR_Reg;
-// 	if (Global_UART_Array[Global_UART_count] == 13)
-// 	{//Remove at Carriage Return \r
-// 		Global_UART_Array[Global_UART_count] = 0;
-// 	}
-// 	if (Global_UART_Array[Global_UART_count] == '\n')
-// 	{ // ASCII  NEW LINE Bluetooth END TRANSMISSION
-// 		Global_UART_Array[Global_UART_count] = '\0';
-// 		//Reset_UART_Counter();
-// 		
-// 	}
-// 	else{
-// 		Global_UART_count++;
-// 	}
-// }
-
-
-
-
-
-
-
-
 uint8 UART_Receive_Byte_8(void) {
 	while (Get(UCSRA_Reg, 7) == 0); // Polling Method
 	return UDR_Reg;
-}
-
-uint8 UART_Receive_CHECK(){
-	return Get(UCSRA_Reg, 7);// 0 means nothing sent, 1 something sent
 }
 void UART_Recieve_String_8(sint8 * String) {
 	uint8 count = 0;
@@ -260,13 +147,11 @@ void UART_Recieve_String_8(sint8 * String) {
 		}
 	}
 }
-
-void   UART_Send_Number_Polling_32(uint32 Number){
+void UART_Send_Number_Polling_32(uint32 Number){
 	char string[10];
 	UART_Send_String_Polling_8(string);
 	sprintf(string, "%lu", Number);
 }
-
 uint32 UART_Recieve_Number_Polling_32(void){
 	uint32 Number;
 	Number = 0;
@@ -279,132 +164,24 @@ uint32 UART_Recieve_Number_Polling_32(void){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// #if (Comm_Character_Size == Comm_Size_9)
-//     void UART_Send_Byte_Polling16(uint16 Data){
-//         while(!Get(UCSRA_Reg,5));// Polling Method On Pin5 UCSRA Reg /Data Register Empty
-//         if(1&(Data>>8)){
-//             Set(UCSRB_Reg,0);
-//         }else{
-//             Clear(UCSRB_Reg,0);
-//         }
-//         UDR_Reg = (uint8)(Data & 0b0000000011111111);
-//     }
-//     uint16 UART_Receive_Byte16(void)
-//     {
-//         while(!Get(UCSRA_Reg,7));
-//         uint16 Received_Data = 0;
-//         if(Get(UCSRB_Reg,1)){
-//             Received_Data = ((1<<8) | UDR_Reg);
-//             }else{
-//             Received_Data = UDR_Reg;
-//         }
-//         return Received_Data;
-//     }
-//     void UART_Send_String_Polling16(uint16 String){
-//         uint8 count = 0;
-//         while(String[count] != '\0'){
-//             UART_Send_Byte_Polling16(String[count]);
-//             count++;
-//         }
-//     }
-//     void UART_Recieve_String16(uint16 *String){
-//         uint8 count = 0;
-//         while(1){
-//             String[count] = UART_Receive_Byte16();
-//             if(String[count] == 46){// ASCII 46 Point  //4 is [END TRANSMISSION]
-//                 break;
-//             }
-//             else{
-//                 count++;
-//             }
-//         }
-//     }
-// #endif
-
-
-
-// 
-// 
-// void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password,uint8 * FailCount){
-// 	if(strcmp(global_EEPROM_Password,global_UART_Password)==0)
-// 	{
-// 		UART_Send_String_Polling_8("Welcome Back! ");
-// 		UART_Send_String_Polling_8(global_UART_Username);
-// 		UART_Show_MainMenu();
-// 		(*global_Flag)++;
-// 	}
-// 	else
-// 	{
-// 		(*FailCount)++;
-// 		if((*FailCount) >= 4)
-// 		{
-// 			UART_Send_String_Polling_8("Login Failed, Contact admin immediately!! \n");
-// 			BUZZER_ALARM_TILL_RESET();
-// 		}
-// 		UART_Send_String_Polling_8("Login Failed, Try again! \n");
-// 		UART_Show_Request_UserID();
-// 		(*global_Flag)=-2;
-// 	}
-// }
-
-
-void UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * UART_UserID, uint8 * global_Flag){
-	switch(choice_2){
-		case 1:UART_Show_Control_Leds();global_Flag++;break;
-		case 2:UART_Show_Control_AC();global_Flag++;break;
-		case 3:
-		if(UART_UserID[0]-48 == 0){UART_Show_Control_Door();global_Flag++;}
-		else
-		{
-			UART_Send_String_Polling_8("Auth Denied, Please ask Admin! \n");
-			UART_Show_Control_Appliances();
-		}
-		break;
-		case 4:UART_Show_Control_Dimmer();global_Flag++;break;
-		case 5:UART_Show_Invalid();break;
-		case 6:UART_Show_Invalid();break;
-	}
-}
-
-
-void UART_Show_UserManagement_Inside(){
-	
-}
-
-
 void UART_Show_Request_UserID(){
-	UART_Send_String_Polling_8("Please Enter UserID:(1~99)\n");
+	UART_Send_String_Polling_8(" Enter UserID:(1~99)\n");
 }
 void UART_Show_Request_Password(){
-	UART_Send_String_Polling_8("Please Enter Password:\n");
+	UART_Send_String_Polling_8(" Enter Password:\n");
 }
 void UART_Show_Invalid(){
-	UART_Send_String_Polling_8("Invalid input Please try Again \n");
+	UART_Send_String_Polling_8("Invalid input  try Again \n");
 }
-
 void UART_Show_MainMenu(){
 	UART_Send_String_Polling_8("Choose Option: \n");
-	UART_Send_String_Polling_8("(1) Control Leds \n");
+	UART_Send_String_Polling_8("(1) Control Led \n");
 	UART_Send_String_Polling_8("(2) Control AC \n");
 	UART_Send_String_Polling_8("(3) Control Door \n");
 	UART_Send_String_Polling_8("(4) Control Dimmer \n");
 	UART_Send_String_Polling_8("(5) Show Users list \n");
 	UART_Send_String_Polling_8("(6) Create New User \n");
 	UART_Send_String_Polling_8("(7) Delete User \n");
-	UART_Send_String_Polling_8("(8) Delete All Users \n");
-	UART_Send_String_Polling_8("(9) Factory Reset \n");
-	UART_Send_String_Polling_8("(0) Log Out \n");
 }
 void UART_Show_Control_Leds(){
 	UART_Send_String_Polling_8("(1) Toggle Led 1 \n");
@@ -434,56 +211,52 @@ void UART_Show_Control_Dimmer(){
 	UART_Send_String_Polling_8("(0) Back \n");
 
 }
+
 void UART_Show_User_List(){
-	for(uint8 id = 0;id<4;id++){
-//		sint8 Username[8];
-// 		if(EEPROM_Read_User(id,Username)){
-// 			UART_Send_String_Polling_8("UserID: ");
-// 			UART_Send_Byte_Polling_8(id);
-// 			UART_Send_String_Polling_8(" Username: ");
-// 			UART_Send_String_Polling_8(Username);
-// 			UART_Send_String_Polling_8("/n");
-// 		}
+	sint8 Usernamex[8];
+	for(uint8 id = 1;id<MAX_Users_Count;id++){
+		if(EEPROM_Read_UserID_Exist(id)){
+			UART_Send_String_Polling_8("UserID: ");
+			UART_Send_Byte_Polling_8(id + 48);
+			UART_Send_String_Polling_8(" Username: ");
+			EEPROM_Read_8Data(id,Usernamex,2);
+			UART_Send_String_Polling_8(Usernamex);
+			UART_Send_String_Polling_8("\n");
+ 		}
 	}
 }
 
+
+void UART_Show_Delete_ID(){
+	UART_Send_String_Polling_8("Enter UserID To Delete : \n");
+}
+void UART_Show_Request_NewUsername(){
+	UART_Send_String_Polling_8("Enter The NewUser Username: \n");
+}
+void UART_Show_Request_NewUserPassword(){
+	UART_Send_String_Polling_8("Enter The NewUser Password: \n");
+}
+
+void UART_Logged_OFF(){
+	UART_Send_String_Polling_8("Logged off Success! \n");
+	UART_Show_Request_UserID();
+}
 void UART_Choice_Handler_1(uint8 g_choice_1){
 	switch(g_choice_1){
-		case 1:UART_Show_Control_Leds();break;
-		case 2:UART_Show_Control_AC();	break;
-		case 3:UART_Show_Control_Door();break;
-		case 4:UART_Show_Control_Dimmer();break;
-		case 5://Show_User_List
-		break;
-		case 6://Create New User Allow Only Admin To Create User!
-		break;
-		case 7://Delete User  Allow Only Admin To Delete User!
-		break;
-		case 8://Delete All Users Allow Only Admin To Delete User!
-		break;
-		case 9:// Factory Reset
-		break;
-		case 0:// Log out
-		break;
+		case 1:UART_Show_Control_Leds();break;		//NEXT EXIST
+		case 2:UART_Show_Control_AC();	break;		//NEXT EXIST
+		case 3:UART_Show_Control_Door();break;		//NEXT EXIST
+		case 4:UART_Show_Control_Dimmer();break;		//NEXT EXIST
+		case 5:UART_Show_User_List();break;				// NO NEXT
+		case 6:UART_Show_Request_NewUsername();break;	//NEXT EXIST
+		case 7:UART_Show_Delete_ID();break;				//NEXT EXIST
+		case 8:UART_Logged_OFF();break;					//NO NEXT
 	}
 }
 
 
-void UART_LED_Feedback(uint8 g_choice_2){
-	uint8 x = 0;
-	switch(g_choice_2){
-		case 1: // Toggle Led 0
-			LED_0_Toggle(); x = 0;break;
-		case 2: // Toggle Led 1
-			LED_1_Toggle(); x = 1;break;
-		case 3: // Toggle Led 2
-			LED_2_Toggle(); x = 2;break;
-		case 4: // Toggle Led 3
-			LED_3_Toggle(); x = 3;break;
-		case 5: // Toggle Led 4
-			LED_4_Toggle(); x = 4;break;
-	}
-	UART_Send_String_Polling_8("Led ");
-	UART_Send_Byte_Polling_8(x);
-	UART_Send_String_Polling_8("Toggled");	
+void UART_Show_Login_Failed(){
+	UART_Send_String_Polling_8("Login Failed, Try again! ");
+	UART_Send_Byte_Polling_8(FailCount + 48);
+	UART_Send_String_Polling_8(" \n");
 }

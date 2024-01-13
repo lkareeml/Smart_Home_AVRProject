@@ -6,7 +6,7 @@ main.d main.o: .././main.c .././MCAL/Digital_Input_Output/DIO.h \
  .././HAL/Buzzer/Buzzer.h .././HAL/Keypad_4x4/Keypad_4x4.h \
  .././HAL/AirConditioner/AC.h .././HAL/Leds_5/Leds.h \
  .././HAL/EEPROM/EEPROM.h .././HAL/LCD_16x2/LCD.h \
- .././HAL/Door_Servo/Door_Servo.h .././HAL/Bluetooth/Bluetooth.h \
+ .././HAL/Door_Servo/Door_Servo.h \
  .././HAL/Temperature_Sensor/Temp_Sensor.h \
  .././HAL/Dimming_Light/Dimmer.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
@@ -61,8 +61,6 @@ main.d main.o: .././main.c .././MCAL/Digital_Input_Output/DIO.h \
 .././HAL/LCD_16x2/LCD.h:
 
 .././HAL/Door_Servo/Door_Servo.h:
-
-.././HAL/Bluetooth/Bluetooth.h:
 
 .././HAL/Temperature_Sensor/Temp_Sensor.h:
 

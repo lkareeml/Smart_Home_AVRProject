@@ -37,4 +37,8 @@ void LED_3_Toggle();
 void LED_4_Toggle();
 void LED_5_Toggle();
 
+
+void LED_Feedback(uint8 g_choice_2);
+
+
 #endif /* LEDS_H_ */

@@ -57,3 +57,22 @@ void LED_2_Toggle(){DIO_Set_Pin_Output(Led2_Port,Led2_Pin,Toggle);}
 void LED_3_Toggle(){DIO_Set_Pin_Output(Led3_Port,Led3_Pin,Toggle);}
 void LED_4_Toggle(){DIO_Set_Pin_Output(Led4_Port,Led4_Pin,Toggle);}
 void Dimmer_Toggle(){DIO_Set_Pin_Output(Dimmer_Port,Dimmer_Pin,Low);}
+
+void LED_Feedback(uint8 g_choice_2){
+	uint8 x = 0;
+	switch(g_choice_2){
+		case 1: // Toggle Led 0
+		LED_0_Toggle(); x = 0;break;
+		case 2: // Toggle Led 1
+		LED_1_Toggle(); x = 1;break;
+		case 3: // Toggle Led 2
+		LED_2_Toggle(); x = 2;break;
+		case 4: // Toggle Led 3
+		LED_3_Toggle(); x = 3;break;
+		case 5: // Toggle Led 4
+		LED_4_Toggle(); x = 4;break;
+	}
+	UART_Send_String_Polling_8("Led ");
+	UART_Send_Byte_Polling_8(x);
+	UART_Send_String_Polling_8("Toggled");
+}

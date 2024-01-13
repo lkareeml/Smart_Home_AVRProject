@@ -17,10 +17,11 @@ void  EEPROM_Write_Number_32(uint16 Address ,uint32 Number);
 uint32 EEPROM_Read_Number_32(uint16 Address);
 
 
-void EEPROM_Read_Data(uint8 UserID,sint8 * Data, uint8 DataType);
+void EEPROM_Read_8Data(uint8 UserID,sint8 * Data, uint8 DataType);
 uint8 EEPROM_Read_UserID_Exist(uint8 UserID);
 void EEPROM_Delete_User(uint8 UserID);
 void EEPROM_Edit_Data(uint8 UserID,sint8 * Data, uint8 DataType);
+uint8 EEPROM_Find_Empty_ID();
 void EEPROM_Reg_New_User(uint8 UserID, sint8 * Username, sint8 * Password);
 
 #endif /* EEPROM_H_ */

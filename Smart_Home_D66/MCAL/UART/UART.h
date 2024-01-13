@@ -73,7 +73,6 @@ uint32 UART_Recieve_Number_Polling_32(void);
 
 void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password,uint8 * FailCount);
 void UART_Show_MainMenu_Inside(uint8 choice_1);
-void UART_Show_Control_Appliances_Inside(uint8 choice_2,sint8 * global_UART_UserID,uint8 * global_Flag);
 
 void UART_Show_Request_UserID();
 void UART_Show_Request_Password();
@@ -88,11 +87,9 @@ void UART_Show_Control_Dimmer();
 void UART_Show_Settings();
 void UART_Show_User_List();
 void UART_EEPROM_Delete_All_Users();
-
-
 void UART_Choice_Handler_1(uint8 g_choice_1);
-
-void UART_LED_Feedback(uint8 g_choice_2);
+void UART_Show_Request_NewUserPassword();
+void UART_Show_Login_Failed();
 
 
 #endif /* UART_H_ */
