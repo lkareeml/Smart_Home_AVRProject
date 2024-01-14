@@ -22,6 +22,22 @@
 static uint8 Cursor_Position = 0;
 extern uint8 Max_Failure_Login_Count;
 
+
+extern uint8 LCD_g_step;
+extern uint8 LCD_UserInput;
+extern uint8 LCD_user_count;
+extern uint8 LCD_pass_count;
+extern uint8 LCD_ID;
+extern sint8 LCD_UserID[8];
+extern sint8 LCD_Password[8];
+extern sint8 LCD_EE_Password[8];
+extern sint8 LCD_EE_Username[8];
+extern uint8 LCD_Fail_Count;
+extern uint8 LCD_g_choice1;
+extern uint8 LCD_g_choice2;
+
+
+
 #define Get_Bit_Value(Byte_Data,Bit_Order)	((Byte_Data>>Bit_Order)&(0x01)) /// 0,1
 
 void Send_Data_FallingEdge(){
@@ -224,81 +240,47 @@ void LCD_Show_Locked(){
 	LCD_Send_String("System Locked   ");
 }
 
-uint8 g_step = 1;
-uint8 x = '\0';
-uint8 user_count = 0;
-uint8 pass_count = 0;
-uint8 LCD_ID;
-sint8 LCD_UserID[8];
-sint8 LCD_Password[8];
-sint8 LCD_EE_Password[8];
-sint8 LCD_EE_Username[8];
-uint8 LCD_Fail_Count = 0;
-
-uint8 LCD_g_choice1 = 0;
-uint8 LCD_g_choice2 = 0;
-
-/*
-// void LCD_Get_UserInput(sint8 * Data, uint8 * Data_Count){
-// 	x = KEYPAD_Get_Pressed_Key();
-// 	if (x == '\0') return;
-	if (x >= '0' && x <= '9'){
-		LCD_Send_Char(x);
-		Data[Data_Count] = x;
-		Data_Count++;
-		}else if (x == '*' && Data_Count > 0){
-		LCD_Delete_Last_Written();
-		Data[Data_Count] = '\0';
-		Data_Count--;
-		}else if (x >= 'A' && x <= 'D') {
-		x = '\0';
-		g_step++;
-	}
-// 	x = '\0';
-// }
-*/
-
 
 void LCD_Process(){
-	switch(g_step){
-		case 1:LCD_Show_Get_UserID(); g_step++; break;
+	switch(LCD_g_step){
+		case 1:LCD_Show_Get_UserID(); LCD_g_step++; break;
 		case 2:
-			x = KEYPAD_Get_Pressed_Key();
-			if (x == '\0') break;
-			if (x >= '0' && x <= '9'){
-				LCD_Send_Char(x);
-				LCD_UserID[user_count] = x;
-				user_count++;
-			}else if (x == '*' && user_count > 0){
+			LCD_UserInput = KEYPAD_Get_Pressed_Key();
+			if (LCD_UserInput == '\0') break;
+			if (LCD_UserInput >= '0' && LCD_UserInput <= '9'){
+				LCD_Send_Char(LCD_UserInput);
+				LCD_UserID[LCD_user_count] = LCD_UserInput;
+				LCD_user_count++;
+			}else if (LCD_UserInput == '*' && LCD_user_count > 0){
 				LCD_Delete_Last_Written();
-				LCD_UserID[user_count] = '\0';
-				user_count--;
-			}else if (x >= 'A' && x <= 'D') {
-				g_step++;
+				LCD_UserID[LCD_user_count] = '\0';
+				LCD_user_count--;
+			}else if (LCD_UserInput >= 'A' && LCD_UserInput <= 'D') {
+				LCD_g_step++;
 			}
-			x = '\0';
+			LCD_UserInput = '\0';
 			break;
-		case 3:LCD_Show_Get_Password();g_step++;break;
+		case 3:LCD_Show_Get_Password();LCD_g_step++;break;
 		case 4:
 			// Get user Input 
-			x = KEYPAD_Get_Pressed_Key();
-			if (x == '\0') break;
-			if (x >= '0' && x <= '9'){
-				LCD_Send_Char(x);
-				LCD_Password[pass_count] = x;
-				pass_count++;
-				}else if (x == '*' && pass_count > 0){
+			LCD_UserInput = KEYPAD_Get_Pressed_Key();
+			if (LCD_UserInput == '\0') break;
+			if (LCD_UserInput >= '0' && LCD_UserInput <= '9'){
+				LCD_Send_Char(LCD_UserInput);
+				LCD_Password[LCD_pass_count] = LCD_UserInput;
+				LCD_pass_count++;
+				}else if (LCD_UserInput == '*' && LCD_pass_count > 0){
 				LCD_Delete_Last_Written();
-				LCD_Password[pass_count] = '\0';
-				pass_count--;
-				}else if (x >= 'A' && x <= 'D') {
-				g_step++;
+				LCD_Password[LCD_pass_count] = '\0';
+				LCD_pass_count--;
+				}else if (LCD_UserInput >= 'A' && LCD_UserInput <= 'D') {
+				LCD_g_step++;
 			}
-			x = '\0';
+			LCD_UserInput = '\0';
 			break;
 		case 5: 
 			//User/Password Login Process
-			// If User Exist, Fetch Password
+			// If User ELCD_UserInputist, Fetch Password
 			LCD_ID = atoi(LCD_UserID);
 
 			if(EEPROM_Read_UserID_Exist(LCD_ID)){
@@ -309,7 +291,7 @@ void LCD_Process(){
 				EEPROM_Read_8Data(LCD_ID,LCD_EE_Username,2);
 				LCD_Show_Welcome_User();
 				LCD_Send_String(LCD_EE_Username);
-				g_step++;
+				LCD_g_step++;
 			}else{
 				//Else Login Failed, Increase Fail Counter
 				LCD_Show_AuthFailed();
@@ -319,23 +301,23 @@ void LCD_Process(){
 					LCD_Show_Locked();
 					BUZZER_ALARM_TILL_RESET();
 				}
-				g_step = 1;
+				LCD_g_step = 1;
 			}
 			break;
 			
 			
 		case 6:_delay_ms(1000);LCD_Show_Main_Options();break;
 		case 7:
-			x = KEYPAD_Get_Pressed_Key();
-			if (x == '\0') break;
-			if (x >= '0' && x <= '4'){
-				LCD_g_choice1 = x - 48;
-				x = '\0';
-				g_step++;
+			LCD_UserInput = KEYPAD_Get_Pressed_Key();
+			if (LCD_UserInput == '\0') break;
+			if (LCD_UserInput >= '0' && LCD_UserInput <= '4'){
+				LCD_g_choice1 = LCD_UserInput - 48;
+				LCD_UserInput = '\0';
+				LCD_g_step++;
 			}else{
 				LCD_Show_Invalid();
 				_delay_ms(1000);
-				g_step--;
+				LCD_g_step--;
 			}
 			break;
 			
@@ -358,7 +340,7 @@ void LCD_Process(){
 //Dimmer Light Control Mode
 //Now Search EEPROM For That User!!
 // if User is created it will have ID in EEPROM
-// User Exist, Get Password From EEPROM
+// User ELCD_UserInputist, Get Password From EEPROM
 // User Exist Process Next to GetPassword
 //Now Get Password from User EEPROM !!
 // Now Flag the EEPROM THAT LCD USer Is Logged IN!

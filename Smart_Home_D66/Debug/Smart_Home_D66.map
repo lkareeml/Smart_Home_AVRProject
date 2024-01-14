@@ -42,17 +42,17 @@ c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/..
 Allocating common symbols
 Common symbol       size              file
 
-LCD_ID              0x1               HAL/LCD_16x2/LCD.o
+LCD_ID              0x1               main.o
 g_choice_1          0x1               main.o
-LCD_UserID          0x8               HAL/LCD_16x2/LCD.o
-LCD_EE_Username     0x8               HAL/LCD_16x2/LCD.o
+LCD_UserID          0x8               main.o
+LCD_EE_Username     0x8               main.o
 New_UserID          0x1               main.o
 UART_Buffer         0x8               main.o
 g_choice_2          0x1               main.o
 New_Username        0x8               main.o
-LCD_Password        0x8               HAL/LCD_16x2/LCD.o
+LCD_Password        0x8               main.o
 New_Password        0x8               main.o
-LCD_EE_Password     0x8               HAL/LCD_16x2/LCD.o
+LCD_EE_Password     0x8               main.o
 
 Discarded input sections
 
@@ -61,22 +61,17 @@ Discarded input sections
  .text          0x00000000        0x0 Application/Smart.o
  .data          0x00000000        0x0 Application/Smart.o
  .bss           0x00000000        0x0 Application/Smart.o
- .text.String_Compare
-                0x00000000       0x52 Application/Smart.o
- .text.Keypad_Check_If_Pressed_0
-                0x00000000        0x2 Application/Smart.o
  .text.Smart_Idle
                 0x00000000        0x2 Application/Smart.o
- .debug_info    0x00000000      0x110 Application/Smart.o
- .debug_abbrev  0x00000000       0xa8 Application/Smart.o
- .debug_loc     0x00000000       0x8a Application/Smart.o
+ .debug_info    0x00000000       0x8c Application/Smart.o
+ .debug_abbrev  0x00000000       0x42 Application/Smart.o
  .debug_aranges
-                0x00000000       0x30 Application/Smart.o
- .debug_ranges  0x00000000       0x40 Application/Smart.o
- .debug_line    0x00000000       0xb6 Application/Smart.o
- .debug_str     0x00000000      0x1c8 Application/Smart.o
+                0x00000000       0x20 Application/Smart.o
+ .debug_ranges  0x00000000       0x10 Application/Smart.o
+ .debug_line    0x00000000       0x45 Application/Smart.o
+ .debug_str     0x00000000      0x189 Application/Smart.o
  .comment       0x00000000       0x31 Application/Smart.o
- .debug_frame   0x00000000       0x44 Application/Smart.o
+ .debug_frame   0x00000000       0x24 Application/Smart.o
  .text          0x00000000        0x0 HAL/AirConditioner/AC.o
  .data          0x00000000        0x0 HAL/AirConditioner/AC.o
  .bss           0x00000000        0x0 HAL/AirConditioner/AC.o
@@ -120,16 +115,14 @@ Discarded input sections
  .text          0x00000000        0x0 HAL/LCD_16x2/LCD.o
  .data          0x00000000        0x0 HAL/LCD_16x2/LCD.o
  .bss           0x00000000        0x0 HAL/LCD_16x2/LCD.o
+ .text.LCD_Show_Choose_AC
+                0x00000000       0x16 HAL/LCD_16x2/LCD.o
  .text.LCD_Show_Choose_LED
                 0x00000000       0x16 HAL/LCD_16x2/LCD.o
  .text.LCD_Show_Choose_Dimmer
                 0x00000000       0x16 HAL/LCD_16x2/LCD.o
  .text.LCD_Idle
                 0x00000000       0x90 HAL/LCD_16x2/LCD.o
- .data.Delayer_ms
-                0x00000000        0x2 HAL/LCD_16x2/LCD.o
- .bss.Delayer_Counter
-                0x00000000        0x2 HAL/LCD_16x2/LCD.o
  .text          0x00000000        0x0 HAL/Leds_5/Leds.o
  .data          0x00000000        0x0 HAL/Leds_5/Leds.o
  .bss           0x00000000        0x0 HAL/Leds_5/Leds.o
@@ -168,6 +161,8 @@ Discarded input sections
  .rodata        0x00000000       0x28 main.o
  .text.Smart_Configurator
                 0x00000000      0x15e main.o
+ .bss.LCD_g_choice2
+                0x00000000        0x1 main.o
  .text          0x00000000        0x0 MCAL/Analog_To_Digital_Converter/ADC.o
  .data          0x00000000        0x0 MCAL/Analog_To_Digital_Converter/ADC.o
  .bss           0x00000000        0x0 MCAL/Analog_To_Digital_Converter/ADC.o
@@ -640,7 +635,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x1ab0
+.text           0x00000000     0x1ab2
  *(.vectors)
  .vectors       0x00000000       0x54 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32a/avr5/crtatmega32a.o
                 0x00000000                __vector_default
@@ -838,188 +833,188 @@ END GROUP
  .text.LCD_Show_AuthFailed
                 0x00000da2       0x16 HAL/LCD_16x2/LCD.o
                 0x00000da2                LCD_Show_AuthFailed
- .text.LCD_Show_Main_Options
-                0x00000db8       0x16 HAL/LCD_16x2/LCD.o
-                0x00000db8                LCD_Show_Main_Options
  .text.LCD_Show_Invalid
+                0x00000db8       0x16 HAL/LCD_16x2/LCD.o
+                0x00000db8                LCD_Show_Invalid
+ .text.LCD_Show_Main_Options
                 0x00000dce       0x16 HAL/LCD_16x2/LCD.o
-                0x00000dce                LCD_Show_Invalid
+                0x00000dce                LCD_Show_Main_Options
  .text.LCD_Show_Locked
                 0x00000de4       0x16 HAL/LCD_16x2/LCD.o
                 0x00000de4                LCD_Show_Locked
  .text.LCD_Process
-                0x00000dfa      0x200 HAL/LCD_16x2/LCD.o
+                0x00000dfa      0x202 HAL/LCD_16x2/LCD.o
                 0x00000dfa                LCD_Process
  .text.LED_Init_All
-                0x00000ffa       0x3e HAL/Leds_5/Leds.o
-                0x00000ffa                LED_Init_All
+                0x00000ffc       0x3e HAL/Leds_5/Leds.o
+                0x00000ffc                LED_Init_All
  .text.LED_0_Off
-                0x00001038        0xc HAL/Leds_5/Leds.o
-                0x00001038                LED_0_Off
+                0x0000103a        0xc HAL/Leds_5/Leds.o
+                0x0000103a                LED_0_Off
  .text.LED_1_Off
-                0x00001044        0xc HAL/Leds_5/Leds.o
-                0x00001044                LED_1_Off
+                0x00001046        0xc HAL/Leds_5/Leds.o
+                0x00001046                LED_1_Off
  .text.LED_2_Off
-                0x00001050        0xc HAL/Leds_5/Leds.o
-                0x00001050                LED_2_Off
+                0x00001052        0xc HAL/Leds_5/Leds.o
+                0x00001052                LED_2_Off
  .text.LED_3_Off
-                0x0000105c        0xc HAL/Leds_5/Leds.o
-                0x0000105c                LED_3_Off
+                0x0000105e        0xc HAL/Leds_5/Leds.o
+                0x0000105e                LED_3_Off
  .text.LED_4_Off
-                0x00001068        0xc HAL/Leds_5/Leds.o
-                0x00001068                LED_4_Off
+                0x0000106a        0xc HAL/Leds_5/Leds.o
+                0x0000106a                LED_4_Off
  .text.LED_0_Toggle
-                0x00001074        0xc HAL/Leds_5/Leds.o
-                0x00001074                LED_0_Toggle
+                0x00001076        0xc HAL/Leds_5/Leds.o
+                0x00001076                LED_0_Toggle
  .text.LED_1_Toggle
-                0x00001080        0xc HAL/Leds_5/Leds.o
-                0x00001080                LED_1_Toggle
+                0x00001082        0xc HAL/Leds_5/Leds.o
+                0x00001082                LED_1_Toggle
  .text.LED_2_Toggle
-                0x0000108c        0xc HAL/Leds_5/Leds.o
-                0x0000108c                LED_2_Toggle
+                0x0000108e        0xc HAL/Leds_5/Leds.o
+                0x0000108e                LED_2_Toggle
  .text.LED_3_Toggle
-                0x00001098        0xc HAL/Leds_5/Leds.o
-                0x00001098                LED_3_Toggle
+                0x0000109a        0xc HAL/Leds_5/Leds.o
+                0x0000109a                LED_3_Toggle
  .text.LED_4_Toggle
-                0x000010a4        0xc HAL/Leds_5/Leds.o
-                0x000010a4                LED_4_Toggle
+                0x000010a6        0xc HAL/Leds_5/Leds.o
+                0x000010a6                LED_4_Toggle
  .text.LED_Feedback
-                0x000010b0       0x62 HAL/Leds_5/Leds.o
-                0x000010b0                LED_Feedback
+                0x000010b2       0x62 HAL/Leds_5/Leds.o
+                0x000010b2                LED_Feedback
  .text.Smart_Initialization
-                0x00001112       0x42 main.o
-                0x00001112                Smart_Initialization
+                0x00001114       0x42 main.o
+                0x00001114                Smart_Initialization
  .text.__vector_13
-                0x00001154       0x52 main.o
-                0x00001154                __vector_13
- .text.Go_Next  0x000011a6        0xc main.o
-                0x000011a6                Go_Next
+                0x00001156       0x52 main.o
+                0x00001156                __vector_13
+ .text.Go_Next  0x000011a8        0xc main.o
+                0x000011a8                Go_Next
  .text.UART_Process
-                0x000011b2      0x284 main.o
-                0x000011b2                UART_Process
- .text.main     0x00001436        0xe main.o
-                0x00001436                main
+                0x000011b4      0x284 main.o
+                0x000011b4                UART_Process
+ .text.main     0x00001438        0xe main.o
+                0x00001438                main
  .text.DIO_Set_Pin_Direction
-                0x00001444       0xe0 MCAL/Digital_Input_Output/DIO.o
-                0x00001444                DIO_Set_Pin_Direction
+                0x00001446       0xe0 MCAL/Digital_Input_Output/DIO.o
+                0x00001446                DIO_Set_Pin_Direction
  .text.DIO_Set_Pin_Output
-                0x00001524      0x14c MCAL/Digital_Input_Output/DIO.o
-                0x00001524                DIO_Set_Pin_Output
+                0x00001526      0x14c MCAL/Digital_Input_Output/DIO.o
+                0x00001526                DIO_Set_Pin_Output
  .text.DIO_Get_Pin_Value
-                0x00001670       0x5c MCAL/Digital_Input_Output/DIO.o
-                0x00001670                DIO_Get_Pin_Value
+                0x00001672       0x5c MCAL/Digital_Input_Output/DIO.o
+                0x00001672                DIO_Get_Pin_Value
  .text.GIE_Enable
-                0x000016cc        0x8 MCAL/Interrupt/Interrupt.o
-                0x000016cc                GIE_Enable
+                0x000016ce        0x8 MCAL/Interrupt/Interrupt.o
+                0x000016ce                GIE_Enable
  .text.GIE_Disable
-                0x000016d4        0x8 MCAL/Interrupt/Interrupt.o
-                0x000016d4                GIE_Disable
+                0x000016d6        0x8 MCAL/Interrupt/Interrupt.o
+                0x000016d6                GIE_Disable
  .text.Timer0_Init
-                0x000016dc       0x2c MCAL/Timers/Timers.o
-                0x000016dc                Timer0_Init
+                0x000016de       0x2c MCAL/Timers/Timers.o
+                0x000016de                Timer0_Init
  .text.Timer0_Enable_Overflow_Interrupt
-                0x00001708        0x8 MCAL/Timers/Timers.o
-                0x00001708                Timer0_Enable_Overflow_Interrupt
+                0x0000170a        0x8 MCAL/Timers/Timers.o
+                0x0000170a                Timer0_Enable_Overflow_Interrupt
  .text.TWI_Init
-                0x00001710       0x18 MCAL/TWI_I2C/TWI_I2C.o
-                0x00001710                TWI_Init
+                0x00001712       0x18 MCAL/TWI_I2C/TWI_I2C.o
+                0x00001712                TWI_Init
  .text.TWI_Check_Status
-                0x00001728       0x16 MCAL/TWI_I2C/TWI_I2C.o
-                0x00001728                TWI_Check_Status
+                0x0000172a       0x16 MCAL/TWI_I2C/TWI_I2C.o
+                0x0000172a                TWI_Check_Status
  .text.TWI_Send_Stop
-                0x0000173e        0x6 MCAL/TWI_I2C/TWI_I2C.o
-                0x0000173e                TWI_Send_Stop
+                0x00001740        0x6 MCAL/TWI_I2C/TWI_I2C.o
+                0x00001740                TWI_Send_Stop
  .text.TWI_MSTR_Send_Start
-                0x00001744        0xc MCAL/TWI_I2C/TWI_I2C.o
-                0x00001744                TWI_MSTR_Send_Start
+                0x00001746        0xc MCAL/TWI_I2C/TWI_I2C.o
+                0x00001746                TWI_MSTR_Send_Start
  .text.TWI_Receive_Data
-                0x00001750       0x18 MCAL/TWI_I2C/TWI_I2C.o
-                0x00001750                TWI_Receive_Data
+                0x00001752       0x18 MCAL/TWI_I2C/TWI_I2C.o
+                0x00001752                TWI_Receive_Data
  .text.TWI_Send_Data
-                0x00001768        0xe MCAL/TWI_I2C/TWI_I2C.o
-                0x00001768                TWI_Send_Data
+                0x0000176a        0xe MCAL/TWI_I2C/TWI_I2C.o
+                0x0000176a                TWI_Send_Data
  .text.UART_Enable_RX_Interrupt
-                0x00001776        0x8 MCAL/UART/UART.o
-                0x00001776                UART_Enable_RX_Interrupt
+                0x00001778        0x8 MCAL/UART/UART.o
+                0x00001778                UART_Enable_RX_Interrupt
  .text.UART_Init
-                0x0000177e       0x4a MCAL/UART/UART.o
-                0x0000177e                UART_Init
+                0x00001780       0x4a MCAL/UART/UART.o
+                0x00001780                UART_Init
  .text.UART_Send_Byte_Polling_8
-                0x000017c8        0x8 MCAL/UART/UART.o
-                0x000017c8                UART_Send_Byte_Polling_8
+                0x000017ca        0x8 MCAL/UART/UART.o
+                0x000017ca                UART_Send_Byte_Polling_8
  .text.UART_Send_String_Polling_8
-                0x000017d0       0x26 MCAL/UART/UART.o
-                0x000017d0                UART_Send_String_Polling_8
+                0x000017d2       0x26 MCAL/UART/UART.o
+                0x000017d2                UART_Send_String_Polling_8
  .text.UART_Receive_Byte_8
-                0x000017f6        0x8 MCAL/UART/UART.o
-                0x000017f6                UART_Receive_Byte_8
+                0x000017f8        0x8 MCAL/UART/UART.o
+                0x000017f8                UART_Receive_Byte_8
  .text.UART_Recieve_String_8
-                0x000017fe       0x3a MCAL/UART/UART.o
-                0x000017fe                UART_Recieve_String_8
+                0x00001800       0x3a MCAL/UART/UART.o
+                0x00001800                UART_Recieve_String_8
  .text.UART_Show_Request_UserID
-                0x00001838        0xa MCAL/UART/UART.o
-                0x00001838                UART_Show_Request_UserID
+                0x0000183a        0xa MCAL/UART/UART.o
+                0x0000183a                UART_Show_Request_UserID
  .text.UART_Show_Request_Password
-                0x00001842        0xa MCAL/UART/UART.o
-                0x00001842                UART_Show_Request_Password
+                0x00001844        0xa MCAL/UART/UART.o
+                0x00001844                UART_Show_Request_Password
  .text.UART_Show_Invalid
-                0x0000184c        0xa MCAL/UART/UART.o
-                0x0000184c                UART_Show_Invalid
+                0x0000184e        0xa MCAL/UART/UART.o
+                0x0000184e                UART_Show_Invalid
  .text.UART_Show_MainMenu
-                0x00001856       0x42 MCAL/UART/UART.o
-                0x00001856                UART_Show_MainMenu
+                0x00001858       0x42 MCAL/UART/UART.o
+                0x00001858                UART_Show_MainMenu
  .text.UART_Show_Control_Leds
-                0x00001898       0x32 MCAL/UART/UART.o
-                0x00001898                UART_Show_Control_Leds
+                0x0000189a       0x32 MCAL/UART/UART.o
+                0x0000189a                UART_Show_Control_Leds
  .text.UART_Show_Control_AC
-                0x000018ca       0x22 MCAL/UART/UART.o
-                0x000018ca                UART_Show_Control_AC
+                0x000018cc       0x22 MCAL/UART/UART.o
+                0x000018cc                UART_Show_Control_AC
  .text.UART_Show_Control_Door
-                0x000018ec       0x1a MCAL/UART/UART.o
-                0x000018ec                UART_Show_Control_Door
+                0x000018ee       0x1a MCAL/UART/UART.o
+                0x000018ee                UART_Show_Control_Door
  .text.UART_Show_Control_Dimmer
-                0x00001906       0x2a MCAL/UART/UART.o
-                0x00001906                UART_Show_Control_Dimmer
+                0x00001908       0x2a MCAL/UART/UART.o
+                0x00001908                UART_Show_Control_Dimmer
  .text.UART_Show_User_List
-                0x00001930       0x78 MCAL/UART/UART.o
-                0x00001930                UART_Show_User_List
+                0x00001932       0x78 MCAL/UART/UART.o
+                0x00001932                UART_Show_User_List
  .text.UART_Show_Delete_ID
-                0x000019a8        0xa MCAL/UART/UART.o
-                0x000019a8                UART_Show_Delete_ID
+                0x000019aa        0xa MCAL/UART/UART.o
+                0x000019aa                UART_Show_Delete_ID
  .text.UART_Show_Request_NewUsername
-                0x000019b2        0xa MCAL/UART/UART.o
-                0x000019b2                UART_Show_Request_NewUsername
+                0x000019b4        0xa MCAL/UART/UART.o
+                0x000019b4                UART_Show_Request_NewUsername
  .text.UART_Show_Request_NewUserPassword
-                0x000019bc        0xa MCAL/UART/UART.o
-                0x000019bc                UART_Show_Request_NewUserPassword
+                0x000019be        0xa MCAL/UART/UART.o
+                0x000019be                UART_Show_Request_NewUserPassword
  .text.UART_Logged_OFF
-                0x000019c6        0xe MCAL/UART/UART.o
-                0x000019c6                UART_Logged_OFF
+                0x000019c8        0xe MCAL/UART/UART.o
+                0x000019c8                UART_Logged_OFF
  .text.UART_Choice_Handler_1
-                0x000019d4       0x44 MCAL/UART/UART.o
-                0x000019d4                UART_Choice_Handler_1
+                0x000019d6       0x44 MCAL/UART/UART.o
+                0x000019d6                UART_Choice_Handler_1
  .text.UART_Show_Login_Failed
-                0x00001a18       0x1c MCAL/UART/UART.o
-                0x00001a18                UART_Show_Login_Failed
- .text.libgcc   0x00001a34        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_tablejump2.o)
-                0x00001a34                __tablejump2__
+                0x00001a1a       0x1c MCAL/UART/UART.o
+                0x00001a1a                UART_Show_Login_Failed
+ .text.libgcc   0x00001a36        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_tablejump2.o)
+                0x00001a36                __tablejump2__
  .text.avr-libc
-                0x00001a40       0x3c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(atoi.o)
-                0x00001a40                atoi
+                0x00001a42       0x3c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(atoi.o)
+                0x00001a42                atoi
  .text.avr-libc
-                0x00001a7c       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strcmp.o)
-                0x00001a7c                strcmp
+                0x00001a7e       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strcmp.o)
+                0x00001a7e                strcmp
  .text.avr-libc
-                0x00001a8e        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strcpy.o)
-                0x00001a8e                strcpy
+                0x00001a90        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strcpy.o)
+                0x00001a90                strcpy
  .text.avr-libc
-                0x00001a9c       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(mul10.o)
-                0x00001a9c                __mulhi_const_10
-                0x00001aac                . = ALIGN (0x2)
+                0x00001a9e       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(mul10.o)
+                0x00001a9e                __mulhi_const_10
+                0x00001aae                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00001aac        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x00001aac                _exit
-                0x00001aac                exit
+ .fini9         0x00001aae        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x00001aae                _exit
+                0x00001aae                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -1038,122 +1033,122 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00001aac        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x00001aae        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00001ab0                _etext = .
+                0x00001ab2                _etext = .
 
-.data           0x00800060      0x5d4 load address 0x00001ab0
+.data           0x00800060      0x5f6 load address 0x00001ab2
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
- .data.Release  0x00800060        0x1 HAL/LCD_16x2/LCD.o
-                0x00800060                Release
- .data.g_step   0x00800061        0x1 HAL/LCD_16x2/LCD.o
-                0x00800061                g_step
+ .data.LCD_g_step
+                0x00800060        0x1 main.o
+                0x00800060                LCD_g_step
  .data.EEPROM_Password
-                0x00800062        0x8 main.o
+                0x00800061        0x8 main.o
  .data.EEPROM_Username
-                0x0080006a        0x8 main.o
+                0x00800069        0x8 main.o
  .data.UART_global_Flag
-                0x00800072        0x1 main.o
+                0x00800071        0x1 main.o
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x00800073       0x7e HAL/AirConditioner/AC.o
+                0x00800072       0x7e HAL/AirConditioner/AC.o
  .rodata.str1.1
-                0x008000f1       0x7a HAL/Dimming_Light/Dimmer.o
+                0x008000f0       0x7a HAL/Dimming_Light/Dimmer.o
  .rodata.str1.1
-                0x0080016b       0x5a HAL/Door_Servo/Door_Servo.o
+                0x0080016a       0x5a HAL/Door_Servo/Door_Servo.o
  .rodata.str1.1
-                0x008001c5      0x128 HAL/LCD_16x2/LCD.o
+                0x008001c4      0x14a HAL/LCD_16x2/LCD.o
  .rodata.str1.1
-                0x008002ed        0xd HAL/Leds_5/Leds.o
+                0x0080030e        0xd HAL/Leds_5/Leds.o
  .rodata.str1.1
-                0x008002fa       0xaf main.o
+                0x0080031b       0xaf main.o
                                  0xd1 (size before relaxing)
  .rodata.MAX_Users_Count
-                0x008003a9        0x1 main.o
-                0x008003a9                MAX_Users_Count
+                0x008003ca        0x1 main.o
+                0x008003ca                MAX_Users_Count
  .rodata.Max_Failure_Login_Count
-                0x008003aa        0x1 main.o
-                0x008003aa                Max_Failure_Login_Count
+                0x008003cb        0x1 main.o
+                0x008003cb                Max_Failure_Login_Count
  .rodata.str1.1
-                0x008003ab      0x289 MCAL/UART/UART.o
+                0x008003cc      0x289 MCAL/UART/UART.o
                                 0x29a (size before relaxing)
  *(.gnu.linkonce.r*)
-                0x00800634                . = ALIGN (0x2)
-                0x00800634                _edata = .
-                0x00800634                PROVIDE (__data_end, .)
+                0x00800656                . = ALIGN (0x2)
+ *fill*         0x00800655        0x1 
+                0x00800656                _edata = .
+                0x00800656                PROVIDE (__data_end, .)
 
-.bss            0x00800634       0x5b
-                0x00800634                PROVIDE (__bss_start, .)
+.bss            0x00800656       0x5b
+                0x00800656                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.AC_State  0x00800634        0x1 HAL/AirConditioner/AC.o
-                0x00800634                AC_State
+ .bss.AC_State  0x00800656        0x1 HAL/AirConditioner/AC.o
+                0x00800656                AC_State
  .bss.AC_State_Auto
-                0x00800635        0x1 HAL/AirConditioner/AC.o
-                0x00800635                AC_State_Auto
+                0x00800657        0x1 HAL/AirConditioner/AC.o
+                0x00800657                AC_State_Auto
  .bss.Dimmercounter.1761
-                0x00800636        0x1 HAL/Dimming_Light/Dimmer.o
- .bss.G_Dimmer_Value
-                0x00800637        0x1 HAL/Dimming_Light/Dimmer.o
-                0x00800637                G_Dimmer_Value
+                0x00800658        0x1 HAL/Dimming_Light/Dimmer.o
  .bss.counter.1900
-                0x00800638        0x1 HAL/Door_Servo/Door_Servo.o
- .bss.door_state
-                0x00800639        0x1 HAL/Door_Servo/Door_Servo.o
-                0x00800639                door_state
- .bss.LCD_g_choice1
-                0x0080063a        0x1 HAL/LCD_16x2/LCD.o
-                0x0080063a                LCD_g_choice1
- .bss.LCD_Fail_Count
-                0x0080063b        0x1 HAL/LCD_16x2/LCD.o
-                0x0080063b                LCD_Fail_Count
- .bss.pass_count
-                0x0080063c        0x1 HAL/LCD_16x2/LCD.o
-                0x0080063c                pass_count
- .bss.user_count
-                0x0080063d        0x1 HAL/LCD_16x2/LCD.o
-                0x0080063d                user_count
- .bss.x         0x0080063e        0x1 HAL/LCD_16x2/LCD.o
-                0x0080063e                x
+                0x00800659        0x1 HAL/Door_Servo/Door_Servo.o
  .bss.Cursor_Position
-                0x0080063f        0x1 HAL/LCD_16x2/LCD.o
+                0x0080065a        0x1 HAL/LCD_16x2/LCD.o
+ .bss.LCD_g_choice1
+                0x0080065b        0x1 main.o
+                0x0080065b                LCD_g_choice1
+ .bss.LCD_Fail_Count
+                0x0080065c        0x1 main.o
+                0x0080065c                LCD_Fail_Count
+ .bss.LCD_pass_count
+                0x0080065d        0x1 main.o
+                0x0080065d                LCD_pass_count
+ .bss.LCD_user_count
+                0x0080065e        0x1 main.o
+                0x0080065e                LCD_user_count
+ .bss.LCD_UserInput
+                0x0080065f        0x1 main.o
+                0x0080065f                LCD_UserInput
  .bss.UART_Password
-                0x00800640        0x8 main.o
- .bss.User_ID   0x00800648        0x1 main.o
+                0x00800660        0x8 main.o
+ .bss.User_ID   0x00800668        0x1 main.o
  .bss.UART_UserID
-                0x00800649        0x8 main.o
+                0x00800669        0x8 main.o
  .bss.UART_Received_Flag
-                0x00800651        0x1 main.o
+                0x00800671        0x1 main.o
  .bss.FailCount
-                0x00800652        0x1 main.o
-                0x00800652                FailCount
+                0x00800672        0x1 main.o
+                0x00800672                FailCount
+ .bss.G_Dimmer_Value
+                0x00800673        0x1 main.o
+                0x00800673                G_Dimmer_Value
+ .bss.door_state
+                0x00800674        0x1 main.o
+                0x00800674                door_state
  *(COMMON)
- COMMON         0x00800653       0x21 HAL/LCD_16x2/LCD.o
-                0x00800653                LCD_ID
-                0x00800654                LCD_UserID
-                0x0080065c                LCD_EE_Username
-                0x00800664                LCD_Password
-                0x0080066c                LCD_EE_Password
- COMMON         0x00800674       0x1b main.o
-                0x00800674                g_choice_1
-                0x00800675                New_UserID
-                0x00800676                UART_Buffer
-                0x0080067e                g_choice_2
-                0x0080067f                New_Username
-                0x00800687                New_Password
-                0x0080068f                PROVIDE (__bss_end, .)
-                0x00001ab0                __data_load_start = LOADADDR (.data)
-                0x00002084                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800675       0x3c main.o
+                0x00800675                LCD_ID
+                0x00800676                g_choice_1
+                0x00800677                LCD_UserID
+                0x0080067f                LCD_EE_Username
+                0x00800687                New_UserID
+                0x00800688                UART_Buffer
+                0x00800690                g_choice_2
+                0x00800691                New_Username
+                0x00800699                LCD_Password
+                0x008006a1                New_Password
+                0x008006a9                LCD_EE_Password
+                0x008006b1                PROVIDE (__bss_end, .)
+                0x00001ab2                __data_load_start = LOADADDR (.data)
+                0x000020a8                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0080068f        0x0
+.noinit         0x008006b1        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x0080068f                _end = .
+                0x008006b1                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -1231,7 +1226,7 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x6c8
+.debug_aranges  0x00000000      0x6d0
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x38 HAL/AirConditioner/AC.o
@@ -1246,44 +1241,44 @@ END GROUP
  .debug_aranges
                 0x00000170       0x28 HAL/Keypad_4x4/Keypad_4x4.o
  .debug_aranges
-                0x00000198       0xc0 HAL/LCD_16x2/LCD.o
+                0x00000198       0xc8 HAL/LCD_16x2/LCD.o
  .debug_aranges
-                0x00000258       0xd0 HAL/Leds_5/Leds.o
+                0x00000260       0xd0 HAL/Leds_5/Leds.o
  .debug_aranges
-                0x00000328       0x50 main.o
+                0x00000330       0x50 main.o
  .debug_aranges
-                0x00000378       0x40 MCAL/Digital_Input_Output/DIO.o
+                0x00000380       0x40 MCAL/Digital_Input_Output/DIO.o
  .debug_aranges
-                0x000003b8       0x80 MCAL/Interrupt/Interrupt.o
+                0x000003c0       0x80 MCAL/Interrupt/Interrupt.o
  .debug_aranges
-                0x00000438      0x118 MCAL/Timers/Timers.o
+                0x00000440      0x118 MCAL/Timers/Timers.o
  .debug_aranges
-                0x00000550       0x60 MCAL/TWI_I2C/TWI_I2C.o
+                0x00000558       0x60 MCAL/TWI_I2C/TWI_I2C.o
  .debug_aranges
-                0x000005b0      0x118 MCAL/UART/UART.o
+                0x000005b8      0x118 MCAL/UART/UART.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x5b4b
+.debug_info     0x00000000     0x5bb9
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x4e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .debug_info    0x000004e6      0x299 HAL/AirConditioner/AC.o
  .debug_info    0x0000077f      0x1b7 HAL/Buzzer/Buzzer.o
- .debug_info    0x00000936      0x336 HAL/Dimming_Light/Dimmer.o
- .debug_info    0x00000c6c      0x2d3 HAL/Door_Servo/Door_Servo.o
- .debug_info    0x00000f3f      0x8c7 HAL/EEPROM/EEPROM.o
- .debug_info    0x00001806      0x7fe HAL/Keypad_4x4/Keypad_4x4.o
- .debug_info    0x00002004     0x14c8 HAL/LCD_16x2/LCD.o
- .debug_info    0x000034cc      0x6a9 HAL/Leds_5/Leds.o
- .debug_info    0x00003b75      0xb5a main.o
- .debug_info    0x000046cf      0x251 MCAL/Digital_Input_Output/DIO.o
- .debug_info    0x00004920      0x25f MCAL/Interrupt/Interrupt.o
- .debug_info    0x00004b7f      0x3ca MCAL/Timers/Timers.o
- .debug_info    0x00004f49      0x23d MCAL/TWI_I2C/TWI_I2C.o
- .debug_info    0x00005186      0x9c5 MCAL/UART/UART.o
+ .debug_info    0x00000936      0x331 HAL/Dimming_Light/Dimmer.o
+ .debug_info    0x00000c67      0x2ce HAL/Door_Servo/Door_Servo.o
+ .debug_info    0x00000f35      0x8c7 HAL/EEPROM/EEPROM.o
+ .debug_info    0x000017fc      0x7fe HAL/Keypad_4x4/Keypad_4x4.o
+ .debug_info    0x00001ffa     0x1444 HAL/LCD_16x2/LCD.o
+ .debug_info    0x0000343e      0x6a9 HAL/Leds_5/Leds.o
+ .debug_info    0x00003ae7      0xc56 main.o
+ .debug_info    0x0000473d      0x251 MCAL/Digital_Input_Output/DIO.o
+ .debug_info    0x0000498e      0x25f MCAL/Interrupt/Interrupt.o
+ .debug_info    0x00004bed      0x3ca MCAL/Timers/Timers.o
+ .debug_info    0x00004fb7      0x23d MCAL/TWI_I2C/TWI_I2C.o
+ .debug_info    0x000051f4      0x9c5 MCAL/UART/UART.o
 
-.debug_abbrev   0x00000000     0x151f
+.debug_abbrev   0x00000000     0x14d4
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x4a3 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .debug_abbrev  0x000004a3       0xed HAL/AirConditioner/AC.o
@@ -1292,16 +1287,16 @@ END GROUP
  .debug_abbrev  0x00000765      0x116 HAL/Door_Servo/Door_Servo.o
  .debug_abbrev  0x0000087b      0x1ce HAL/EEPROM/EEPROM.o
  .debug_abbrev  0x00000a49       0xd1 HAL/Keypad_4x4/Keypad_4x4.o
- .debug_abbrev  0x00000b1a      0x2b8 HAL/LCD_16x2/LCD.o
- .debug_abbrev  0x00000dd2      0x103 HAL/Leds_5/Leds.o
- .debug_abbrev  0x00000ed5      0x18b main.o
- .debug_abbrev  0x00001060       0xc8 MCAL/Digital_Input_Output/DIO.o
- .debug_abbrev  0x00001128       0xb1 MCAL/Interrupt/Interrupt.o
- .debug_abbrev  0x000011d9       0x90 MCAL/Timers/Timers.o
- .debug_abbrev  0x00001269       0xd3 MCAL/TWI_I2C/TWI_I2C.o
- .debug_abbrev  0x0000133c      0x1e3 MCAL/UART/UART.o
+ .debug_abbrev  0x00000b1a      0x26d HAL/LCD_16x2/LCD.o
+ .debug_abbrev  0x00000d87      0x103 HAL/Leds_5/Leds.o
+ .debug_abbrev  0x00000e8a      0x18b main.o
+ .debug_abbrev  0x00001015       0xc8 MCAL/Digital_Input_Output/DIO.o
+ .debug_abbrev  0x000010dd       0xb1 MCAL/Interrupt/Interrupt.o
+ .debug_abbrev  0x0000118e       0x90 MCAL/Timers/Timers.o
+ .debug_abbrev  0x0000121e       0xd3 MCAL/TWI_I2C/TWI_I2C.o
+ .debug_abbrev  0x000012f1      0x1e3 MCAL/UART/UART.o
 
-.debug_line     0x00000000     0x2fa7
+.debug_line     0x00000000     0x2fc4
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x116 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .debug_line    0x00000116      0x1b4 HAL/AirConditioner/AC.o
@@ -1310,16 +1305,16 @@ END GROUP
  .debug_line    0x0000062d      0x1f8 HAL/Door_Servo/Door_Servo.o
  .debug_line    0x00000825      0x462 HAL/EEPROM/EEPROM.o
  .debug_line    0x00000c87      0x2ea HAL/Keypad_4x4/Keypad_4x4.o
- .debug_line    0x00000f71      0x938 HAL/LCD_16x2/LCD.o
- .debug_line    0x000018a9      0x2e0 HAL/Leds_5/Leds.o
- .debug_line    0x00001b89      0x573 main.o
- .debug_line    0x000020fc      0x23b MCAL/Digital_Input_Output/DIO.o
- .debug_line    0x00002337      0x1c7 MCAL/Interrupt/Interrupt.o
- .debug_line    0x000024fe      0x38c MCAL/Timers/Timers.o
- .debug_line    0x0000288a      0x19c MCAL/TWI_I2C/TWI_I2C.o
- .debug_line    0x00002a26      0x581 MCAL/UART/UART.o
+ .debug_line    0x00000f71      0x955 HAL/LCD_16x2/LCD.o
+ .debug_line    0x000018c6      0x2e0 HAL/Leds_5/Leds.o
+ .debug_line    0x00001ba6      0x573 main.o
+ .debug_line    0x00002119      0x23b MCAL/Digital_Input_Output/DIO.o
+ .debug_line    0x00002354      0x1c7 MCAL/Interrupt/Interrupt.o
+ .debug_line    0x0000251b      0x38c MCAL/Timers/Timers.o
+ .debug_line    0x000028a7      0x19c MCAL/TWI_I2C/TWI_I2C.o
+ .debug_line    0x00002a43      0x581 MCAL/UART/UART.o
 
-.debug_frame    0x00000000      0xebc
+.debug_frame    0x00000000      0xecc
  *(.debug_frame)
  .debug_frame   0x00000000       0x54 HAL/AirConditioner/AC.o
  .debug_frame   0x00000054       0x54 HAL/Buzzer/Buzzer.o
@@ -1327,16 +1322,16 @@ END GROUP
  .debug_frame   0x00000174       0x8c HAL/Door_Servo/Door_Servo.o
  .debug_frame   0x00000200      0x1c8 HAL/EEPROM/EEPROM.o
  .debug_frame   0x000003c8       0x3c HAL/Keypad_4x4/Keypad_4x4.o
- .debug_frame   0x00000404      0x1bc HAL/LCD_16x2/LCD.o
- .debug_frame   0x000005c0      0x18c HAL/Leds_5/Leds.o
- .debug_frame   0x0000074c       0xe8 main.o
- .debug_frame   0x00000834       0x64 MCAL/Digital_Input_Output/DIO.o
- .debug_frame   0x00000898       0xe4 MCAL/Interrupt/Interrupt.o
- .debug_frame   0x0000097c      0x214 MCAL/Timers/Timers.o
- .debug_frame   0x00000b90       0xa4 MCAL/TWI_I2C/TWI_I2C.o
- .debug_frame   0x00000c34      0x288 MCAL/UART/UART.o
+ .debug_frame   0x00000404      0x1cc HAL/LCD_16x2/LCD.o
+ .debug_frame   0x000005d0      0x18c HAL/Leds_5/Leds.o
+ .debug_frame   0x0000075c       0xe8 main.o
+ .debug_frame   0x00000844       0x64 MCAL/Digital_Input_Output/DIO.o
+ .debug_frame   0x000008a8       0xe4 MCAL/Interrupt/Interrupt.o
+ .debug_frame   0x0000098c      0x214 MCAL/Timers/Timers.o
+ .debug_frame   0x00000ba0       0xa4 MCAL/TWI_I2C/TWI_I2C.o
+ .debug_frame   0x00000c44      0x288 MCAL/UART/UART.o
 
-.debug_str      0x00000000     0x1718
+.debug_str      0x00000000     0x1730
  *(.debug_str)
  .debug_str     0x00000000      0x196 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega32a/avr5/crtatmega32a.o
  .debug_str     0x00000196      0x1ec HAL/AirConditioner/AC.o
@@ -1351,21 +1346,21 @@ END GROUP
                                 0x5c9 (size before relaxing)
  .debug_str     0x00000982       0x5e HAL/Keypad_4x4/Keypad_4x4.o
                                 0x1fd (size before relaxing)
- .debug_str     0x000009e0      0x2a3 HAL/LCD_16x2/LCD.o
-                                0x563 (size before relaxing)
- .debug_str     0x00000c83      0x133 HAL/Leds_5/Leds.o
+ .debug_str     0x000009e0      0x2ad HAL/LCD_16x2/LCD.o
+                                0x566 (size before relaxing)
+ .debug_str     0x00000c8d      0x133 HAL/Leds_5/Leds.o
                                 0x2c5 (size before relaxing)
- .debug_str     0x00000db6      0x258 main.o
-                                0x601 (size before relaxing)
- .debug_str     0x0000100e       0x6e MCAL/Digital_Input_Output/DIO.o
+ .debug_str     0x00000dc0      0x266 main.o
+                                0x6bc (size before relaxing)
+ .debug_str     0x00001026       0x6e MCAL/Digital_Input_Output/DIO.o
                                 0x230 (size before relaxing)
- .debug_str     0x0000107c       0xc5 MCAL/Interrupt/Interrupt.o
+ .debug_str     0x00001094       0xc5 MCAL/Interrupt/Interrupt.o
                                 0x27b (size before relaxing)
- .debug_str     0x00001141      0x354 MCAL/Timers/Timers.o
+ .debug_str     0x00001159      0x354 MCAL/Timers/Timers.o
                                 0x4b4 (size before relaxing)
- .debug_str     0x00001495       0x76 MCAL/TWI_I2C/TWI_I2C.o
+ .debug_str     0x000014ad       0x76 MCAL/TWI_I2C/TWI_I2C.o
                                 0x42a (size before relaxing)
- .debug_str     0x0000150b      0x20d MCAL/UART/UART.o
+ .debug_str     0x00001523      0x20d MCAL/UART/UART.o
                                 0x515 (size before relaxing)
 
 .debug_loc      0x00000000     0x2376
@@ -1400,7 +1395,7 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x600
+.debug_ranges   0x00000000      0x608
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x28 HAL/AirConditioner/AC.o
  .debug_ranges  0x00000028       0x28 HAL/Buzzer/Buzzer.o
@@ -1408,14 +1403,14 @@ END GROUP
  .debug_ranges  0x00000090       0x20 HAL/Door_Servo/Door_Servo.o
  .debug_ranges  0x000000b0       0x88 HAL/EEPROM/EEPROM.o
  .debug_ranges  0x00000138       0x18 HAL/Keypad_4x4/Keypad_4x4.o
- .debug_ranges  0x00000150       0xb0 HAL/LCD_16x2/LCD.o
- .debug_ranges  0x00000200       0xc0 HAL/Leds_5/Leds.o
- .debug_ranges  0x000002c0       0x40 main.o
- .debug_ranges  0x00000300       0x30 MCAL/Digital_Input_Output/DIO.o
- .debug_ranges  0x00000330       0x70 MCAL/Interrupt/Interrupt.o
- .debug_ranges  0x000003a0      0x108 MCAL/Timers/Timers.o
- .debug_ranges  0x000004a8       0x50 MCAL/TWI_I2C/TWI_I2C.o
- .debug_ranges  0x000004f8      0x108 MCAL/UART/UART.o
+ .debug_ranges  0x00000150       0xb8 HAL/LCD_16x2/LCD.o
+ .debug_ranges  0x00000208       0xc0 HAL/Leds_5/Leds.o
+ .debug_ranges  0x000002c8       0x40 main.o
+ .debug_ranges  0x00000308       0x30 MCAL/Digital_Input_Output/DIO.o
+ .debug_ranges  0x00000338       0x70 MCAL/Interrupt/Interrupt.o
+ .debug_ranges  0x000003a8      0x108 MCAL/Timers/Timers.o
+ .debug_ranges  0x000004b0       0x50 MCAL/TWI_I2C/TWI_I2C.o
+ .debug_ranges  0x00000500      0x108 MCAL/UART/UART.o
 
 .debug_macro
  *(.debug_macro)

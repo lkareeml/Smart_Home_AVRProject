@@ -51,8 +51,10 @@ const uint8 Max_Failure_Login_Count = 3;
 #include <util/delay.h>
 
 
-extern uint8 door_state;
-extern uint8 G_Dimmer_Value;
+// ****************     UART VARIABLES     ****************
+
+uint8 door_state = 0;// 0 is closed, 1 is open
+uint8 G_Dimmer_Value = 0;
 sint8 UART_Buffer[8];
 uint8 FailCount = 0;
 static uint8 UART_Received_Flag = 0;
@@ -71,7 +73,27 @@ sint8 New_Password[8];
 static uint8 AC_State_Auto = 1; // Automatic 1 is on , 0 off allow manual
 static uint8 AC_State = 0; // 0 means off 1 means on
 const uint8 MAX_Users_Count = 5;// Without Admin
-	
+
+// ****************     KEYPAD LCD VARIABLES     ****************
+
+uint8 LCD_g_step = 1;
+uint8 LCD_UserInput = '\0';
+uint8 LCD_user_count = 0;
+uint8 LCD_pass_count = 0;
+uint8 LCD_ID;
+sint8 LCD_UserID[8];
+sint8 LCD_Password[8];
+sint8 LCD_EE_Password[8];
+sint8 LCD_EE_Username[8];
+uint8 LCD_Fail_Count = 0;
+uint8 LCD_g_choice1 = 0;
+uint8 LCD_g_choice2 = 0;
+
+// **************************************************************
+
+
+
+
 void Smart_Initialization(){
 	LED_Init_All();
 	LED_1_Off();

@@ -18,7 +18,7 @@
 #define Dimmer_Port		PORTDx
 
 
-uint8 G_Dimmer_Value = 0;
+extern uint8 G_Dimmer_Value;
 
 ISR(TIMER0_OVF_vect){
 	static uint8 Dimmercounter = 0;

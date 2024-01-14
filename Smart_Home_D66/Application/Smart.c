@@ -1,9 +1,7 @@
-/*
-
-AMIT Embedded System Diploma 
+/*	AMIT Embedded System Diploma 
 Batch: D66
 
-Smart Home Application Made by Team Members: ...  
+Smart Home Application Made by: Kareem Atef
 Here we will document every important part in the application
 Starting with Pin Needed Calculation To choose micro controller:
 
@@ -26,70 +24,27 @@ Starting with Pin Needed Calculation To choose micro controller:
     Air Conditioner    1 Pin      PA2
 ******************************************************************************
 
-Total Pins Needed for the Project : 29
-
-Calculation of Timers Needed : 
-Calculation of ADC Needed :
-
-Any other Needed Technology for the project ?
-
-
-Suitable Microcontroller : 
-
-
 Timers:
 Timer1 >> For Servo and Door State
-
-Timer0 >>
-
+Timer0 >> Dimmer
 Timer2 >> 
 
-******************************************************************************
 ******************************************************************************
 ******************************************************************************
 Some Notes: 
 
 Login system admin and user “admin is remoted only.
 --->    Admin mode can register any user or remove.
---->    Usernames and password must be kept into memory even at powered off. .... EEPROM
---->    If any user/admin/passwords wrong more than 3 trial, system must break down and fire alarm until reset.
---->    Admin and user can access to all applies except user cant control the door opening
+--->    Usernames and passwords kept in EEPROM
+--->    user/passwords wrong 3 trial,alarm until reset.
+--->    door Control for Admin Only
+--->    Create / Delete  for Admin Only{EEPROM}
+--->    USER control even any user login remote, except admin until allowing of admin
+--->    LCD must display (IDLE)
+--->    user’s usernames LCD different user’s usernames in the UART system
+--->    Temperature Sensor if temp > 28 °C, Air condition TURN_ON DC_Motor
+--->    Temperature Sensor if temp < 21 °C, Air condition    TURN_OFF DC_Motor
 
-// Specifications LCD & keypad USER MODE ONLY
-        Normal user control all except opening door
-        USER MODE control system even if any user login remotely except admin until allowing of admin
-        LCD must display running devices if keypad-LCD (IDLE)
-        user’s usernames in this system different than the user’s usernames in the remoting system
-
-// Specifications EEPROM
-        Store new user /registration/
-        ADMIN_MODE Read/write 
-        USER_MODE read only
-
-// Specifications Bluetooth
-        Transmitting/Receiving the commands to run the system.
-
-// Specifications Lamps, Relay, Dimmer
-        Lamps must be RELAY isolated because of high power.
-        Dimmer circuit control lamp depending
-
-// Specifications Door
-        ADMIN_MODE ONLY can control SERVO_MOTOR to control door
-
-// Specifications –Temperature Sensor, DC motor
-        Temperature Sensor if temp > 28 °C, Air condition TURN_ON DC_Motor
-        Temperature Sensor if temp < 21 °C, Air condition    TURN_OFF DC_Motor
-
-// Components needed :
-        External EEPROM
-        Bluetooth module HC-05
-        5 LEDs
-        1 dimming circuit.
-        LM35 temperature sensor or equivalent//Using POT ON AMIT KIT
-        DC motor/ OR AC/ Or Relay
-        Keypad 
-        Lm01602A Character LCD.
-        Servo motor
 */
 
 
@@ -128,33 +83,6 @@ Login system admin and user “admin is remoted only.
 /****************      Dimming Lamp Include   **************************/
 #include "../HAL/Dimming_Light/Dimmer.h"               // NO CODE YET
 /********************************************* **************************/
-
-
-
-uint8 String_Compare(sint8* str1,sint8* str2){
-	//return 0 if mismatch
-	//return 1 if match
-	if(strlen(str1) != strlen(str2)) return 0; // Mismatch Due to size
-	for(int i = 0;i<=strlen(str1);i++){
-		if(str1[i] == str2[i]) continue;
-		else return 0;// Mismatch
-	}
-	return 1; // Match each char
-}
-
-
-// LCD_Show_Welcome();
-// LCD_Show_Welcome_User();
-// LCD_Show_WrongUser();
-// LCD_Show_WrongPassword();
-// LCD_Show_Main_Options();
-// LCD_Show_Choose_LED();
-// LCD_Show_Choose_Dimmer();
-
-
-void Keypad_Check_If_Pressed_0(){}
-
-
 
 void Smart_Idle(){
     // There are 3 things should always work at idle

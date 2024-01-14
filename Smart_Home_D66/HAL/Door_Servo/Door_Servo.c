@@ -38,7 +38,7 @@ Closed Door lets make it to 0 degree which means:
 	
 */
 
-uint8 door_state = 0;// 0 is closed, 1 is open
+extern uint8 door_state;// 0 is closed, 1 is open
 
 void Door_Feedback(uint8 New_Feed){
 	switch(New_Feed){
