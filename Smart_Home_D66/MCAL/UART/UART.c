@@ -1,5 +1,5 @@
 /****************************************/
-/* Atef         */
+/*			Auther: Kareem Atef         */
 /*          Date: 26-11-2023            */
 /*          Version: 1.0                */
 /*          Module: UART                */
@@ -157,11 +157,6 @@ uint32 UART_Recieve_Number_Polling_32(void){
 	Number = 0;
 	return Number;
 }
-
-
-
-
-
 
 
 void UART_Show_Request_UserID(){

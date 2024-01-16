@@ -9,11 +9,9 @@
 #include "../../MCAL/Digital_Input_Output/DIO.h"
 #include "AC.h"
 #include "../../MCAL/UART/UART.h"
+#include "../../Global_Var.h"
 
-
-
-uint8 AC_State_Auto = 0;
-uint8 AC_State = 0;
+extern uint8 AC_State;
 
 void AC_Initialization()
 {
@@ -21,9 +19,11 @@ void AC_Initialization()
 }
 void AC_On(){
 	DIO_Set_Pin_Output(AC_Port,AC_Pin,High);
+	AC_State = 1;
 }
 void AC_Off(){
 	DIO_Set_Pin_Output(AC_Port,AC_Pin,Low);
+	AC_State = 0;
 }
 
 void AC_Feedback(uint8 New_Feed){
@@ -32,40 +32,27 @@ void AC_Feedback(uint8 New_Feed){
 	//3 Means Turn On AC Manual
 	switch(New_Feed){
 		case 1:
-			switch(AC_State_Auto){
-				case 0 :
-				AC_State_Auto = 1;
+			if(AC_State == 2){
+					UART_Send_String_Polling_8("AC is Already Auto!");
+			}else{
+				AC_State = 2;
 				UART_Send_String_Polling_8("AC Auto Success!");
-				break;
-				case 1:
-				UART_Send_String_Polling_8("AC is Already Auto!");
-				break;
 			}
 			break;
 		case 2:
-			switch(AC_State){
-				case 0 :
+				if(AC_State == 0){
 					UART_Send_String_Polling_8("AC is Already Closed!");
-					break;
-				case 1:
+				}else{
 					AC_Off();
-					AC_State = 0;
-					AC_State_Auto = 0;
 					UART_Send_String_Polling_8("AC Turned Off Success!");
-					break;
-			}
+				}
 			break;
 		case 3:
-			switch(AC_State){
-				case 0 :
-					AC_On();
-					AC_State = 1;
-					AC_State_Auto = 0;
-					UART_Send_String_Polling_8("AC Turned On Success!");
-					break;
-				case 1:
-					UART_Send_String_Polling_8("AC Already Turned ON!");
-					break;
+			if(AC_State == 1){
+				UART_Send_String_Polling_8("AC Already Turned ON!");
+			}else{
+				AC_On();
+				UART_Send_String_Polling_8("AC Turned On Success!");
 			}
 			break;
 		default:UART_Show_Invalid();break;

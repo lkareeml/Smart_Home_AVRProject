@@ -56,7 +56,7 @@ SUBDIRS :=  \
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
-../Application/Smart.c \
+../Application/SmartHome_Core.c \
 ../HAL/AirConditioner/AC.c \
 ../HAL/Bluetooth/Bluetooth.c \
 ../HAL/Buzzer/Buzzer.c \
@@ -83,7 +83,7 @@ ASM_SRCS +=
 
 
 OBJS +=  \
-Application/Smart.o \
+Application/SmartHome_Core.o \
 HAL/AirConditioner/AC.o \
 HAL/Bluetooth/Bluetooth.o \
 HAL/Buzzer/Buzzer.o \
@@ -103,7 +103,7 @@ MCAL/TWI_I2C/TWI_I2C.o \
 MCAL/UART/UART.o
 
 OBJS_AS_ARGS +=  \
-Application/Smart.o \
+Application/SmartHome_Core.o \
 HAL/AirConditioner/AC.o \
 HAL/Bluetooth/Bluetooth.o \
 HAL/Buzzer/Buzzer.o \
@@ -123,7 +123,7 @@ MCAL/TWI_I2C/TWI_I2C.o \
 MCAL/UART/UART.o
 
 C_DEPS +=  \
-Application/Smart.d \
+Application/SmartHome_Core.d \
 HAL/AirConditioner/AC.d \
 HAL/Bluetooth/Bluetooth.d \
 HAL/Buzzer/Buzzer.d \
@@ -143,7 +143,7 @@ MCAL/TWI_I2C/TWI_I2C.d \
 MCAL/UART/UART.d
 
 C_DEPS_AS_ARGS +=  \
-Application/Smart.d \
+Application/SmartHome_Core.d \
 HAL/AirConditioner/AC.d \
 HAL/Bluetooth/Bluetooth.d \
 HAL/Buzzer/Buzzer.d \
@@ -176,7 +176,7 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
-Application/Smart.o: ../Application/Smart.c
+Application/SmartHome_Core.o: ../Application/SmartHome_Core.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega32a -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega32a" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

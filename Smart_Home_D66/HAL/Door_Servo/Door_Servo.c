@@ -16,8 +16,6 @@
 #include "../../MCAL/UART/UART.h"
 #include <avr/interrupt.h>
 
-
-
 /*
 Open Door lets make it to 180 degree which means:
 	duty cycle 12.3% , 50HZ
@@ -35,7 +33,6 @@ Closed Door lets make it to 0 degree which means:
 	...
 	19.5 
 	20.0													40
-	
 */
 
 extern uint8 door_state;// 0 is closed, 1 is open
@@ -70,24 +67,6 @@ void Door_Feedback(uint8 New_Feed){
 	}
 }
 
-ISR(TIMER1_COMPA_vect) // Timer1 compare match interrupt
-{
-	static uint8 counter = 0;
-	// Start if counter = 0 by making Servo Pin high
-	if(counter==0){DIO_Set_Pin_Output(PORTDx,Pin7,High);}
-	else if(counter == 1){
-		if(door_state == 0){
-			DIO_Set_Pin_Output(PORTDx,Pin7,Low);
-		}
-	}
-	else if(counter == 5){
-		if(door_state == 1){
-			DIO_Set_Pin_Output(PORTDx,Pin7,Low);
-		}
-	}
-	if(counter<40){counter++;}
-	else {counter = 0;}
-}
 
 
 void Servo_Init(){
@@ -105,42 +84,3 @@ void Servo_Init(){
 	TIMSK_Reg |= (1 << OCIE1A);
 	GIE_Enable(); // Enable global interrupts
 }
-
-
-
-/*
-void Servo_Init(){
-    DIO_Set_Pin_Direction(PORTD,Pin7,Out);
-    DIO_Set_Pin_Output(PORTD,Pin7,Low);
-}
-
-void Servo_0_Degree_Delay(){
-	//duty cycle 2.3% , 50HZ
-    DIO_Set_Pin_Output(PORTD,Pin7,High);
-    _delay_us(500);
-    DIO_Set_Pin_Output(PORTD,Pin7,Low);
-    _delay_ms(19.5);
-}
-
-void Servo_90_Degree_Delay(){
-	//duty cycle 7.3% , 50HZ
-	DIO_Set_Pin_Output(PORTD,Pin7,High);
-	_delay_us(1500);
-	DIO_Set_Pin_Output(PORTD,Pin7,Low);
-	_delay_ms(18.5);
-}
-void Servo_180_Degree_Delay(){
-	//duty cycle 12.3% , 50HZ
-	DIO_Set_Pin_Output(PORTD,Pin7,High);
-	_delay_us(2500);
-	DIO_Set_Pin_Output(PORTD,Pin7,Low);
-	_delay_ms(17.5);
-}
-*/
-/*
-  Set timer interrupt after 1 ms;
-• Signal pin High at the 1st ISR;
-• At the next ISR Set Signal pin to LOW
-• Count another 18 ISR;
-• Repeat the cycle again.
-*/

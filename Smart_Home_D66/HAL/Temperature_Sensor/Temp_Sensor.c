@@ -1,16 +1,4 @@
-/*
- * Temp_Sensor.c
- *
- * Created: 12/20/2023 4:25:04 PM
- *
- */ 
 
-/*
- * Temp_Sensor.c
- *
- * Created: 12/20/2023 4:25:04 PM
- *
- */ 
 // 
 // #include "../../MCAL/Interrupt/Interrupt.h"
 // #include "../../MCAL/Analog_To_Digital_Converter/ADC.h"
@@ -23,6 +11,10 @@
 // 
 // static uint8 globaltemp;
 // 
+
+
+
+
 // ISR(ADC_vect)
 // {
 // 	

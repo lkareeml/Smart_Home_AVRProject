@@ -241,6 +241,7 @@ void Timer2_Init(){
 	Set(TCCR2_Reg,5);  Set(TCCR2_Reg,4);
 	#endif
 }
+
 void Timer2_Set_TCNT2_Reg(uint8 value)    {    TCNT2_Reg= value;    }//Timer Register
 void Timer2_Set_OCR2_Reg(uint8 value)     {    OCR2_Reg = value;    }//Output Compare Register
 void Timer2_Enable_Overflow_Interrupt()   {      Set(TIMSK_Reg,6);  }

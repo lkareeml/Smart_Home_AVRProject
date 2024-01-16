@@ -1,10 +1,9 @@
-/*
- * Dimmer.c
- *
- * Created: 12/20/2023 4:24:33 PM
- *
- */ 
-
+/****************************************/
+/*          Author: Kareem Atef         */
+/*          Date: 06-12-2023            */
+/*          Version: 1.0                */
+/*          Module: Dimmer              */
+/****************************************/
 
 #include "../../STD_Types.h"
 #include "../../MCAL/Digital_Input_Output/DIO.h"
@@ -17,7 +16,6 @@
 #define Dimmer_Pin		3
 #define Dimmer_Port		PORTDx
 
-
 extern uint8 G_Dimmer_Value;
 
 ISR(TIMER0_OVF_vect){
@@ -28,19 +26,16 @@ ISR(TIMER0_OVF_vect){
 		DIO_Set_Pin_Output(Dimmer_Port,Dimmer_Pin,Low);
 	}
 	Dimmercounter++;
-	if (Dimmercounter >=254){
+	if (Dimmercounter >=253){
 		Dimmercounter =0;
 	}
 }
 
-void Dimmer_Init()
-{
+void Dimmer_Init(){
 	DIO_Set_Pin_Direction(Dimmer_Port,Dimmer_Pin,Out);
 	Timer0_Init();
 	Timer0_Enable_Overflow_Interrupt();	
 }
-
-
 
 void Dimmer_Feedback(uint8 New_Feed){
 	//1 increase
