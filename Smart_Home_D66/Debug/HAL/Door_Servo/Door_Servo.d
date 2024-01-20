@@ -12,7 +12,7 @@ HAL/Door_Servo/Door_Servo.d HAL/Door_Servo/Door_Servo.o: \
  ../HAL/Door_Servo/../../MCAL/Digital_Input_Output/DIO.h \
  ../HAL/Door_Servo/../../MCAL/Interrupt/Interrupt.h \
  ../HAL/Door_Servo/../../AVR32_Reg_Private.h \
- ../HAL/Door_Servo/../../MCAL/UART/UART.h \
+ ../HAL/Door_Servo/../../MCAL/UART/UART.h ../HAL/Door_Servo/Door_Servo.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
@@ -48,6 +48,8 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 ../HAL/Door_Servo/../../AVR32_Reg_Private.h:
 
 ../HAL/Door_Servo/../../MCAL/UART/UART.h:
+
+../HAL/Door_Servo/Door_Servo.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
 

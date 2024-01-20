@@ -27,9 +27,7 @@ Starting with Pin Needed Calculation To choose micro controller:
 Timers:
 Timer1 >> For Servo and Door State
 Timer0 >> Dimmer
-Timer2 >> 
 
-******************************************************************************
 ******************************************************************************
 Some Notes: 
 
@@ -87,7 +85,7 @@ void AC_Auto_Idle();
 
 #define Servo_Port	PORTDx
 #define Servo_Pin	Pin7
-#define Admin_ID			99
+#define Admin_ID	1
 uint8 Max_Failure_Login_Count = 3;
 uint8 MAX_Users_Count = 5;// Without Admin
 uint8 AC_Auto_Threshold_Up = 28;
@@ -106,20 +104,20 @@ uint8 User_ID;
 sint8 UART_Password[8];
 sint8 EEPROM_Username[8];
 sint8 EEPROM_Password[8];
-uint8 g_choice_1;
-uint8 g_choice_2;
-uint8 g_choice_3;
+uint8 UART_G_Choice_1;
+uint8 UART_G_Choice_2;
+uint8 UART_G_Choice_3;
 uint8 New_UserID;
 sint8 New_Username[8];
 sint8 New_Password[8];
 
 //uint8 AC_State_Auto = 1; // Automatic 1 is on , 0 off allow manual
-// 0 means off
-// 1 means on
-// 2 means Auto
-uint8 AC_State = 2; // Auto when Start
-uint8 g_Temp = 29;
 
+uint8 AC_Auto = 1; // Auto when Start 0 = Manual,  1 = Auto
+uint8 AC_State = 0; // Auto when Start 0 = off,  1 = on
+uint8 g_Temp = 29;
+uint8 Old_g_Temp;
+uint8 Temp_Changed = 1;
 // ****************     KEYPAD LCD VARIABLES     ****************
 
 uint8 LCD_g_step = 0;				//Start at Idle Step
@@ -134,7 +132,7 @@ sint8 LCD_EE_Username[8];
 uint8 LCD_Fail_Count = 0;
 uint8 LCD_g_choice1 = 0;
 uint8 LCD_g_choice2 = 0;
-uint16 LCD_Idle_Stop = 0;
+//uint16 LCD_Idle_Stop = 0;
 
 // **************************************************************
 
@@ -185,7 +183,6 @@ void Smart_Initialization(){
 	LED_0_Off();
 	ADC_Init();		// Enable ADC to measure Temperature
 	Dimmer_Init();	//
-	Dimmer_Off();
 	KEYPAD_Initialization();
 	LCD_Init();
 	AC_Initialization();
@@ -197,7 +194,12 @@ void Smart_Initialization(){
 }
 
 void ADC_Temperature_Update(){
+	
 	g_Temp = ADC_Convert_8bit(ADC_Ch1) * 50 / 256; //0 -- 50 c
+	if((g_Temp - Old_g_Temp) !=0){
+		Temp_Changed = 1;
+		Old_g_Temp = g_Temp;
+	}
 	//LCD_Idle_Stop = 0;
 }
 
@@ -246,23 +248,23 @@ void UART_Process() {
 			/********************** End Login Process *************************/
 
 			case 4: // Process choice 1 from MainMenu
-			g_choice_1 = atoi(UART_Buffer);
-			if (g_choice_1 <= 9 || g_choice_1 != 0) {
+			UART_G_Choice_1 = atoi(UART_Buffer);
+			if (UART_G_Choice_1 <= 9 || UART_G_Choice_1 != 0) {
 				// If user Input is valid, BUT User is not admin
 				// Reply Admin Auth Required
 				// Admin Only: Control Door(3), Create,Delete(6,7)
-				if ((g_choice_1 > 5 && g_choice_1 < 9) || (g_choice_1 == 3)) {
+				if ((UART_G_Choice_1 > 5 && UART_G_Choice_1 < 9) || (UART_G_Choice_1 == 3)) {
 					if (User_ID != Admin_ID) {
 						UART_Send_String_Polling_8("Auth Denied, Only Admin Function! \n");
 						break;
 					}
 				}
 				//Otherwise, Allow to handle every functionality
-				UART_Choice_Handler_1(g_choice_1);
+				UART_Choice_Handler_1(UART_G_Choice_1);
 				// For Show user list No further Instructions Needed
-				if (g_choice_1 != 5) {
+				if (UART_G_Choice_1 != 5) {
 					UART_global_Flag++;
-					}else if(g_choice_1 == 8){
+					}else if(UART_G_Choice_1 == 8){
 					UART_global_Flag = 2;
 				}
 				} else {
@@ -273,45 +275,45 @@ void UART_Process() {
 			break;
 
 			case 5: // Process choice 2 from SubMenu
-			g_choice_2 = atoi(UART_Buffer);
-			if (g_choice_1 != 6 && g_choice_1 != 7) {
-				if (g_choice_2 > 8) {
+			UART_G_Choice_2 = atoi(UART_Buffer);
+			if (UART_G_Choice_1 != 6 && UART_G_Choice_1 != 7) {
+				if (UART_G_Choice_2 > 8) {
 					UART_Show_Invalid();
-					UART_Choice_Handler_1(g_choice_1);
+					UART_Choice_Handler_1(UART_G_Choice_1);
 					break;
 				}
-				if (g_choice_2 == 0) {
+				if (UART_G_Choice_2 == 0) {
 					UART_Show_MainMenu();
 					UART_global_Flag--;
 					break;
 				}
 			}
 
-			switch (g_choice_1) {
+			switch (UART_G_Choice_1) {
 				case 1: // LED Controller
-				if (g_choice_2 < 6) {
-					LED_Feedback(g_choice_2);
+				if (UART_G_Choice_2 < 6) {
+					LED_Feedback(UART_G_Choice_2,UART);
 					} else {
 					UART_Show_Invalid();
 				}
 				break;
 				case 2: // Air Conditioner Controller
-				if (g_choice_2 < 4) {
-					AC_Feedback(g_choice_2);
+				if (UART_G_Choice_2 < 4) {
+					AC_Feedback(UART_G_Choice_2,UART);
 					} else {
 					UART_Show_Invalid();
 				}
 				break;
 				case 3: // Door Controller
-				if (g_choice_2 < 3) {
-					Door_Feedback(g_choice_2);
+				if (UART_G_Choice_2 < 3) {
+					Door_Feedback(UART_G_Choice_2,UART);
 					} else {
 					UART_Show_Invalid();
 				}
 				break;
 				case 4: // Dimmer Controller
-				if (g_choice_2 < 3) {
-					Dimmer_Feedback(g_choice_2);
+				if (UART_G_Choice_2 < 3) {
+					Dimmer_FeedBack(UART_G_Choice_2,UART);
 					} else {
 					UART_Show_Invalid();
 				}
@@ -322,8 +324,8 @@ void UART_Process() {
 				UART_global_Flag++;
 				break;
 				case 7: // Delete User
-				if (EEPROM_Read_UserID_Exist(g_choice_2)) {
-					EEPROM_Delete_User(g_choice_2);
+				if (EEPROM_Read_UserID_Exist(UART_G_Choice_2)) {
+					EEPROM_Delete_User(UART_G_Choice_2);
 					UART_Send_String_Polling_8("User Deleted Successfully");
 					} else {
 					UART_Send_String_Polling_8("User Does not Exist!");
@@ -354,26 +356,26 @@ void UART_Process() {
 void Smart_Configurator(){
 	sint8 Admin_username[8] = "Kareem";
 	sint8 Admin_password[8] = "1234";
-	EEPROM_Write_Byte(10,Admin_ID);
-	EEPROM_Write_String(11,Admin_password);
-	EEPROM_Write_String(20,Admin_username);
+	EEPROM_Write_Byte(30,Admin_ID);
+	EEPROM_Write_String(31,Admin_password);
+	EEPROM_Write_String(40,Admin_username);
 	//User1 Initialize :
 	sint8 User1_username[8] = "User1";
 	sint8 User1_password[8] = "4321";
-	uint8 User1_UserID = 1;
-	EEPROM_Write_Byte(30,User1_UserID);
-	EEPROM_Write_String(31,User1_password);
-	EEPROM_Write_String(40,User1_username);
+	uint8 User1_UserID = 2;
+	EEPROM_Write_Byte(50,User1_UserID);
+	EEPROM_Write_String(51,User1_password);
+	EEPROM_Write_String(60,User1_username);
 	//User2 Initialize :
 	sint8 User2_username[8] = "User2";
 	sint8 User2_password[8] = "4321";
-	uint8 User2_UserID = 2;
-	EEPROM_Write_Byte(50,User2_UserID);
-	EEPROM_Write_String(51,User2_password);
-	EEPROM_Write_String(60,User2_username);
-	for(int i =1; i<1000;i++){
-		EEPROM_Write_Byte(70+i,0);
-	}
+	uint8 User2_UserID = 3;
+	EEPROM_Write_Byte(70,User2_UserID);
+	EEPROM_Write_String(71,User2_password);
+	EEPROM_Write_String(80,User2_username);
+// 	for(int i =1; i<1000;i++){
+// 		EEPROM_Write_Byte(70+i,0);
+// 	}
 }
 
 void LCD_Show(uint8 stage){
@@ -386,8 +388,7 @@ void LCD_Show(uint8 stage){
 		case 3:// Welcome_User
 			LCD_Send_String("Welcome Back!   ");break;
 		case 4:// Auth Failed
-			LCD_Send_String("Auth Failed!    ");
-			LCD_Send_String("Try Again       ");break;
+			LCD_Send_String("Auth Failed!    ");break;
 		case 5:// Invalid Selected
 			LCD_Send_String("Invalid Selected");
 			LCD_Send_String("Try Again       ");break;
@@ -396,16 +397,30 @@ void LCD_Show(uint8 stage){
 			LCD_Send_String("(3)Led (4)Logout");break;
 		case 7://AC_Options
 			LCD_Send_String("AC(1)Auto (2)Off");
-			LCD_Send_String("AC(3)ON  (9)Exit");break;
+			LCD_Send_String("AC(3)ON (0)Back ");break;
 		case 8://Dimmer_Options
 			LCD_Send_String("Dimmer Higher(1)");
-			LCD_Send_String("(0)Lower (9)Exit");break;
+			LCD_Send_String("(2)Lower (0)Back");break;
 		case 9://LED_Options
 			LCD_Send_String("Led No.(1)(2)(3)");
-			LCD_Send_String("(4)(5)   (9)Exit");break;
+			LCD_Send_String("(4)(5)   (0)Back");break;
 		case 10:// System Locked
 			LCD_Send_String("Auth Failed!    ");
 			LCD_Send_String("System Locked   ");break;
+		case 11: LCD_Send_String("Done!");break;
+	}
+}
+
+
+void LCD_MEM_Clear(){
+	LCD_user_count = 0;
+	LCD_pass_count = 0;
+	LCD_ID = 0;
+	for(uint8 i =0;i<8;i++){
+		LCD_UserID[i] = 0;
+		LCD_Password[i] = 0;
+		LCD_EE_Password[i] = 0;
+		LCD_EE_Username[i] = 0;
 	}
 }
 
@@ -420,6 +435,7 @@ void LCD_Process(){
 			}
 			break;
 		case 1:
+			LCD_MEM_Clear();
 			LCD_Show(1);// Show Request UserID
 			LCD_g_step++;
 			break;
@@ -442,6 +458,7 @@ void LCD_Process(){
 			break;
 		case 3:
 			LCD_Show(2);// Show Request Password
+			LCD_user_count = 0;
 			LCD_g_step++;
 			break;
 		case 4:
@@ -481,8 +498,6 @@ void LCD_Process(){
 				//Else Login Failed, Increase Fail Counter
 				LCD_Show(4);// Auth Failed
 				LCD_Fail_Count++;
-				LCD_user_count = 0;
-				LCD_pass_count = 0;
 				LCD_g_step = 1;
 				if(LCD_Fail_Count == Max_Failure_Login_Count){
 					UART_Send_String_Polling_8("\nKEYPAD Login Failed, \nSystem Locked! \n");
@@ -494,7 +509,7 @@ void LCD_Process(){
 			
 			
 		case 6:
-			_delay_ms(1000);
+			//_delay_ms(1000);
 			LCD_Show(6);// Main_Options
 			LCD_g_step++;
 			break;
@@ -507,7 +522,6 @@ void LCD_Process(){
 				LCD_g_step++;
 			}else{
 				LCD_Show(5);// Invalid Selected
-				//_delay_ms(1000);
 				LCD_g_step--;
 			}
 			break;
@@ -518,13 +532,17 @@ void LCD_Process(){
 				case 1: LCD_Show(7);break;//AC_Options
 				case 2: LCD_Show(8);break;//Dimmer_Options
 				case 3: LCD_Show(9);break;//LED_Options
-				case 4: LCD_Send_Clear_Screen();LCD_g_step = 0; break;//Logout
+				case 4: 
+					LCD_Send_Clear_Screen();
+					LCD_g_step = 0;//Go to LCD IDLE
+					Temp_Changed = 1;//Make Temp Changed To enable display First time
+					break;//Logout
 			}
 			break;
 		case 9:
 			LCD_UserInput = KEYPAD_Get_Pressed_Key();
 			if (LCD_UserInput == '\0') break;
-			if (LCD_UserInput > '0' && LCD_UserInput <= '4'){
+			if (LCD_UserInput >= '0' && LCD_UserInput <= '5'){
 				LCD_g_choice2 = LCD_UserInput - 48;
 				LCD_UserInput = '\0';
 				LCD_g_step++;
@@ -535,83 +553,98 @@ void LCD_Process(){
 			break;
 		case 10:
 			switch(LCD_g_choice1){
-				case 1: 
-					if(LCD_g_choice2 <4) AC_Feedback(LCD_g_choice2);
-					else if(LCD_g_choice2 == 9){
-						LCD_g_step-=4;
+				case 1:
+					if(LCD_g_choice2 == 0){
+						LCD_g_step-= 2;break;
+					}
+					else if(LCD_g_choice2 < 4) {
+						AC_Feedback(LCD_g_choice2,LCD);
+					}
+					else{
+						LCD_g_step-=2;
 					}
 					break;
-				case 2: 
-					if(LCD_g_choice2 < 3) Dimmer_Feedback(LCD_g_choice2);
-					else if(LCD_g_choice2 == 9){
-						LCD_g_step-=4;
+				case 2:
+					if(LCD_g_choice2 == 0){
+						LCD_g_step-= 2;break;
+					}
+					else if(LCD_g_choice2 < 3){
+						 Dimmer_FeedBack(LCD_g_choice2,LCD);
+					}else{
+						LCD_g_step-=2;
 					}
 					break;
-				case 3: 
-					if(LCD_g_choice2 < 6) Dimmer_Feedback(LCD_g_choice2);
-					else if(LCD_g_choice2 == 9){
-						LCD_g_step-=4;
+				case 3:
+					if(LCD_g_choice2 == 0){
+						LCD_g_step-= 2;break;
+					}
+					else if(LCD_g_choice2 < 6) {
+						LED_Feedback(LCD_g_choice2,LCD);
+					}else{
+						LCD_g_step-=2;
 					}
 					break;
 			}
+			//LCD_Show(11);
+			LCD_g_step-=2;
 			break;
 	}
 }
 
 void LCD_Idle(){
-	//[AC(ON) Temp(30c)]
-	//[        (0) More]
-	// Counter to limit the number of Running This function
-	LCD_Idle_Stop++;
-	if(LCD_Idle_Stop > 7900){
-		LCD_Idle_Stop = 0;
-	}
-	if(LCD_g_step != 0) return;
-	if(LCD_g_step == 0 && LCD_Idle_Stop == 0){
+//		[AC(ON) Temp(30c)]
+//		[        (0) More]
+//		Counter to limit the number of Running This function
+// 		LCD_Idle_Stop++;
+// 		if(LCD_Idle_Stop > 7900){
+// 			LCD_Idle_Stop = 0;
+// 		}
+	if(LCD_g_step != 0 || Temp_Changed == 0) return;
+	if(LCD_g_step == 0 && Temp_Changed == 1){
+		Temp_Changed = 0;
 		//LCD_Send_Clear_Screen(); // Clears anything on screen
 		sint8 snum[3];
 		itoa(g_Temp, snum, 10);
-		LCD_Send_String("AC("); // AC(O as it can be On or Off
-		if     (AC_State == 0) LCD_Send_String("OFF)");
-		else if(AC_State == 1) LCD_Send_String("ON) ");
-		else if(AC_State == 2) LCD_Send_String("Aut)"); 
+		LCD_Send_String("AC(O"); // AC(O as it can be On or Off
+		if     (AC_State == 0) LCD_Send_String("FF)");
+		else if(AC_State == 1) LCD_Send_String("N) ");
 		LCD_Send_String("Temp(");
 		LCD_Send_String(snum);
-		if     (g_Temp <  10) LCD_Send_String("c) ");
-		else if(g_Temp >= 10) LCD_Send_String("c)");
-		LCD_Send_String("        (0) More");
+		LCD_Send_String("c)");
+		if     (g_Temp <  10) LCD_Send_String(" ");
+		LCD_Send_String("(0) More        ");
 		// To prevent screen Reloading So fast
 	}
 }
 
 void AC_Auto_Idle(){
 	// If AC is manual not Auto Return
-	if(AC_State != 2) return;
-	
+	if(AC_Auto != 1) return;
 	//When AC set To Auto Mode
-	if(AC_State == 2){
+	if(AC_Auto == 1){
 		//When Temperature is Higher than Hot
 		if(g_Temp >= AC_Auto_Threshold_Up){
 			AC_On();
-			AC_State = 1;
 		}else if(g_Temp <= AC_Auto_Threshold_Down){//When Temperature is Lower than Cold
 			AC_Off();
-			AC_State = 0;
 		}
 	}
 }
 
 void Smart_Idle(){
-	// There are 5 things should always work at idle
+	
+	// There are 6 Functions should always work at idle
 	// 1) UART Bluetooth (Interrupt)
 		UART_Process();
-	// 2) LCD & Keypad system
-		LCD_Process();
-	// 3) LCD Idle
-		LCD_Idle();
-	// 4) The door Servo				(Timer1 + Interrupt)
-	// 5) The Dimmer					(Timer0 + Interrupt)
-	// 6) The Temp/AC Auto/				(ADC Polling Prescaler 2 Fast)
+	// 2) The Temperature (ADC Polling Prescaler 2 Fast)
 		ADC_Temperature_Update();
+	// 3) AirConditioner Automatic		
 		AC_Auto_Idle();
+	// 4) LCD & Keypad system
+		LCD_Process();
+	// 5) LCD Idle
+		LCD_Idle();
+	// 6) The door Servo				(Timer1 + Interrupt)
+	// 7) The Dimmer					(Timer0 + Interrupt)
+
 }

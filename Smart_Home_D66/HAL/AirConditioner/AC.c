@@ -7,11 +7,14 @@
 
 #include "../../STD_Types.h"
 #include "../../MCAL/Digital_Input_Output/DIO.h"
-#include "AC.h"
 #include "../../MCAL/UART/UART.h"
 #include "../../Global_Var.h"
+#include "../../HAL/LCD_16x2/LCD.h"
+#include "AC.h"
+
 
 extern uint8 AC_State;
+extern uint8 AC_Auto;
 
 void AC_Initialization()
 {
@@ -26,35 +29,31 @@ void AC_Off(){
 	AC_State = 0;
 }
 
-void AC_Feedback(uint8 New_Feed){
+void AC_Feedback(uint8 New_Feed,Requester Type){
 	//1 Means Turn Automatic AC
 	//2 Means Turn Off AC Manual
 	//3 Means Turn On AC Manual
 	switch(New_Feed){
 		case 1:
-			if(AC_State == 2){
-					UART_Send_String_Polling_8("AC is Already Auto!");
-			}else{
-				AC_State = 2;
-				UART_Send_String_Polling_8("AC Auto Success!");
-			}
+			AC_Auto = 1;
+			if(Type == UART) UART_AC_Show_Auto();
 			break;
 		case 2:
-				if(AC_State == 0){
-					UART_Send_String_Polling_8("AC is Already Closed!");
-				}else{
-					AC_Off();
-					UART_Send_String_Polling_8("AC Turned Off Success!");
-				}
-			break;
-		case 3:
-			if(AC_State == 1){
-				UART_Send_String_Polling_8("AC Already Turned ON!");
-			}else{
-				AC_On();
-				UART_Send_String_Polling_8("AC Turned On Success!");
+			AC_Auto = 0;
+			AC_Off();
+			if(Type == UART){ 
+				UART_AC_Show_Manual();
+				UART_AC_Show_Off();
 			}
 			break;
-		default:UART_Show_Invalid();break;
+		case 3:
+			AC_Auto = 0;
+			AC_On();
+			if(Type == UART){
+				UART_AC_Show_Manual();
+				UART_AC_Show_On();
+			}
+			break;
+		default:break;
 	}
 }

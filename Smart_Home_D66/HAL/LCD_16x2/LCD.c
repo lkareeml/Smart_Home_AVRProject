@@ -117,7 +117,6 @@ void LCD_Set_Cursor_Position(uint8 row, uint8 col){
 
 void LCD_Send_Clear_Screen(){
 	LCD_Send_Cmd(0x01);
-	_delay_ms(2);
 	Cursor_Position = 0;
 }
 
@@ -175,6 +174,6 @@ void LCD_Send_String(sint8 * str){
 	while(str[index] != '\0'){
 		LCD_Send_Char(str[index]);
 		index++;
-		_delay_ms(5);
+		//_delay_ms(5);
 	}
 }

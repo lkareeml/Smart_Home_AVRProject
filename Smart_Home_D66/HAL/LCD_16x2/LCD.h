@@ -25,7 +25,4 @@ void LCD_Cursor_Shift(Dir Direction);
 void LCD_Delete_Last_Written();
 void LCD_Position_Handler(Dir Direction);
 
-
-void LCD_Process();
-
 #endif /* DRIVERS_HAL_LCD_LCD_H_ */

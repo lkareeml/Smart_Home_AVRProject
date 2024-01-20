@@ -10,5 +10,5 @@
 
 void Smart_Idle();
 void Smart_Initialization();
-
+void Smart_Configurator();
 #endif /* SMART_H_ */

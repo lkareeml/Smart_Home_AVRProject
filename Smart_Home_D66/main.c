@@ -10,6 +10,7 @@
 
 int main(void){
 	Smart_Initialization();
+	//Smart_Configurator();
 	while (1) 
     {
 		Smart_Idle();

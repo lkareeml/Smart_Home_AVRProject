@@ -5,6 +5,7 @@ HAL/Dimming_Light/Dimmer.d HAL/Dimming_Light/Dimmer.o: \
  ../HAL/Dimming_Light/../../MCAL/Timers/Timers.h \
  ../HAL/Dimming_Light/../../AVR32_Reg_Private.h \
  ../HAL/Dimming_Light/../../MCAL/UART/UART.h \
+ ../HAL/Dimming_Light/Dimmer.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
@@ -29,6 +30,8 @@ HAL/Dimming_Light/Dimmer.d HAL/Dimming_Light/Dimmer.o: \
 ../HAL/Dimming_Light/../../AVR32_Reg_Private.h:
 
 ../HAL/Dimming_Light/../../MCAL/UART/UART.h:
+
+../HAL/Dimming_Light/Dimmer.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
 

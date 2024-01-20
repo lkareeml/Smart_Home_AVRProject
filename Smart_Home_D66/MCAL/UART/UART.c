@@ -159,6 +159,12 @@ uint32 UART_Recieve_Number_Polling_32(void){
 }
 
 
+
+
+
+
+
+
 void UART_Show_Request_UserID(){
 	UART_Send_String_Polling_8(" Enter UserID:(1~99)\n");
 }
@@ -204,8 +210,41 @@ void UART_Show_Control_Dimmer(){
 	UART_Send_String_Polling_8("(3) Dimmer Off \n");
 	UART_Send_String_Polling_8("(4) Dimmer On \n");
 	UART_Send_String_Polling_8("(0) Back \n");
-
 }
+
+
+void UART_AC_Show_Off(){
+	UART_Send_String_Polling_8("AC Off\n");
+}
+void UART_AC_Show_On(){
+	UART_Send_String_Polling_8("AC On\n");
+}
+void UART_AC_Show_Auto(){
+	UART_Send_String_Polling_8("AC Auto\n");
+}
+void UART_AC_Show_Manual(){
+	UART_Send_String_Polling_8("AC Manual\n");
+}
+void UART_Dimmer_Show_Up(){
+	UART_Send_String_Polling_8("Dimmer Up\n");
+}
+void UART_Dimmer_Show_Down(){
+	UART_Send_String_Polling_8("Dimmer Down\n");
+}
+void UART_Door_Show_Closed(){
+	UART_Send_String_Polling_8("Door Close");
+}
+void UART_Door_Show_Open(){
+	UART_Send_String_Polling_8("Door Open");
+}
+
+
+// void UART_Show_Done(){
+// 	UART_Send_String_Polling_8("Done\n");
+// }
+// void UART_Show_Unavailable(){
+// 	UART_Send_String_Polling_8("Option Unavailable\n");
+// }
 
 void UART_Show_User_List(){
 	sint8 Usernamex[8];
@@ -236,8 +275,8 @@ void UART_Logged_OFF(){
 	UART_Send_String_Polling_8("Logged off Success! \n");
 	UART_Show_Request_UserID();
 }
-void UART_Choice_Handler_1(uint8 g_choice_1){
-	switch(g_choice_1){
+void UART_Choice_Handler_1(uint8 UART_G_Choice_1){
+	switch(UART_G_Choice_1){
 		case 1:UART_Show_Control_Leds();break;		//NEXT EXIST
 		case 2:UART_Show_Control_AC();	break;		//NEXT EXIST
 		case 3:UART_Show_Control_Door();break;		//NEXT EXIST

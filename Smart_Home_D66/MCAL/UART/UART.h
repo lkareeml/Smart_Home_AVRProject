@@ -86,8 +86,21 @@ void UART_Show_Control_Door();
 void UART_Show_Control_Dimmer();
 void UART_Show_Settings();
 void UART_Show_User_List();
+
+void UART_AC_Show_Off();
+void UART_AC_Show_On();
+void UART_AC_Show_Auto();
+void UART_AC_Show_Manual();
+void UART_Dimmer_Show_Up();
+void UART_Dimmer_Show_Down();
+void UART_Door_Show_Closed();
+void UART_Door_Show_Open();
+
+// void UART_Show_Done();
+// void UART_Show_Unavailable();
+
 void UART_EEPROM_Delete_All_Users();
-void UART_Choice_Handler_1(uint8 g_choice_1);
+void UART_Choice_Handler_1(uint8 UART_G_Choice_1);
 void UART_Show_Request_NewUserPassword();
 void UART_Show_Login_Failed();
 
