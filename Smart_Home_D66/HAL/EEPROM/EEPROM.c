@@ -1,7 +1,7 @@
 /****************************************/
 /*          Author : Kareem Atef        */
 /*          Date: 4-12-2023             */
-/*          Version: 1.0                */
+/*          Version: 5.1                */
 /*          Module: EEPROM              */
 /****************************************/
 #define F_CPU 16000000UL
@@ -9,10 +9,10 @@
 #include "../../MCAL/TWI_I2C/TWI_I2C.h"
 #include "EEPROM.h"
 #include <util/delay.h>
+extern uint8 MAX_Users_Count;// Without Admin
 
 
 void  EEPROM_Init(void){TWI_Init();}
-
 uint8 EEPROM_Read_Byte(uint16 Address){
 	uint8 Data = 0;
 	Address &= 0b0000011111111111 ; // Filter the address for protection
@@ -36,10 +36,9 @@ uint8 EEPROM_Read_Byte(uint16 Address){
 			}
 		}
 	}
-	_delay_ms(10);
+	_delay_ms(7);
 	return Data;
 }
-
 void  EEPROM_Write_Byte(uint16 Address , uint8 Data){
 	//Address &= 0b0000011111111111 ; // Filter the address for protection
 	uint8 SLA_W_address = 0b10100000; // Frame For EXT EEPROM
@@ -53,39 +52,28 @@ void  EEPROM_Write_Byte(uint16 Address , uint8 Data){
 				TWI_Send_Data(Data);
 				if(TWI_Check_Status(MSTR_T_DATA_ACK)){
 					TWI_Send_Stop();
-					_delay_ms(10);
+					_delay_ms(7);
 				}
 			}
 		}
 	}
 }
-
-
-
-//strlen() function doesn't count the null character \0
-
-uint16 EEPROM_Write_String(uint16 Address , sint8* String){
+void EEPROM_Write_String(uint16 Address , sint8* String){
 	uint8 i = 0;
 	while(String[i] != '\0'){
 		EEPROM_Write_Byte((Address+i), String[i]);
 		i++;
 	}
-	EEPROM_Write_Byte((Address+i), String[i]);
-	return (Address+i+1);
+	EEPROM_Write_Byte((Address+i+1), String[i]);
 }
-
 void  EEPROM_Read_String(uint16 Address ,sint8* String){
 	uint8 i =0;
 	String[i] = EEPROM_Read_Byte(Address+i);
 	while(String[i] != '\0'){
 		i++;
-		_delay_ms(10);
 		String[i] = EEPROM_Read_Byte(Address+i);
 	}
-	String[i] = '\0';
 }
-
-
 void  EEPROM_Write_Number_32(uint16 Address , uint32 Number){
 	//00011000 01100000 00011000 00000110
 	// Sec1 = Number >> 24; // Sec2 = Number >> 16;
@@ -98,7 +86,6 @@ void  EEPROM_Write_Number_32(uint16 Address , uint32 Number){
 		i++;
 	}
 }
-
 uint32 EEPROM_Read_Number_32(uint16 Address){
 	uint32 Number = 0;
 	for(int i =0;i<4;i++){
@@ -109,23 +96,53 @@ uint32 EEPROM_Read_Number_32(uint16 Address){
 
 
 
+void EEPROM_Read_8Data(uint8 UserID,sint8 * Data, uint8 DataType){	
+	//DataType = 1 -- Password + 1 //DataType = 2 -- Username +10
+	uint16 Marker = 0;
+	if(UserID == 99) Marker = 10;
+	else Marker = (UserID*20) + 10;
+	
+	switch(DataType){
+		case 1: EEPROM_Read_String(Marker+1,Data); break;
+		case 2: EEPROM_Read_String(Marker+10,Data); break;
+	}
+}
+uint8 EEPROM_Read_UserID_Exist(uint8 UserID){
+	uint16 Marker = 0;
+	if(UserID == 99){
+		Marker = 10;
+	}else{
+		Marker = (UserID*20) + 10;
+	}	
+	return EEPROM_Read_Byte(Marker);
+}
+void EEPROM_Delete_User(uint8 UserID){
+	// No Need To delete whole info, just Delete ID consider it Deleted
+	uint16 Marker = (UserID*20) + 10;
+	EEPROM_Write_Byte(Marker,0);
+}
+void EEPROM_Edit_Data(uint8 UserID,sint8 * Data, uint8 DataType){
+	uint16 Marker = 0;
+	if(UserID == 99) Marker = 10;
+	else Marker = (UserID*20) + 10;
+	// EDIT NOT COMPLETE
+	EEPROM_Write_String((Marker+10),Data);
+}
 
 
+uint8 EEPROM_Find_Empty_ID(){
+	for(int i=0; i<MAX_Users_Count;i++){
+		if(EEPROM_Read_UserID_Exist(i))
+			continue;
+		else return i;
+	}
+	return 0;
+}
+void EEPROM_Reg_New_User(uint8 UserID, sint8 * Username, sint8 * Password){
+uint16 Marker = (UserID*20) + 10;
+// User does not exist, Create the user
+	EEPROM_Write_Byte(Marker,UserID);
+	EEPROM_Write_String((Marker+1),Password);
+	EEPROM_Write_String((Marker+10),Username);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-/* IN PROGRESS */
-void  EEPROM_Remove_Byte(uint16 Address);
-void  EEPROM_Remove_String(uint16 Start_Address, uint16 End_Address);
-void EEPROM_ALL_Wiper(){}
-void EEPROM_Address_Checker(){}

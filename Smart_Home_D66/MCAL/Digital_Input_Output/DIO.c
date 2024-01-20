@@ -13,18 +13,18 @@
 void DIO_Set_Port_Direction(PORT Port,DIO_IO Direction){
 	if(Direction == Out){
 		switch(Port){
-			case PORTA:DDRA_Reg=0xFF;break;
-			case PORTB:DDRB_Reg=0xFF;break;
-			case PORTC:DDRC_Reg=0xFF;break;
-			case PORTD:DDRD_Reg=0xFF;break;
+			case PORTAx:DDRA_Reg=0xFF;break;
+			case PORTBx:DDRB_Reg=0xFF;break;
+			case PORTCx:DDRC_Reg=0xFF;break;
+			case PORTDx:DDRD_Reg=0xFF;break;
 			default:break;
 		}
 		}else if(Direction == In){
 		switch(Port){
-			case PORTA:DDRA_Reg=0x00;break;
-			case PORTB:DDRB_Reg=0x00;break;
-			case PORTC:DDRC_Reg=0x00;break;
-			case PORTD:DDRD_Reg=0x00;break;
+			case PORTAx:DDRA_Reg=0x00;break;
+			case PORTBx:DDRB_Reg=0x00;break;
+			case PORTCx:DDRC_Reg=0x00;break;
+			case PORTDx:DDRD_Reg=0x00;break;
 			default:break;
 		}
 	}
@@ -33,18 +33,18 @@ void DIO_Set_Port_Direction(PORT Port,DIO_IO Direction){
 void DIO_Set_Pin_Direction(PORT port,PIN pin,DIO_IO Direction){
 	if(Direction == Out){
 		switch(port){
-			case PORTA: Set(DDRA_Reg,pin) ;break;
-			case PORTB: Set(DDRB_Reg,pin) ;break;
-			case PORTC: Set(DDRC_Reg,pin) ;break;
-			case PORTD: Set(DDRD_Reg,pin) ;break;
+			case PORTAx: Set(DDRA_Reg,pin) ;break;
+			case PORTBx: Set(DDRB_Reg,pin) ;break;
+			case PORTCx: Set(DDRC_Reg,pin) ;break;
+			case PORTDx: Set(DDRD_Reg,pin) ;break;
 			default:break;
 		}
 		}else if(Direction == In){
 		switch(port){
-			case PORTA: Clear(DDRA_Reg,pin);break;
-			case PORTB: Clear(DDRB_Reg,pin);break;
-			case PORTC: Clear(DDRC_Reg,pin);break;
-			case PORTD: Clear(DDRD_Reg,pin);break;
+			case PORTAx: Clear(DDRA_Reg,pin);break;
+			case PORTBx: Clear(DDRB_Reg,pin);break;
+			case PORTCx: Clear(DDRC_Reg,pin);break;
+			case PORTDx: Clear(DDRD_Reg,pin);break;
 			default:break;
 		}
 	}
@@ -53,18 +53,18 @@ void DIO_Set_Pin_Direction(PORT port,PIN pin,DIO_IO Direction){
 void DIO_Set_Port_Output(PORT port,DIO_VALUE Output){
 	if(Output == High){
 		switch(port){
-			case PORTA:PORTA_Reg=0xFF;break;
-			case PORTB:PORTB_Reg=0xFF;break;
-			case PORTC:PORTC_Reg=0xFF;break;
-			case PORTD:PORTD_Reg=0xFF;break;
+			case PORTAx:PORTA_Reg=0xFF;break;
+			case PORTBx:PORTB_Reg=0xFF;break;
+			case PORTCx:PORTC_Reg=0xFF;break;
+			case PORTDx:PORTD_Reg=0xFF;break;
 			default:break;
 		}
 		}else if(Output == Low){
 		switch(port){
-			case PORTA:PORTA_Reg=0x00;break;
-			case PORTB:PORTB_Reg=0x00;break;
-			case PORTC:PORTC_Reg=0x00;break;
-			case PORTD:PORTD_Reg=0x00;break;
+			case PORTAx:PORTA_Reg=0x00;break;
+			case PORTBx:PORTB_Reg=0x00;break;
+			case PORTCx:PORTC_Reg=0x00;break;
+			case PORTDx:PORTD_Reg=0x00;break;
 			default:break;
 		}
 	}
@@ -73,29 +73,39 @@ void DIO_Set_Port_Output(PORT port,DIO_VALUE Output){
 void DIO_Set_Pin_Output(PORT port,PIN pin,DIO_VALUE Output){
 	if(Output == High){
 		switch(port){
-			case PORTA: Set(PORTA_Reg,pin) ;break;
-			case PORTB: Set(PORTB_Reg,pin) ;break;
-			case PORTC: Set(PORTC_Reg,pin) ;break;
-			case PORTD: Set(PORTD_Reg,pin) ;break;
+			case PORTAx: Set(PORTA_Reg,pin) ;break;
+			case PORTBx: Set(PORTB_Reg,pin) ;break;
+			case PORTCx: Set(PORTC_Reg,pin) ;break;
+			case PORTDx: Set(PORTD_Reg,pin) ;break;
 			default:break;
 		}
-		}else if(Output == Low){
+	}
+	else if(Output == Low){
 		switch(port){
-			case PORTA: Clear(PORTA_Reg,pin);break;
-			case PORTB: Clear(PORTB_Reg,pin);break;
-			case PORTC: Clear(PORTC_Reg,pin);break;
-			case PORTD: Clear(PORTD_Reg,pin);break;
+			case PORTAx: Clear(PORTA_Reg,pin);break;
+			case PORTBx: Clear(PORTB_Reg,pin);break;
+			case PORTCx: Clear(PORTC_Reg,pin);break;
+			case PORTDx: Clear(PORTD_Reg,pin);break;
 			default:break;
 		}
+	}
+	else if(Output == Toggle){
+		switch(port){
+			case PORTAx: Toggle(PORTA_Reg,pin);break;
+			case PORTBx: Toggle(PORTB_Reg,pin);break;
+			case PORTCx: Toggle(PORTC_Reg,pin);break;
+			case PORTDx: Toggle(PORTD_Reg,pin);break;
+			default:break;
+		}			
 	}
 }
 
 DIO_VALUE DIO_Get_Pin_Value(PORT port,PIN pin){
 	switch(port){
-		case PORTA: return Get(PINA_Reg,pin);break;
-		case PORTB: return Get(PINB_Reg,pin);break;
-		case PORTC: return Get(PINC_Reg,pin);break;
-		case PORTD: return Get(PIND_Reg,pin);break;
+		case PORTAx: return Get(PINA_Reg,pin);break;
+		case PORTBx: return Get(PINB_Reg,pin);break;
+		case PORTCx: return Get(PINC_Reg,pin);break;
+		case PORTDx: return Get(PIND_Reg,pin);break;
 		default:return 0;break;
 	}
 }

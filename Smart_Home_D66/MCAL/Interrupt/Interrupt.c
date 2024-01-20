@@ -29,11 +29,11 @@ void EXTI0_Init()
 }
 
 void EXTI0_Set_Direction_Input(){
-	DIO_Set_Pin_Direction(PORTD,Pin2,In);
+	DIO_Set_Pin_Direction(PORTDx,Pin2,In);
 }
 
 void EXTI0_Set_Internal_Pull_Up(){
-	DIO_Set_Pin_Output(PORTD,Pin2,High);
+	DIO_Set_Pin_Output(PORTDx,Pin2,High);
 }
 
 void EXTI1_Init()

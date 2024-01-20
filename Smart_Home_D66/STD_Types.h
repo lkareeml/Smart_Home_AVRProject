@@ -20,5 +20,10 @@ typedef short sint16;
 typedef long unsigned int uint32;
 typedef int sint32;
 typedef enum {FALSE = 0, TRUE = 1} bool;
+typedef enum{
+	LCD = 0,
+	UART = 1
+}Requester;
+
 
 #endif /* STD_TYPES_H_ */

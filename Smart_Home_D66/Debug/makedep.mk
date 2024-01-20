@@ -2,7 +2,7 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-Application\Smart.c
+Application\SmartHome_Core.c
 
 HAL\AirConditioner\AC.c
 

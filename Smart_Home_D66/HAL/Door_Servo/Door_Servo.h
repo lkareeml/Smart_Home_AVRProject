@@ -9,9 +9,12 @@
 #ifndef DOOR_SERVO_H_
 #define DOOR_SERVO_H_
 
+//	**********   Servo Configuration Port And PIN    **********
+#define Servo_Pin		Pin7
+#define Servo_Port		PORTDx
+// **********************************************************
+
 void Servo_Init();
-void Servo_0_Degree_Delay();
-void Servo_90_Degree_Delay();
-void Servo_180_Degree_Delay();
+void Door_Feedback(uint8 New_Feed,Requester Type);
 
 #endif /* DOOR_SERVO_H_ */

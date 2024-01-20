@@ -43,7 +43,7 @@
 #define UART_TX_Enable						Enabled					// Enabled -- Disabled
 #define UART_RX_Enable						Enabled					// Enabled -- Disabled
 #define UART_TX_Complete_Interrupt			Disabled				// Enabled -- Disabled
-#define UART_RX_Complete_Interrupt			Disabled				// Enabled -- Disabled
+#define UART_RX_Complete_Interrupt			Enabled					// Enabled -- Disabled
 #define UART_Data_Reg_Empty_Interrupt		Disabled				// Enabled -- Disabled
 
 //#define Multi_processor_Com_Mode	 >>>> (UCSRA_Reg,0);	Only operate for
@@ -69,5 +69,40 @@ void   UART_Send_String_Polling_8(sint8 *String);
 void   UART_Recieve_String_8(sint8 *String);
 void   UART_Send_Number_Polling_32(uint32 Number);
 uint32 UART_Recieve_Number_Polling_32(void);
+
+
+void UART_User_Login(uint8 * global_Flag, sint8 * global_UART_Username, sint8 * global_EEPROM_Password, sint8 * global_UART_Password,uint8 * FailCount);
+void UART_Show_MainMenu_Inside(uint8 choice_1);
+
+void UART_Show_Request_UserID();
+void UART_Show_Request_Password();
+
+void UART_Show_Invalid();
+void UART_Show_MainMenu();
+void UART_Show_Control_Appliances();
+void UART_Show_Control_Leds();
+void UART_Show_Control_AC();
+void UART_Show_Control_Door();
+void UART_Show_Control_Dimmer();
+void UART_Show_Settings();
+void UART_Show_User_List();
+
+void UART_AC_Show_Off();
+void UART_AC_Show_On();
+void UART_AC_Show_Auto();
+void UART_AC_Show_Manual();
+void UART_Dimmer_Show_Up();
+void UART_Dimmer_Show_Down();
+void UART_Door_Show_Closed();
+void UART_Door_Show_Open();
+
+// void UART_Show_Done();
+// void UART_Show_Unavailable();
+
+void UART_EEPROM_Delete_All_Users();
+void UART_Choice_Handler_1(uint8 UART_G_Choice_1);
+void UART_Show_Request_NewUserPassword();
+void UART_Show_Login_Failed();
+
 
 #endif /* UART_H_ */

@@ -25,7 +25,7 @@
 
 #define ADC_REF_VOLT      ADC_AVCC            /// Options: ADC_AVCC - ADC_AREF - ADC_INTERNAL
 #define ADC_ADJUSTMENT    ADC_Left_Adjust     /// Options: ADC_Left_Adjust - ADC_Right_Adjust
-#define ADC_PRESCALER     ADC_PRE_2           /// Options: ADC_PRE_2 - ADC_PRE_4 ... ADC_PRE_128
+#define ADC_PRESCALER     ADC_PRE_2         /// Options: ADC_PRE_2 - ADC_PRE_4 ... ADC_PRE_128
 
 
 #define ADC_Ch0 0
