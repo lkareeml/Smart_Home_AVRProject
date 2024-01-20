@@ -8,6 +8,8 @@
 
 #include "Application/SmartHome_Core_Header.h"
 
+
+
 int main(void){
 	Smart_Initialization();
 	//Smart_Configurator();
